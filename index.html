@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Farm Game</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0f1923;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: #1c2530;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #8b9bb4;
+        }
+        .balance {
+            color: #00e701;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        /* Ferma Sahəsi (Torpaqlar) */
+        .farm-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .plot {
+            aspect-ratio: 1;
+            background: #131b22;
+            border: 2px dashed #2a3744;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .plot:hover {
+            border-color: #3a4b5c;
+        }
+        .plot.empty {
+            border-color: #8b9bb4;
+            background: #131b22;
+        }
+        .plot.growing {
+            border-color: #f3ba2f;
+            background: rgba(243, 186, 47, 0.05);
+        }
+        .plot.ready {
+            border-color: #00e701;
+            background: rgba(0, 231, 1, 0.08);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        .plot-icon {
+            font-size: 36px;
+            margin-bottom: 5px;
+        }
+        .plot-text {
+            font-size: 12px;
+            color: #8b9bb4;
+            font-weight: bold;
+        }
+        .controls {
+            width: 100%;
+            text-align: center;
+        }
+        .info-text {
+            font-size: 12px;
+            color: #8b9bb4;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Başlıq və Balans -->
+        <div class="header">
+            <span>Balans: <span id="balanceDisplay" class="balance">50.00</span> AZN</span>
+            <span>Crypto Farm</span>
+        </div>
+
+        <!-- Ferma Torpaqları (4 ədəd yataq) -->
+        <div class="farm-grid" id="farmGrid">
+            <!-- JavaScript vasitəsilə doldurulacaq -->
+        </div>
+
+        <!-- İdarəetmə Məlumatı -->
+        <div class="controls">
+            <div class="info-text">🌱 Torpağa toxum əkmək üçün kliklə, yetişəndə yığaraq qazanc əldə et!</div>
+        </div>
+    </div>
+
+    <script>
+        let balance = 50.00;
+        const seedCost = 5;  // Toxumun qiyməti
+        const harvestReward = 12; // Məhsulun satış qiyməti
+        const growTime = 5; // Yetişmə müddəti (saniyə)
+
+        // 4 ədəd torpaq sahəsi
+        let plots = [
+            { state: 'empty', timeLeft: 0 }, // 'empty', 'growing', 'ready'
+            { state: 'empty', timeLeft: 0 },
+            { state: 'empty', timeLeft: 0 },
+            { state: 'empty', timeLeft: 0 }
+        ];
+
+        const balanceDisplay = document.getElementById('balanceDisplay');
+        const farmGrid = document.getElementById('farmGrid');
+
+        // Fermanı ekrana çəkən funksiya
+        function renderFarm() {
+            farmGrid.innerHTML = '';
+
+            plots.forEach((plot, index) => {
+                const div = document.createElement('div');
+                div.className = `plot ${plot.state}`;
+
+                if (plot.state === 'empty') {
+                    div.innerHTML = `
+                        <div class="plot-icon">🌱</div>
+                        <div class="plot-text">Ək (5 AZN)</div>
+                    `;
+                } else if (plot.state === 'growing') {
+                    div.innerHTML = `
+                        <div class="plot-icon">🌿</div>
+                        <div class="plot-text">${plot.timeLeft} san</div>
+                    `;
+                } else if (plot.state === 'ready') {
+                    div.innerHTML = `
+                        <div class="plot-icon">🥕</div>
+                        <div class="plot-text">Yığ (+12 AZN)</div>
+                    `;
+                }
+
+                div.onclick = () => handlePlotClick(index);
+                farmGrid.appendChild(div);
+            });
+
+            balanceDisplay.innerText = balance.toFixed(2);
+        }
+
+        // Torpağa kliklədikdə baş verənlər
+        function handlePlotClick(index) {
+            let plot = plots[index];
+
+            if (plot.state === 'empty') {
+                // Toxum əkmək
+                if (balance < seedCost) {
+                    alert("Balansınız toxum almaq üçün kifayət etmir!");
+                    return;
+                }
+                balance -= seedCost;
+                plot.state = 'growing';
+                plot.timeLeft = growTime;
+                renderFarm();
+
+            } else if (plot.state === 'ready') {
+                // Məhsulu yığmaq
+                balance += harvestReward;
+                plot.state = 'empty';
+                renderFarm();
+            }
+        }
+
+        // Hər saniyə bitkilərin böyüməsini yoxlayan sistem
+        setInterval(() => {
+            let updated = false;
+            plots.forEach(plot => {
+                if (plot.state === 'growing') {
+                    plot.timeLeft--;
+                    if (plot.timeLeft <= 0) {
+                        plot.state = 'ready';
+                    }
+                    updated = true;
+                }
+            });
+            if (updated) {
+                renderFarm();
+            }
+        }, 1000);
+
+        // İlk yüklənmə
+        renderFarm();
+    </script>
+</body>
+</html>
