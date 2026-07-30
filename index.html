@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Farm Game</title>
+    <title>Global Empire & Monopoly</title>
     <style>
         * {
             box-sizing: border-box;
@@ -12,7 +12,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body {
-            background-color: #0f1923;
+            background-color: #0b131d;
             color: #ffffff;
             display: flex;
             flex-direction: column;
@@ -24,20 +24,18 @@
         .container {
             width: 100%;
             max-width: 400px;
-            background: #1c2530;
+            background: #151f2e;
             border-radius: 16px;
             padding: 20px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.7);
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
         .header {
-            width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-size: 14px;
             color: #8b9bb4;
         }
@@ -46,66 +44,105 @@
             font-weight: bold;
             font-size: 18px;
         }
-        /* Ferma Sahəsi (Torpaqlar) */
-        .farm-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-        .plot {
-            aspect-ratio: 1;
-            background: #131b22;
-            border: 2px dashed #2a3744;
-            border-radius: 14px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            position: relative;
-            transition: all 0.2s;
-            user-select: none;
-        }
-        .plot:hover {
-            border-color: #3a4b5c;
-        }
-        .plot.empty {
-            border-color: #8b9bb4;
-            background: #131b22;
-        }
-        .plot.growing {
-            border-color: #f3ba2f;
-            background: rgba(243, 186, 47, 0.05);
-        }
-        .plot.ready {
-            border-color: #00e701;
-            background: rgba(0, 231, 1, 0.08);
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.03); }
-            100% { transform: scale(1); }
-        }
-        .plot-icon {
-            font-size: 36px;
-            margin-bottom: 5px;
-        }
-        .plot-text {
-            font-size: 12px;
-            color: #8b9bb4;
-            font-weight: bold;
-        }
-        .controls {
-            width: 100%;
+        .income-rate {
+            font-size: 13px;
+            color: #f3ba2f;
+            margin-bottom: 15px;
+            background: rgba(243, 186, 47, 0.1);
+            padding: 8px;
+            border-radius: 8px;
             text-align: center;
         }
-        .info-text {
+        /* Şəhər Seçimi Tabları */
+        .city-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        .tab-btn {
+            background: #1c2838;
+            border: 1px solid #2a3d55;
+            color: #8b9bb4;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+        .tab-btn.active {
+            background: #00e701;
+            color: #000;
+            border-color: #00e701;
+        }
+        /* Şəhər Başlığı və Monopoliya Statusu */
+        .city-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            background: #1c2838;
+            padding: 10px 14px;
+            border-radius: 10px;
+        }
+        .monopoly-badge {
+            font-size: 11px;
+            background: #f3ba2f;
+            color: #000;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: none;
+        }
+        .monopoly-badge.active {
+            display: inline-block;
+        }
+        /* Zavodlar Siyahısı */
+        .factories-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 15px;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+        .factory-card {
+            background: #1c2838;
+            border: 1px solid #2a3d55;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .factory-info h4 {
+            font-size: 15px;
+            margin-bottom: 3px;
+        }
+        .factory-info p {
             font-size: 12px;
             color: #8b9bb4;
-            margin-top: 10px;
+        }
+        .btn-upgrade {
+            background: #00e701;
+            color: #000;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+        .btn-upgrade:hover {
+            background: #00c701;
+        }
+        .btn-upgrade:disabled {
+            background: #2a3d55;
+            color: #556677;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -114,112 +151,453 @@
     <div class="container">
         <!-- Başlıq və Balans -->
         <div class="header">
-            <span>Balans: <span id="balanceDisplay" class="balance">50.00</span> AZN</span>
-            <span>Crypto Farm</span>
+            <span>Imperiya Balansı:</span>
+            <span id="balanceDisplay" class="balance">500.00 AZN</span>
         </div>
 
-        <!-- Ferma Torpaqları (4 ədəd yataq) -->
-        <div class="farm-grid" id="farmGrid">
-            <!-- JavaScript vasitəsilə doldurulacaq -->
+        <div id="incomeDisplay" class="income-rate">Ümumi Gəlir: +0.0 AZN / san</div>
+
+        <!-- Şəhər Seçimi -->
+        <div class="city-tabs" id="cityTabs"></div>
+
+        <!-- Seçilmiş Şəhər Paneli -->
+        <div class="city-header">
+            <h3 id="cityName">Bakı</h3>
+            <span id="monopolyBadge" class="monopoly-badge">👑 MONOPOLİYA (2x Gəlir!)</span>
         </div>
 
-        <!-- İdarəetmə Məlumatı -->
-        <div class="controls">
-            <div class="info-text">🌱 Torpağa toxum əkmək üçün kliklə, yetişəndə yığaraq qazanc əldə et!</div>
-        </div>
+        <!-- Zavodlar -->
+        <div class="factories-list" id="factoriesList"></div>
     </div>
 
     <script>
-        let balance = 50.00;
-        const seedCost = 5;  // Toxumun qiyməti
-        const harvestReward = 12; // Məhsulun satış qiyməti
-        const growTime = 5; // Yetişmə müddəti (saniyə)
+        // Oyun Verilənləri (Ölkələr, Şəhərlər və Zavodlar)
+        let balance = 500.00;
+        let currentCityKey = 'baku';
 
-        // 4 ədəd torpaq sahəsi
-        let plots = [
-            { state: 'empty', timeLeft: 0 }, // 'empty', 'growing', 'ready'
-            { state: 'empty', timeLeft: 0 },
-            { state: 'empty', timeLeft: 0 },
-            { state: 'empty', timeLeft: 0 }
-        ];
+        let empire = {
+            baku: {
+                name: "🇦🇿 Bakı",
+                factories: [
+                    { id: 'oil', name: "Neft Zavodu", level: 1, baseIncome: 1.0, cost: 50 },
+                    { id: 'tech', name: "İT Park", level: 0, baseIncome: 3.0, cost: 200 },
+                    { id: 'solar', name: "Günəş Stansiyası", level: 0, baseIncome: 8.0, cost: 600 }
+                ]
+            },
+            dubai: {
+                name: "🇦🇪 Dubay",
+                factories: [
+                    { id: 'gold', name: "Qızıl Emalı", level: 0, baseIncome: 15.0, cost: 1500 },
+                    { id: 'tower', name: "Smart Qüllə", level: 0, baseIncome: 35.0, cost: 4000 },
+                    { id: 'hyper', name: "Hyperloop Stansiyası", level: 0, baseIncome: 80.0, cost: 10000 }
+                ]
+            },
+            london: {
+                name: "🇬🇧 London",
+                factories: [
+                    { id: 'bank', name: "Maliyyə Mərkəzi", level: 0, baseIncome: 200.0, cost: 25000 },
+                    { id: 'media', name: "Media Qərargahı", level: 0, baseIncome: 500.0, cost: 70000 },
+                    { id: 'ai', name: "Süni İntellekt Lab", level: 0, baseIncome: 1200.0, cost: 200000 }
+                ]
+            }
+        };
 
         const balanceDisplay = document.getElementById('balanceDisplay');
-        const farmGrid = document.getElementById('farmGrid');
+        const incomeDisplay = document.getElementById('incomeDisplay');
+        const cityTabs = document.getElementById('cityTabs');
+        const cityName = document.getElementById('cityName');
+        const monopolyBadge = document.getElementById('monopolyBadge');
+        const factoriesList = document.getElementById('factoriesList');
 
-        // Fermanı ekrana çəkən funksiya
-        function renderFarm() {
-            farmGrid.innerHTML = '';
+        // İnterfeysi yeniləyən əsas funksiya
+        function render() {
+            balanceDisplay.innerText = balance.toFixed(2) + " AZN";
 
-            plots.forEach((plot, index) => {
-                const div = document.createElement('div');
-                div.className = `plot ${plot.state}`;
+            // Şəhər tablarını yarat
+            cityTabs.innerHTML = '';
+            let totalGlobalIncome = 0;
 
-                if (plot.state === 'empty') {
-                    div.innerHTML = `
-                        <div class="plot-icon">🌱</div>
-                        <div class="plot-text">Ək (5 AZN)</div>
-                    `;
-                } else if (plot.state === 'growing') {
-                    div.innerHTML = `
-                        <div class="plot-icon">🌿</div>
-                        <div class="plot-text">${plot.timeLeft} san</div>
-                    `;
-                } else if (plot.state === 'ready') {
-                    div.innerHTML = `
-                        <div class="plot-icon">🥕</div>
-                        <div class="plot-text">Yığ (+12 AZN)</div>
-                    `;
-                }
+            Object.keys(empire).forEach(cityKey => {
+                const city = empire[cityKey];
+                const btn = document.createElement('button');
+                btn.className = `tab-btn ${cityKey === currentCityKey ? 'active' : ''}`;
+                btn.innerText = city.name;
+                btn.onclick = () => {
+                    currentCityKey = cityKey;
+                    render();
+                };
+                cityTabs.appendChild(btn);
 
-                div.onclick = () => handlePlotClick(index);
-                farmGrid.appendChild(div);
-            });
+                // Hər şəhərin öz gəlirini hesablayırıq (monopoliya yoxlanışı ilə)
+                let cityHasMonopoly = city.factories.every(f => f.level > 0);
+                let multiplier = cityHasMonopoly ? 2 : 1;
 
-            balanceDisplay.innerText = balance.toFixed(2);
-        }
-
-        // Torpağa kliklədikdə baş verənlər
-        function handlePlotClick(index) {
-            let plot = plots[index];
-
-            if (plot.state === 'empty') {
-                // Toxum əkmək
-                if (balance < seedCost) {
-                    alert("Balansınız toxum almaq üçün kifayət etmir!");
-                    return;
-                }
-                balance -= seedCost;
-                plot.state = 'growing';
-                plot.timeLeft = growTime;
-                renderFarm();
-
-            } else if (plot.state === 'ready') {
-                // Məhsulu yığmaq
-                balance += harvestReward;
-                plot.state = 'empty';
-                renderFarm();
-            }
-        }
-
-        // Hər saniyə bitkilərin böyüməsini yoxlayan sistem
-        setInterval(() => {
-            let updated = false;
-            plots.forEach(plot => {
-                if (plot.state === 'growing') {
-                    plot.timeLeft--;
-                    if (plot.timeLeft <= 0) {
-                        plot.state = 'ready';
+                city.factories.forEach(f => {
+                    if (f.level > 0) {
+                        totalGlobalIncome += (f.baseIncome * f.level) * multiplier;
                     }
-                    updated = true;
-                }
+                });
             });
-            if (updated) {
-                renderFarm();
+
+            incomeDisplay.innerText = `Ümumi Gəlir: +${totalGlobalIncome.toFixed(1)} AZN / san`;
+            window.currentGlobalIncome = totalGlobalIncome;
+
+            // Cari şəhərin zavodlarını göstər
+            const currentCity = empire[currentCityKey];
+            cityName.innerText = currentCity.name;
+
+            // Monopoliya yoxlanışı (Bütün zavodların səviyyəsi 1 və ya daha çoxdursa)
+            let hasMonopoly = currentCity.factories.every(f => f.level > 0);
+            if (hasMonopoly) {
+                monopolyBadge.classList.add('active');
+            } else {
+                monopolyBadge.classList.remove('active');
             }
-        }, 1000);
+
+            factoriesList.innerHTML = '';
+            currentCity.factories.forEach((factory, index) => {
+                let currentCost = Math.floor(factory.cost * Math.pow(1.3, factory.level));
+                let currentIncome = (factory.baseIncome * (factory.level > 0 ? factory.level : 1)) * (hasMonopoly ? 2 : 1);
+
+                const card = document.createElement('div');
+                card.className = 'factory-card';
+                card.innerHTML = `
+                    <div class="factory-info">
+                        <h4>${factory.name} (Lvl ${factory.level})</h4>
+                        <p>Gəlir: +${currentIncome.toFixed(1)} AZN/san</p>
+                    </div>
+                    <button class="btn-upgrade" onclick="upgradeFactory(${index})" ${balance < currentCost ? 'disabled' : ''}>
+                        ${factory.level === 0 ? 'Tik' : 'Yüksəlt'} <br>(${currentCost} AZN)
+                    </button>
+                `;
+                factoriesList.appendChild(card);
+            });
+        }
+
+        // Zavod tikmək və ya səviyyəsini artırmaq
+        function upgradeFactory(index) {
+            const factory = empire[currentCityKey].factories[index];
+            let currentCost = Math.floor(factory.cost * Math.pow(1.3, factory.level));
+
+            if (balance >= currentCost) {
+                balance -= currentCost;
+                factory.level++;
+                render();
+            }
+        }
+
+        // Hər saniyə passiv gəlirin əlavə olunması
+        setInterval(() => {
+            if (window.currentGlobalIncome > 0) {
+                balance += window.currentGlobalIncome / 10;
+                balanceDisplay.innerText = balance.toFixed(2) + " AZN";
+            }
+        }, 100);
 
         // İlk yüklənmə
-        renderFarm();
+        render();
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Empire & Monopoly</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0b131d;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: #151f2e;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #8b9bb4;
+        }
+        .balance {
+            color: #00e701;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .income-rate {
+            font-size: 13px;
+            color: #f3ba2f;
+            margin-bottom: 15px;
+            background: rgba(243, 186, 47, 0.1);
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        /* Şəhər Seçimi Tabları */
+        .city-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        .tab-btn {
+            background: #1c2838;
+            border: 1px solid #2a3d55;
+            color: #8b9bb4;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+        .tab-btn.active {
+            background: #00e701;
+            color: #000;
+            border-color: #00e701;
+        }
+        /* Şəhər Başlığı və Monopoliya Statusu */
+        .city-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            background: #1c2838;
+            padding: 10px 14px;
+            border-radius: 10px;
+        }
+        .monopoly-badge {
+            font-size: 11px;
+            background: #f3ba2f;
+            color: #000;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: none;
+        }
+        .monopoly-badge.active {
+            display: inline-block;
+        }
+        /* Zavodlar Siyahısı */
+        .factories-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 15px;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+        .factory-card {
+            background: #1c2838;
+            border: 1px solid #2a3d55;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .factory-info h4 {
+            font-size: 15px;
+            margin-bottom: 3px;
+        }
+        .factory-info p {
+            font-size: 12px;
+            color: #8b9bb4;
+        }
+        .btn-upgrade {
+            background: #00e701;
+            color: #000;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+        .btn-upgrade:hover {
+            background: #00c701;
+        }
+        .btn-upgrade:disabled {
+            background: #2a3d55;
+            color: #556677;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Başlıq və Balans -->
+        <div class="header">
+            <span>Imperiya Balansı:</span>
+            <span id="balanceDisplay" class="balance">500.00 AZN</span>
+        </div>
+
+        <div id="incomeDisplay" class="income-rate">Ümumi Gəlir: +0.0 AZN / san</div>
+
+        <!-- Şəhər Seçimi -->
+        <div class="city-tabs" id="cityTabs"></div>
+
+        <!-- Seçilmiş Şəhər Paneli -->
+        <div class="city-header">
+            <h3 id="cityName">Bakı</h3>
+            <span id="monopolyBadge" class="monopoly-badge">👑 MONOPOLİYA (2x Gəlir!)</span>
+        </div>
+
+        <!-- Zavodlar -->
+        <div class="factories-list" id="factoriesList"></div>
+    </div>
+
+    <script>
+        // Oyun Verilənləri (Ölkələr, Şəhərlər və Zavodlar)
+        let balance = 500.00;
+        let currentCityKey = 'baku';
+
+        let empire = {
+            baku: {
+                name: "🇦🇿 Bakı",
+                factories: [
+                    { id: 'oil', name: "Neft Zavodu", level: 1, baseIncome: 1.0, cost: 50 },
+                    { id: 'tech', name: "İT Park", level: 0, baseIncome: 3.0, cost: 200 },
+                    { id: 'solar', name: "Günəş Stansiyası", level: 0, baseIncome: 8.0, cost: 600 }
+                ]
+            },
+            dubai: {
+                name: "🇦🇪 Dubay",
+                factories: [
+                    { id: 'gold', name: "Qızıl Emalı", level: 0, baseIncome: 15.0, cost: 1500 },
+                    { id: 'tower', name: "Smart Qüllə", level: 0, baseIncome: 35.0, cost: 4000 },
+                    { id: 'hyper', name: "Hyperloop Stansiyası", level: 0, baseIncome: 80.0, cost: 10000 }
+                ]
+            },
+            london: {
+                name: "🇬🇧 London",
+                factories: [
+                    { id: 'bank', name: "Maliyyə Mərkəzi", level: 0, baseIncome: 200.0, cost: 25000 },
+                    { id: 'media', name: "Media Qərargahı", level: 0, baseIncome: 500.0, cost: 70000 },
+                    { id: 'ai', name: "Süni İntellekt Lab", level: 0, baseIncome: 1200.0, cost: 200000 }
+                ]
+            }
+        };
+
+        const balanceDisplay = document.getElementById('balanceDisplay');
+        const incomeDisplay = document.getElementById('incomeDisplay');
+        const cityTabs = document.getElementById('cityTabs');
+        const cityName = document.getElementById('cityName');
+        const monopolyBadge = document.getElementById('monopolyBadge');
+        const factoriesList = document.getElementById('factoriesList');
+
+        // İnterfeysi yeniləyən əsas funksiya
+        function render() {
+            balanceDisplay.innerText = balance.toFixed(2) + " AZN";
+
+            // Şəhər tablarını yarat
+            cityTabs.innerHTML = '';
+            let totalGlobalIncome = 0;
+
+            Object.keys(empire).forEach(cityKey => {
+                const city = empire[cityKey];
+                const btn = document.createElement('button');
+                btn.className = `tab-btn ${cityKey === currentCityKey ? 'active' : ''}`;
+                btn.innerText = city.name;
+                btn.onclick = () => {
+                    currentCityKey = cityKey;
+                    render();
+                };
+                cityTabs.appendChild(btn);
+
+                // Hər şəhərin öz gəlirini hesablayırıq (monopoliya yoxlanışı ilə)
+                let cityHasMonopoly = city.factories.every(f => f.level > 0);
+                let multiplier = cityHasMonopoly ? 2 : 1;
+
+                city.factories.forEach(f => {
+                    if (f.level > 0) {
+                        totalGlobalIncome += (f.baseIncome * f.level) * multiplier;
+                    }
+                });
+            });
+
+            incomeDisplay.innerText = `Ümumi Gəlir: +${totalGlobalIncome.toFixed(1)} AZN / san`;
+            window.currentGlobalIncome = totalGlobalIncome;
+
+            // Cari şəhərin zavodlarını göstər
+            const currentCity = empire[currentCityKey];
+            cityName.innerText = currentCity.name;
+
+            // Monopoliya yoxlanışı (Bütün zavodların səviyyəsi 1 və ya daha çoxdursa)
+            let hasMonopoly = currentCity.factories.every(f => f.level > 0);
+            if (hasMonopoly) {
+                monopolyBadge.classList.add('active');
+            } else {
+                monopolyBadge.classList.remove('active');
+            }
+
+            factoriesList.innerHTML = '';
+            currentCity.factories.forEach((factory, index) => {
+                let currentCost = Math.floor(factory.cost * Math.pow(1.3, factory.level));
+                let currentIncome = (factory.baseIncome * (factory.level > 0 ? factory.level : 1)) * (hasMonopoly ? 2 : 1);
+
+                const card = document.createElement('div');
+                card.className = 'factory-card';
+                card.innerHTML = `
+                    <div class="factory-info">
+                        <h4>${factory.name} (Lvl ${factory.level})</h4>
+                        <p>Gəlir: +${currentIncome.toFixed(1)} AZN/san</p>
+                    </div>
+                    <button class="btn-upgrade" onclick="upgradeFactory(${index})" ${balance < currentCost ? 'disabled' : ''}>
+                        ${factory.level === 0 ? 'Tik' : 'Yüksəlt'} <br>(${currentCost} AZN)
+                    </button>
+                `;
+                factoriesList.appendChild(card);
+            });
+        }
+
+        // Zavod tikmək və ya səviyyəsini artırmaq
+        function upgradeFactory(index) {
+            const factory = empire[currentCityKey].factories[index];
+            let currentCost = Math.floor(factory.cost * Math.pow(1.3, factory.level));
+
+            if (balance >= currentCost) {
+                balance -= currentCost;
+                factory.level++;
+                render();
+            }
+        }
+
+        // Hər saniyə passiv gəlirin əlavə olunması
+        setInterval(() => {
+            if (window.currentGlobalIncome > 0) {
+                balance += window.currentGlobalIncome / 10;
+                balanceDisplay.innerText = balance.toFixed(2) + " AZN";
+            }
+        }, 100);
+
+        // İlk yüklənmə
+        render();
+    </script>
+</body>
+</html>
+
