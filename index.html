@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexusCloud // Regnorcoin Mining Ecosystem (0 Balance & Real Passive Income)</title>
+    <title>NexusCloud // Regnorcoin Mining Ecosystem</title>
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -15,10 +17,8 @@
             --neon-gold: #f59e0b;
             --neon-purple: #a855f7;
             --neon-red: #ef4444;
-            --neon-pink: #ec4899;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --border-glass: rgba(0, 210, 255, 0.15);
         }
 
         * {
@@ -26,6 +26,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -35,9 +36,59 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
+            padding-bottom: 75px; /* Alt tab bar üçün boşluq */
         }
 
-        /* Top Header Navigation */
+        /* Toast Bildirişləri */
+        #toastContainer {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1), fadeOut 0.3s ease 2.7s forwards;
+            pointer-events: auto;
+        }
+
+        .toast.success { border-color: var(--neon-green); color: var(--neon-green); }
+        .toast.error { border-color: var(--neon-red); color: var(--neon-red); }
+        .toast.gold { border-color: var(--neon-gold); color: var(--neon-gold); }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+
+        /* Skeleton Yüklənmə Effekti */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
         .top-hud {
             width: 100%;
             background: var(--bg-darker);
@@ -135,7 +186,7 @@
             color: #000;
         }
 
-        /* Slide-out Sidebar Menu */
+        /* Sidebar Sürüşən Menyu */
         .sidebar {
             position: fixed;
             top: 0;
@@ -239,7 +290,50 @@
             display: block;
         }
 
-        /* Main Dynamic Application Container */
+        /* Alt Sabit Naviqasiya Paneli (Bottom Tab Bar) */
+        .bottom-tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(4, 6, 11, 0.95);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 90;
+        }
+
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            transition: 0.2s;
+            flex: 1;
+        }
+
+        .tab-item svg {
+            width: 20px;
+            height: 20px;
+            margin-bottom: 3px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .tab-item.active, .tab-item:hover {
+            color: var(--neon-blue);
+        }
+
         .container {
             max-width: 1100px;
             margin: 30px auto;
@@ -273,7 +367,6 @@
             color: var(--text-main);
         }
 
-        /* Filters Bar */
         .filters-wrapper {
             display: flex;
             gap: 10px;
@@ -297,7 +390,6 @@
             border-color: var(--neon-blue);
         }
 
-        /* Miners Grid */
         .miners-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -319,6 +411,12 @@
         .miner-card:hover {
             border-color: var(--neon-blue);
             box-shadow: 0 10px 30px rgba(0, 210, 255, 0.1);
+        }
+
+        /* Yüksəldilmiş Kart Dinamik Parıltı Effekti */
+        .miner-card.upgraded {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.15);
         }
 
         .card-top-tags {
@@ -357,11 +455,6 @@
             height: 100%;
             object-fit: contain;
             padding: 10px;
-            transition: 0.3s;
-        }
-
-        .miner-card:hover .miner-preview img {
-            transform: scale(1.08);
         }
 
         .price-tag-top {
@@ -399,52 +492,8 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
-        .miner-specs span b {
-            color: var(--text-main);
-        }
-
-        .counter-buy-wrapper {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .quantity-box {
-            display: flex;
-            background: var(--bg-darker);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-            align-items: center;
-        }
-
-        .qty-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-main);
-            width: 32px;
-            height: 38px;
-            font-size: 15px;
-            cursor: pointer;
-        }
-
-        .qty-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .qty-input {
-            width: 32px;
-            background: transparent;
-            border: none;
-            color: var(--text-main);
-            text-align: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            outline: none;
-        }
-
         .btn-buy {
-            flex: 1;
+            width: 100%;
             background: rgba(245, 158, 11, 0.15);
             border: 1px solid var(--neon-gold);
             color: var(--neon-gold);
@@ -464,28 +513,25 @@
             box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
         }
 
-        .btn-sell {
-            flex: 1;
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid var(--neon-red);
-            color: var(--neon-red);
-            height: 38px;
-            border-radius: 8px;
+        .btn-upgrade {
+            background: rgba(168, 85, 247, 0.15);
+            border: 1px solid var(--neon-purple);
+            color: var(--neon-purple);
+            padding: 6px 10px;
+            border-radius: 6px;
             font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
             font-weight: 700;
-            font-size: 12px;
             cursor: pointer;
-            text-transform: uppercase;
+            margin-top: 8px;
+            width: 100%;
             transition: 0.3s;
         }
-
-        .btn-sell:hover {
-            background: var(--neon-red);
+        .btn-upgrade:hover {
+            background: var(--neon-purple);
             color: #fff;
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
         }
 
-        /* Profile & Wallet Styling */
         .card-panel {
             background: var(--bg-card);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -572,7 +618,6 @@
             color: #000;
         }
 
-        /* Wallet Crypto Grid */
         .wallet-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -621,27 +666,39 @@
             margin-bottom: 4px;
         }
 
-        .crypto-usd-equiv {
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
+            font-size: 13px;
+        }
+        .leaderboard-table th, .leaderboard-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .leaderboard-table th {
             color: var(--text-muted);
-            margin-bottom: 16px;
+            font-size: 11px;
+            text-transform: uppercase;
         }
     </style>
 </head>
 <body>
 
-    <!-- Top Navigation Bar -->
+    <!-- Toast Bildiriş Konteyneri -->
+    <div id="toastContainer"></div>
+
     <header class="top-hud">
         <div class="hud-left">
             <div class="brand-logo">RGN</div>
             <div class="balance-badge">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"></circle><path d="M12 6v12M15 9.5H9.5a1.5 1.5 0 0 0 0 3h5a1.5 1.5 0 0 1 0 3H9"></path></svg>
-                <span id="topRegnorBalance">0.00</span> RGN
+                <span id="topRegnorBalance">50.00</span> RGN
             </div>
         </div>
         <div class="hud-right">
-            <button class="btn-action" style="padding: 5px 10px; font-size: 11px; background: rgba(16, 185, 129, 0.15); border-color: var(--neon-green); color: var(--neon-green);" onclick="claimFreeFaucet()">🎁 Faucet Bonus</button>
+            <button class="btn-action" style="padding: 5px 10px; font-size: 11px; background: rgba(16, 185, 129, 0.15); border-color: var(--neon-green); color: var(--neon-green);" onclick="claimFreeFaucet()">🎁 Faucet</button>
             <div class="user-profile-btn" onclick="switchView('profile')">
                 <img id="navAvatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=SingleKing67" class="user-avatar-sm" alt="Avatar">
                 <span id="navUsername">SingleKing67</span>
@@ -652,10 +709,9 @@
         </div>
     </header>
 
-    <!-- Menu Overlay -->
     <div class="menu-overlay" id="menuOverlay" onclick="toggleSidebar()"></div>
 
-    <!-- Slide-out Sidebar Menu -->
+    <!-- Sürüşən Menyu (Sidebar) -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <button class="close-btn" onclick="toggleSidebar()">✕</button>
@@ -664,15 +720,22 @@
             <div class="menu-item" onclick="switchView('market'); toggleSidebar();">
                 <div class="menu-item-left">
                     <svg class="menu-icon" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
-                    Bazar (100 Kristal Mayner)
+                    Bazar (100 Mayner)
                 </div>
                 <span class="badge-sale">100 Model</span>
             </div>
             <div class="menu-item" onclick="switchView('inventory'); toggleSidebar();">
                 <div class="menu-item-left">
                     <svg class="menu-icon" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                    İnventar & Passiv Gəlir
+                    İnventar & Yüksəltmə
                 </div>
+            </div>
+            <div class="menu-item" onclick="switchView('p2p'); toggleSidebar();">
+                <div class="menu-item-left">
+                    <svg class="menu-icon" viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"></path><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline></svg>
+                    P2P İstifadəçi Bazarı
+                </div>
+                <span class="badge-sale" style="background: var(--neon-green);">P2P</span>
             </div>
             <div class="menu-item" onclick="switchView('boxes'); toggleSidebar();">
                 <div class="menu-item-left">
@@ -681,16 +744,23 @@
                 </div>
                 <span class="badge-sale" style="background: var(--neon-purple);">Loot</span>
             </div>
+            <div class="menu-item" onclick="switchView('referral'); toggleSidebar();">
+                <div class="menu-item-left">
+                    <svg class="menu-icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                    Referal (10% Qazanc)
+                </div>
+                <span class="badge-sale" style="background: var(--neon-gold);">Bonus</span>
+            </div>
+            <div class="menu-item" onclick="switchView('leaderboard'); toggleSidebar();">
+                <div class="menu-item-left">
+                    <svg class="menu-icon" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+                    Liderlər Lövhəsi
+                </div>
+            </div>
             <div class="menu-item" onclick="switchView('wallet'); toggleSidebar();">
                 <div class="menu-item-left">
                     <svg class="menu-icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-                    Cüzdan & Canlı Kripto
-                </div>
-            </div>
-            <div class="menu-item" onclick="switchView('swap'); toggleSidebar();">
-                <div class="menu-item-left">
-                    <svg class="menu-icon" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
-                    Kripto Swap
+                    Cüzdan & Kripto
                 </div>
             </div>
             <div class="menu-item" onclick="switchView('profile'); toggleSidebar();">
@@ -702,143 +772,140 @@
         </div>
     </div>
 
-    <!-- Main Dynamic Application Container -->
+    <!-- Alt Sabit Naviqasiya Paneli (Bottom Tab Bar) -->
+    <nav class="bottom-tab-bar">
+        <button class="tab-item active" id="tab-market" onclick="switchView('market')">
+            <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+            Bazar
+        </button>
+        <button class="tab-item" id="tab-inventory" onclick="switchView('inventory')">
+            <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            İnventar
+        </button>
+        <button class="tab-item" id="tab-p2p" onclick="switchView('p2p')">
+            <svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4"/></svg>
+            P2P
+        </button>
+        <button class="tab-item" id="tab-boxes" onclick="switchView('boxes')">
+            <svg viewBox="0 0 24 24"><path d="M21 8V21H3V8M1 3h22v5H1V3z"/></svg>
+            Sandıq
+        </button>
+        <button class="tab-item" id="tab-wallet" onclick="switchView('wallet')">
+            <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            Cüzdan
+        </button>
+    </nav>
+
     <div class="container">
         
-        <!-- 1. BAZAR (MARKETPLACE) VIEW -->
         <div id="marketView" class="app-view active">
             <div class="section-header-bar">
-                <div class="section-title">100 KRİSTAL MAYNER BAZARI ($1 - $1000)</div>
+                <div class="section-title">MAYNER BAZARI ($1-dan başlayır)</div>
                 <div class="filters-wrapper">
                     <select class="dropdown-select" id="sortSelect" onchange="renderMarket()">
-                        <option value="price-desc">Qiymət: Çoxdan aza</option>
                         <option value="price-asc">Qiymət: Azdan çoxuna</option>
-                        <option value="power-desc">Güc: Ən güclü (Çox)</option>
-                        <option value="power-asc">Güc: Ən zəif (Az)</option>
+                        <option value="price-desc">Qiymət: Çoxdan aza</option>
                     </select>
                     <input type="text" id="searchInput" class="filter-input" placeholder="Ada görə axtar..." onkeyup="renderMarket()">
                 </div>
             </div>
-
             <div class="miners-grid" id="minersMarketGrid"></div>
         </div>
 
-        <!-- 2. İNVENTAR & MAYNİNG VIEW -->
         <div id="inventoryView" class="app-view">
             <div class="section-header-bar">
-                <div class="section-title">ŞƏXSİ İNVENTAR & HASH GÜCÜ PASSİV GƏLİRİ</div>
+                <div class="section-title">ŞƏXSİ İNVENTAR & YÜKSƏLTMƏ</div>
                 <div style="font-family: 'JetBrains Mono'; font-size: 13px; color: var(--neon-blue);">
-                    Ümumi Hash Gücü: <b id="totalHashrate">0 GH/s</b>
+                    Aktiv Gəlir: <b id="totalHashrate">0.00 RGN/gün</b>
                 </div>
             </div>
 
-            <!-- Real Passive Income & ROI Analytics Panel -->
             <div class="card-panel" style="background: linear-gradient(135deg, rgba(0,210,255,0.06), rgba(16,185,129,0.06)); border: 1px solid var(--neon-blue);">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
                     <div>
-                        <h3 style="font-family: 'JetBrains Mono'; font-size: 14px; color: var(--neon-blue); margin-bottom: 4px;">// HASH GÜCÜNƏ GÖRƏ REAL PASSİV GƏLİR</h3>
-                        <p style="font-size: 12px; color: var(--text-muted);">Aktiv maynerlərinizin gücünə əsaslanan real-vaxt qazanc göstəriciləri (3 aylıq ROI sistemi):</p>
+                        <h3 style="font-family: 'JetBrains Mono'; font-size: 14px; color: var(--neon-blue); margin-bottom: 4px;">// PASSİV QAZANC</h3>
+                        <p style="font-size: 12px; color: var(--text-muted);">Yığılan mədən gəlirini balansa köçürün:</p>
                     </div>
                     <div style="display: flex; align-items: center; gap: 16px;">
                         <div style="font-family: 'JetBrains Mono'; font-size: 20px; font-weight: 700; color: var(--neon-gold);" id="unclaimedRgnDisplay">0.0000 RGN</div>
                         <button class="btn-action" style="background: rgba(16, 185, 129, 0.15); border-color: var(--neon-green); color: var(--neon-green);" onclick="claimMiningRewards()">Balansa Köçir 📥</button>
                     </div>
                 </div>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-family: 'JetBrains Mono'; font-size: 12px;">
-                    <div style="background: var(--bg-darker); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-                        <span style="color: var(--text-muted);">Gündəlik Qazanc:</span><br>
-                        <b id="dailyPassiveEarn" style="color: var(--neon-green); font-size: 14px;">0.00 RGN / gün</b>
-                    </div>
-                    <div style="background: var(--bg-darker); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-                        <span style="color: var(--text-muted);">Aylıq Qazanc (30 gün):</span><br>
-                        <b id="monthlyPassiveEarn" style="color: var(--neon-blue); font-size: 14px;">0.00 RGN / ay</b>
-                    </div>
-                    <div style="background: var(--bg-darker); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-                        <span style="color: var(--text-muted);">İnvestisiya Qaytarması (ROI):</span><br>
-                        <b style="color: var(--neon-gold); font-size: 14px;">90 Gün (3 Ay)</b>
-                    </div>
-                </div>
             </div>
-
             <div class="miners-grid" id="inventoryGrid"></div>
         </div>
 
-        <!-- 3. MİSTİK SANDIQLAR (LOOT BOXES) VIEW -->
-        <div id="boxesView" class="app-view">
+        <div id="p2pView" class="app-view">
             <div class="section-header-bar">
-                <div class="section-title">MİSTİK SANDIQLAR & MÜKAFATLAR</div>
-                <div style="font-family: 'JetBrains Mono'; font-size: 13px; color: var(--neon-purple);">
-                    Sandıq Açma Qiyməti: <b>250 RGN</b>
+                <div class="section-title">P2P İSTİFADƏÇİ BAZARI</div>
+            </div>
+            <div class="card-panel">
+                <h3 style="font-family: 'JetBrains Mono'; font-size: 14px; color: var(--neon-green); margin-bottom: 12px;">// Öz Maynerini Satışa Çıxar</h3>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <select class="dropdown-select" id="p2pSellSelect" style="flex: 2;"></select>
+                    <input type="number" id="p2pSellPrice" class="form-input" placeholder="Qiymət (RGN)" style="flex: 1;">
+                    <button class="btn-action" onclick="createP2PListing()">Elan Yerləşdir</button>
                 </div>
             </div>
+            <div class="miners-grid" id="p2pMarketGrid"></div>
+        </div>
+
+        <div id="boxesView" class="app-view">
+            <div class="section-header-bar">
+                <div class="section-title">MİSTİK SANDIQLAR</div>
+            </div>
             <div class="card-panel" style="text-align: center; max-width: 600px; margin: 0 auto;">
-                <div style="font-size: 64px; margin-bottom: 16px; animation: pulse 2s infinite;">🎁</div>
+                <div style="font-size: 64px; margin-bottom: 16px;">🎁</div>
                 <h3 style="font-family: 'JetBrains Mono'; font-size: 18px; color: #fff; margin-bottom: 8px;">Regnor Mystery Box</h3>
-                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">
-                    Bu sandığı açaraq dəyərli maynerlər və ya böyük məbləğdə RGN qazana bilərsiniz. Dəyərli hədiyyələrin çıxma ehtimalı çox azdır!
-                </p>
-                <button class="btn-action" style="background: rgba(168, 85, 247, 0.15); border-color: var(--neon-purple); color: var(--neon-purple); width: 100%; font-size: 15px; padding: 14px;" onclick="openMysteryBox()">Sandığı Aç (250 RGN)</button>
+                <button class="btn-action" style="background: rgba(168, 85, 247, 0.15); border-color: var(--neon-purple); color: var(--neon-purple); width: 100%; font-size: 15px; padding: 14px;" onclick="openMysteryBox()">Sandığı Aç (50 RGN)</button>
                 <div id="boxResult" style="margin-top: 20px; font-family: 'JetBrains Mono'; font-size: 14px; min-height: 50px; padding: 10px; border-radius: 8px;"></div>
             </div>
         </div>
 
-        <!-- 4. CÜZDAN (WALLET) VIEW -->
+        <div id="referralView" class="app-view">
+            <div class="section-header-bar">
+                <div class="section-title">REFERAL SİSTEMİ (10%)</div>
+            </div>
+            <div class="card-panel" style="max-width: 600px; margin: 0 auto; text-align: center;">
+                <h3 style="font-family: 'JetBrains Mono'; font-size: 16px; color: var(--neon-gold); margin-bottom: 12px;">Dostlarını Dəvət Et, RGN Qazan!</h3>
+                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">
+                    Sənin referal linkinlə qoşulanların qazancından **10% komissiya** birbaşa balansına gələcək.
+                </p>
+                <div class="form-group">
+                    <label>Şəxsi Referal Linkin:</label>
+                    <input type="text" id="referralLinkInput" class="form-input" readonly style="text-align: center; font-family: 'JetBrains Mono';">
+                </div>
+                <button class="btn-action" onclick="copyReferralLink()">Linkin Kopyala 📋</button>
+            </div>
+        </div>
+
+        <div id="leaderboardView" class="app-view">
+            <div class="section-header-bar">
+                <div class="section-title">LİDERLƏR LÖVHƏSİ</div>
+            </div>
+            <div class="card-panel">
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Yer</th>
+                            <th>İstifadəçi</th>
+                            <th>Balans (RGN)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        <tr><td colspan="3"><div class="skeleton" style="height: 20px; width: 100%;"></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <div id="walletView" class="app-view">
             <div class="section-header-bar">
-                <div class="section-title">CÜZDAN & CANLI BAZAR QİYMƏTLƏRİ</div>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-action" style="padding: 6px 12px; font-size: 11px; background: rgba(16, 185, 129, 0.15); border-color: var(--neon-green); color: var(--neon-green);" onclick="claimFreeFaucet()">Pulsuz Faucet (+5 RGN)</button>
-                    <button class="btn-action" style="padding: 6px 12px; font-size: 11px;" onclick="fetchLivePrices()">Qiymətləri Yenilə 🔄</button>
-                </div>
+                <div class="section-title">CÜZDAN</div>
             </div>
             <div class="wallet-grid" id="walletCardsContainer"></div>
         </div>
 
-        <!-- 5. KRİPTO SWAP VIEW -->
-        <div id="swapView" class="app-view">
-            <div class="section-header-bar">
-                <div class="section-title">KRİPTO SWAP & MÜBADİLƏ</div>
-            </div>
-            <div class="card-panel" style="max-width: 520px; margin: 0 auto;">
-                <div class="form-group">
-                    <label>Verirsən (Satırsan)</label>
-                    <div style="display: flex; gap: 10px;">
-                        <select class="dropdown-select" id="fromCurrency" onchange="calculateSwap()" style="flex: 1;">
-                            <option value="RGN">Regnorcoin (RGN)</option>
-                            <option value="USDT">Tether USD (USDT)</option>
-                            <option value="BTC">Bitcoin (BTC)</option>
-                            <option value="ETH">Ethereum (ETH)</option>
-                            <option value="SOL">Solana (SOL)</option>
-                        </select>
-                        <input type="number" id="fromAmount" class="form-input" placeholder="0.00" oninput="calculateSwap()" style="flex: 1;">
-                    </div>
-                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 6px; font-family: 'JetBrains Mono';">Mövcud balans: <span id="swapFromBalance">0.00</span></div>
-                </div>
-
-                <div style="text-align: center; margin: 12px 0;">
-                    <button class="menu-dots-btn" onclick="invertSwap()" style="margin: 0 auto; border-radius: 50%;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 16V4M7 4L3 8M7 4l4 4M17 8v12M17 20l4-4M17 20l-4-4"/></svg>
-                    </button>
-                </div>
-
-                <div class="form-group">
-                    <label>Alırsan</label>
-                    <div style="display: flex; gap: 10px;">
-                        <select class="dropdown-select" id="toCurrency" onchange="calculateSwap()" style="flex: 1;">
-                            <option value="USDT">Tether USD (USDT)</option>
-                            <option value="RGN" selected>Regnorcoin (RGN)</option>
-                            <option value="BTC">Bitcoin (BTC)</option>
-                            <option value="ETH">Ethereum (ETH)</option>
-                        </select>
-                        <input type="text" id="toAmount" class="form-input" placeholder="0.00" readonly style="flex: 1; background: var(--bg-darker);">
-                    </div>
-                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 6px; font-family: 'JetBrains Mono';">Məzənnə: <span id="exchangeRateText">1 RGN = 1 USD</span></div>
-                </div>
-                <button class="btn-action" style="width: 100%; margin-top: 10px;" onclick="executeSwap()">Swap Et</button>
-            </div>
-        </div>
-
-        <!-- 6. PROFİL VIEW -->
         <div id="profileView" class="app-view">
             <div class="section-header-bar">
                 <div class="section-title">ŞƏXSİ PROFİL</div>
@@ -848,8 +915,7 @@
                     <img id="profileAvatarLg" src="" class="profile-avatar-lg" alt="Avatar">
                     <div>
                         <h2 id="profileNameDisplay" style="margin-bottom: 4px;">SingleKing67</h2>
-                        <p style="font-family: 'JetBrains Mono'; font-size: 12px; color: var(--neon-gold);">Rank: <span id="userRankBadge">Yeni Başlayan Mayner</span></p>
-                        <p style="font-family: 'JetBrains Mono'; font-size: 12px; color: var(--neon-blue); margin-top: 4px;">Mayning Səviyyəsi: <span id="userLevelDisplay">Level 1</span></p>
+                        <p style="font-family: 'JetBrains Mono'; font-size: 12px; color: var(--neon-gold);">Rank: <span id="userRankBadge">Mayner</span></p>
                     </div>
                 </div>
             </div>
@@ -869,10 +935,9 @@
 
     </div>
 
-    <!-- Firebase SDK (Modular CDN) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, deleteDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyArfgU34XyZH7TrRNJN-ApKl1MNwU31Sfs",
@@ -887,165 +952,368 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Telegram WebApp və Haptic Feedback
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+        }
+
+        function triggerHaptic(style = 'medium') {
+            if (tg?.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred(style);
+            }
+        }
+
+        // Müasir Toast Bildiriş Sistemi (Alert əvəzinə)
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerText = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        const tgUser = tg?.initDataUnsafe?.user;
+        let currentUserId = tgUser ? String(tgUser.id) : "SingleKing67";
+        let currentUsername = tgUser ? (tgUser.username || tgUser.first_name || "Mayner") : "SingleKing67";
+        let defaultAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${currentUsername}`;
+
         const minersDatabase = [];
-        const prefixList = ["Nano", "Micro", "Quantum", "Plasma", "Aether", "Solar", "Lunar", "Astral", "Void", "Nova", "Stellar", "Core", "Vortex", "Matrix", "Nexus", "Titan", "Omega", "Prime", "Apex", "Singularity"];
-        const suffixList = ["Shard", "Cluster", "Node", "Monolith", "Prism", "Crystal", "Core", "Spire", "Matrix", "Gem", "Pylon", "Beacon", "Fragment", "Obelisk", "Sphere"];
+        const prefixList = ["Nano", "Micro", "Quantum", "Plasma", "Aether", "Solar", "Lunar", "Astral", "Void", "Nova"];
+        const suffixList = ["Shard", "Cluster", "Node", "Monolith", "Prism", "Crystal", "Core", "Spire", "Matrix", "Gem"];
 
         for (let i = 1; i <= 100; i++) {
-            let price = parseFloat((1 + (999 * Math.pow((i - 1) / 99, 1.3))).toFixed(2));
-            let power = Math.round(price * 3.8 + (i * 1.2));
-            let tier = price < 50 ? 'L4' : price < 250 ? 'L3' : price < 600 ? 'L2' : price < 900 ? 'L1' : 'Elite';
-            let size = price < 50 ? 'Kiçik' : price < 250 ? 'Orta' : price < 600 ? 'Böyük' : 'Ultra';
+            let price = parseFloat((Math.pow(1.078, i - 1)).toFixed(2));
+            let tier = i <= 25 ? 'L4' : i <= 55 ? 'L3' : i <= 80 ? 'L2' : i <= 95 ? 'L1' : 'Elite';
+            let dailyEarnings = price / 90;
+            let earningPerSec = dailyEarnings / 86400;
 
             let hue1 = (i * 37) % 360;
-            let hue2 = (hue1 + 75) % 360;
             let color1 = `hsl(${hue1}, 90%, 55%)`;
-            let color2 = `hsl(${hue2}, 85%, 25%)`;
-            let glowColor = `hsl(${hue1}, 100%, 50%)`;
-
-            let p1x = 80 + (i % 40);
-            let p1y = 10 + (i % 25);
-            let p2x = 120 + (i % 35);
-            let p2y = 40 + (i % 30);
-
-            let svgString = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="g${i}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="${color1}"/><stop offset="100%" stop-color="${color2}"/></linearGradient></defs><rect width="200" height="200" fill="#04060b"/><polygon points="${p1x},${p1y} ${p2x},${p2y} 140,160 100,190 60,160" fill="url(#g${i})" opacity="0.95"/><polygon points="${p1x},${p1y} 100,190 ${p2x},${p2y}" fill="${color1}" opacity="0.45"/><circle cx="100" cy="100" r="${45 + (i % 25)}" fill="${glowColor}" filter="blur(35px)" opacity="0.45"/></svg>`;
-
+            let color2 = `hsl(${(hue1+75)%360}, 85%, 25%)`;
+            let svgString = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="g${i}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="${color1}"/><stop offset="100%" stop-color="${color2}"/></linearGradient></defs><rect width="200" height="200" fill="#04060b"/><polygon points="80,10 120,40 140,160 100,190 60,160" fill="url(#g${i})" opacity="0.95"/></svg>`;
             let name = `${prefixList[(i * 3) % prefixList.length]} ${suffixList[(i * 7) % suffixList.length]} #${i}`;
 
             minersDatabase.push({
                 id: 'm' + i,
                 name: name,
                 tier: tier,
-                size: size,
-                power: power,
                 price: price,
-                date: 2024 + (i % 3),
+                earningPerSec: earningPerSec,
+                upgradeLevel: 0,
                 image: 'data:image/svg+xml;utf8,' + encodeURIComponent(svgString)
             });
         }
 
-        let cryptoPricesUsd = {
-            RGN: 1.00,
-            USDT: 1.00,
-            BTC: 65000.00,
-            ETH: 3500.00,
-            SOL: 150.00
-        };
-
         let userState = {
-            name: "SingleKing67",
-            avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=SingleKing67",
-            balances: {
-                RGN: 0.00,
-                USDT: 0.00,
-                BTC: 0.0000,
-                ETH: 0.0000,
-                SOL: 0.0000
-            },
+            name: currentUsername,
+            avatar: defaultAvatar,
+            balances: { RGN: 50.00, USDT: 0.00, BTC: 0.00 },
             inventory: [],
-            unclaimedRgn: 0.00
+            unclaimedRgn: 0.00,
+            referredBy: null
         };
 
         const avatarsList = [
-            "https://api.dicebear.com/7.x/bottts/svg?seed=SingleKing67",
+            defaultAvatar,
             "https://api.dicebear.com/7.x/bottts/svg?seed=CryptoKing",
-            "https://api.dicebear.com/7.x/bottts/svg?seed=NexusNode",
-            "https://api.dicebear.com/7.x/bottts/svg?seed=CyberMiner"
+            "https://api.dicebear.com/7.x/bottts/svg?seed=NexusNode"
         ];
 
-        // Firestore-a məlumatı yazmaq üçün funksiya
+        function checkReferral() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const ref = urlParams.get('ref');
+            if (ref && ref !== currentUserId) {
+                userState.referredBy = ref;
+            }
+        }
+
+        async function rewardReferrer(amount) {
+            if (!userState.referredBy) return;
+            try {
+                const refDocRef = doc(db, "istifadeciler", userState.referredBy);
+                const refSnap = await getDoc(refDocRef);
+                if (refSnap.exists()) {
+                    let refData = refSnap.data();
+                    let commission = amount * 0.10;
+                    refData.balances.RGN += commission;
+                    await setDoc(refDocRef, refData);
+                }
+            } catch (e) {
+                console.error("Referal xətası:", e);
+            }
+        }
+
         async function saveUserDataToFirebase() {
             try {
-                await setDoc(doc(db, "istifadeciler", userState.name), {
+                await setDoc(doc(db, "istifadeciler", currentUserId), {
+                    id: currentUserId,
                     name: userState.name,
                     avatar: userState.avatar,
                     balances: userState.balances,
                     inventory: userState.inventory,
                     unclaimedRgn: userState.unclaimedRgn,
+                    referredBy: userState.referredBy,
                     lastUpdated: new Date()
                 });
             } catch (e) {
-                console.error("Firestore-a yazılarkən xəta baş verdi: ", e);
+                console.error("Firebase xətası:", e);
             }
         }
 
-        // Firestore-dan məlumatı çəkmək üçün funksiya
         async function loadUserDataFromFirebase() {
             try {
-                const docRef = doc(db, "istifadeciler", userState.name);
+                const docRef = doc(db, "istifadeciler", currentUserId);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     let data = docSnap.data();
+                    userState.name = data.name || userState.name;
                     userState.balances = data.balances || userState.balances;
                     userState.inventory = data.inventory || [];
                     userState.unclaimedRgn = data.unclaimedRgn || 0.00;
                     userState.avatar = data.avatar || userState.avatar;
+                    userState.referredBy = data.referredBy || null;
+                } else {
+                    await saveUserDataToFirebase();
                 }
             } catch (e) {
-                console.error("Firestore-dan oxunarkən xəta baş verdi: ", e);
+                console.error("Firebase yüklənmə xətası:", e);
             }
         }
 
-        async function fetchLivePrices() {
+        async function renderLeaderboard() {
+            const tbody = document.getElementById('leaderboardBody');
+            tbody.innerHTML = `
+                <tr><td colspan="3"><div class="skeleton" style="height: 25px; width: 100%;"></div></td></tr>
+                <tr><td colspan="3"><div class="skeleton" style="height: 25px; width: 100%;"></div></td></tr>
+                <tr><td colspan="3"><div class="skeleton" style="height: 25px; width: 100%;"></div></td></tr>
+            `;
             try {
-                let response = await fetch('https://api.binance.com/api/v3/ticker/price');
-                let data = await response.json();
-                if (Array.isArray(data)) {
-                    let priceMap = {};
-                    data.forEach(item => { priceMap[item.symbol] = parseFloat(item.price); });
-                    if (priceMap['BTCUSDT']) cryptoPricesUsd.BTC = priceMap['BTCUSDT'];
-                    if (priceMap['ETHUSDT']) cryptoPricesUsd.ETH = priceMap['ETHUSDT'];
-                    if (priceMap['SOLUSDT']) cryptoPricesUsd.SOL = priceMap['SOLUSDT'];
-                }
-            } catch (error) {
-                console.warn("Canlı qiymətlər yenilənmədi:", error);
+                const q = query(collection(db, "istifadeciler"), orderBy("balances.RGN", "desc"), limit(10));
+                const querySnapshot = await getDocs(q);
+                tbody.innerHTML = '';
+                let rank = 1;
+                querySnapshot.forEach((docSnap) => {
+                    let data = docSnap.data();
+                    let rgn = data.balances && data.balances.RGN ? data.balances.RGN.toFixed(2) : "0.00";
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><b>#${rank++}</b></td>
+                            <td style="color: var(--neon-blue);">${data.name}</td>
+                            <td style="color: var(--neon-gold);">${rgn} RGN</td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--neon-red);">Məlumat çəkilə bilmədi.</td></tr>`;
             }
-            renderWallet();
-            calculateSwap();
+        }
+
+        window.createP2PListing = async function() {
+            triggerHaptic('medium');
+            let select = document.getElementById('p2pSellSelect');
+            let priceInput = document.getElementById('p2pSellPrice');
+            let minerId = select.value;
+            let price = parseFloat(priceInput.value);
+
+            if (!minerId || isNaN(price) || price <= 0) {
+                showToast("Zəhmət olmasa düzgün qiymət daxil edin.", "error");
+                return;
+            }
+
+            let item = userState.inventory.find(i => i.id === minerId);
+            if (!item || item.qty <= 0) {
+                showToast("Bu mayner inventarınızda yoxdur.", "error");
+                return;
+            }
+
+            item.qty -= 1;
+            if (item.qty <= 0) {
+                userState.inventory = userState.inventory.filter(i => i.id !== minerId);
+            }
+
+            try {
+                await addDoc(collection(db, "p2p_listings"), {
+                    sellerId: currentUserId,
+                    seller: userState.name,
+                    minerId: item.id,
+                    name: item.name,
+                    tier: item.tier,
+                    price: price,
+                    earningPerSec: item.earningPerSec,
+                    image: item.image,
+                    createdAt: new Date()
+                });
+                showToast("Elan P2P bazarına əlavə olundu!", "success");
+                renderInventory();
+                renderP2PMarket();
+                saveUserDataToFirebase();
+            } catch (e) {
+                showToast("Xəta baş verdi.", "error");
+            }
+        }
+
+        window.renderP2PMarket = async function() {
+            const grid = document.getElementById('p2pMarketGrid');
+            grid.innerHTML = `<p style="color:var(--text-muted);">Yüklənir...</p>`;
+            try {
+                const querySnapshot = await getDocs(collection(db, "p2p_listings"));
+                grid.innerHTML = '';
+                if (querySnapshot.empty) {
+                    grid.innerHTML = `<p style="color:var(--text-muted);">Aktiv P2P elanı yoxdur.</p>`;
+                    return;
+                }
+                querySnapshot.forEach((docSnap) => {
+                    let listing = docSnap.data();
+                    let docId = docSnap.id;
+                    let dailyReturn = (listing.earningPerSec * 86400).toFixed(2);
+                    grid.innerHTML += `
+                        <div class="miner-card">
+                            <div>
+                                <div class="card-top-tags">
+                                    <span class="tier-badge">${listing.tier}</span>
+                                    <span style="font-size: 11px; color: var(--neon-gold);">Satıcı: ${listing.seller}</span>
+                                </div>
+                                <div class="miner-preview">
+                                    <img src="${listing.image}" alt="${listing.name}">
+                                    <div class="price-tag-top">${listing.price} RGN</div>
+                                </div>
+                                <div class="miner-name">${listing.name}</div>
+                                <div class="miner-specs"><span>📈 Gəlir: <b>+${dailyReturn} RGN/gün</b></span></div>
+                            </div>
+                            <button class="btn-buy" onclick="buyP2PMiningItem('${docId}', ${listing.price}, '${listing.minerId}', '${listing.name}', '${listing.tier}', ${listing.earningPerSec}, '${listing.image}', '${listing.sellerId}')">Al</button>
+                        </div>
+                    `;
+                });
+            } catch (e) {
+                grid.innerHTML = `<p style="color:var(--neon-red);">Xəta baş verdi.</p>`;
+            }
+        }
+
+        window.buyP2PMiningItem = async function(docId, price, minerId, name, tier, earningPerSec, image, sellerId) {
+            triggerHaptic('heavy');
+            if (sellerId === currentUserId) {
+                showToast("Öz elanınızı ala bilməzsiniz!", "error");
+                return;
+            }
+            if (userState.balances.RGN < price) {
+                showToast("Balansınızda kifayət qədər RGN yoxdur!", "error");
+                return;
+            }
+
+            userState.balances.RGN -= price;
+            let existing = userState.inventory.find(i => i.id === minerId);
+            if (existing) { existing.qty += 1; }
+            else { userState.inventory.push({ id: minerId, name, tier, price, earningPerSec, upgradeLevel: 0, image, qty: 1 }); }
+
+            await deleteDoc(doc(db, "p2p_listings", docId));
+            updateTopUI();
+            renderInventory();
+            renderP2PMarket();
+            saveUserDataToFirebase();
+            showToast("Mayner uğurla alındı!", "success");
+        }
+
+        window.upgradeMiner = function(minerId) {
+            triggerHaptic('medium');
+            let item = userState.inventory.find(i => i.id === minerId);
+            if (!item) return;
+            let upgradeCost = Math.round(item.price * 0.4);
+
+            if (userState.balances.RGN < upgradeCost) {
+                showToast(`Balansınız çatmır! Lazımdır: ${upgradeCost} RGN`, "error");
+                return;
+            }
+
+            userState.balances.RGN -= upgradeCost;
+            item.upgradeLevel = (item.upgradeLevel || 0) + 1;
+            item.earningPerSec *= 1.20;
+
+            updateTopUI();
+            renderInventory();
+            saveUserDataToFirebase();
+            showToast("Mayner səviyyəsi artırıldı (+20% qazanc)!", "gold");
+        }
+
+        window.claimFreeFaucet = function() {
+            triggerHaptic('success');
+            let bonus = 5.00;
+            userState.balances.RGN += bonus;
+            rewardReferrer(bonus);
+            updateTopUI();
+            saveUserDataToFirebase();
+            showToast("+5.00 RGN Faucet bonusu qazanıldı!", "gold");
+        }
+
+        window.claimMiningRewards = function() {
+            triggerHaptic('success');
+            if (userState.unclaimedRgn <= 0) {
+                showToast("Toplanacaq gəlir yoxdur!", "error");
+                return;
+            }
+            let claimed = userState.unclaimedRgn;
+            userState.balances.RGN += claimed;
+            rewardReferrer(claimed);
+            userState.unclaimedRgn = 0;
+            updateTopUI();
+            document.getElementById('unclaimedRgnDisplay').innerText = "0.0000 RGN";
+            saveUserDataToFirebase();
+            showToast(`Uğurla toplandı: +${claimed.toFixed(2)} RGN`, "gold");
+        }
+
+        window.copyReferralLink = function() {
+            triggerHaptic('light');
+            let linkInput = document.getElementById('referralLinkInput');
+            linkInput.select();
+            navigator.clipboard.writeText(linkInput.value);
+            showToast("Referal link kopyalandı!", "success");
         }
 
         async function initApp() {
+            checkReferral();
             await loadUserDataFromFirebase();
-            await fetchLivePrices();
             renderMarket();
             renderProfileData();
             renderAvatarSelector();
             updateTopUI();
-            
+
+            document.getElementById('referralLinkInput').value = window.location.origin + window.location.pathname + "?ref=" + currentUserId;
+
             setInterval(() => {
-                let totalPower = 0;
+                let totalEarningPerSec = 0;
                 userState.inventory.forEach(item => {
-                    totalPower += item.power * item.qty;
+                    totalEarningPerSec += item.earningPerSec * item.qty;
                 });
-                if (totalPower > 0) {
-                    let earnedPerSec = totalPower * (1 / 360 / 86400); 
-                    userState.unclaimedRgn += earnedPerSec;
+                if (totalEarningPerSec > 0) {
+                    userState.unclaimedRgn += totalEarningPerSec;
                     document.getElementById('unclaimedRgnDisplay').innerText = userState.unclaimedRgn.toFixed(4) + " RGN";
-                    
-                    let dailyEarn = totalPower * (1 / 360);
-                    let monthlyEarn = dailyEarn * 30;
-                    document.getElementById('dailyPassiveEarn').innerText = dailyEarn.toFixed(2) + " RGN / gün";
-                    document.getElementById('monthlyPassiveEarn').innerText = monthlyEarn.toFixed(2) + " RGN / ay";
                 }
             }, 1000);
 
-            // Hər 30 saniyədən bir məlumatları avtomatik Firebase-ə qeyd et
-            setInterval(() => {
-                saveUserDataToFirebase();
-            }, 30000);
+            setInterval(() => { saveUserDataToFirebase(); }, 30000);
         }
 
         window.toggleSidebar = function() {
+            triggerHaptic('light');
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('menuOverlay').classList.toggle('active');
         }
 
         window.switchView = function(viewId) {
+            triggerHaptic('light');
             document.querySelectorAll('.app-view').forEach(el => el.classList.remove('active'));
             document.getElementById(viewId + 'View').classList.add('active');
+            
+            document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
+            let activeTab = document.getElementById('tab-' + viewId);
+            if (activeTab) activeTab.classList.add('active');
+
             if(viewId === 'inventory') renderInventory();
-            if(viewId === 'wallet') { fetchLivePrices(); renderWallet(); }
-            if(viewId === 'swap') calculateSwap();
+            if(viewId === 'p2p') renderP2PMarket();
+            if(viewId === 'leaderboard') renderLeaderboard();
+            if(viewId === 'wallet') renderWallet();
         }
 
         function updateTopUI() {
@@ -1054,316 +1322,116 @@
             document.getElementById('navAvatar').src = userState.avatar;
         }
 
-        window.claimFreeFaucet = function() {
-            userState.balances.RGN += 5.00;
-            updateTopUI();
-            renderWallet();
-            saveUserDataToFirebase();
-            alert("Təbriklər! Faucet bonusundan +5.00 RGN qazandınız.");
-        }
-
         window.renderMarket = function() {
             const grid = document.getElementById('minersMarketGrid');
-            const sortVal = document.getElementById('sortSelect').value;
-            const searchVal = document.getElementById('searchInput').value.toLowerCase();
-
-            let filtered = minersDatabase.filter(m => m.name.toLowerCase().includes(searchVal));
-
-            filtered.sort((a, b) => {
-                if (sortVal === 'price-desc') return b.price - a.price;
-                if (sortVal === 'price-asc') return a.price - b.price;
-                if (sortVal === 'power-desc') return b.power - a.power;
-                if (sortVal === 'power-asc') return a.power - b.power;
-            });
-
             grid.innerHTML = '';
-            filtered.forEach(miner => {
+            minersDatabase.forEach(miner => {
+                let dailyProfit = (miner.earningPerSec * 86400).toFixed(2);
                 grid.innerHTML += `
                     <div class="miner-card">
                         <div>
                             <div class="card-top-tags">
                                 <span class="tier-badge">${miner.tier}</span>
-                                <span style="font-size: 11px; color: var(--text-muted);">⚡ ${miner.power} GH/s</span>
+                                <span style="font-size: 11px; color: var(--neon-green)">Aktiv</span>
                             </div>
                             <div class="miner-preview">
-                                <img src="${miner.image}" alt="${miner.name}">
+                                <img src="${miner.image}">
                                 <div class="price-tag-top">${miner.price.toFixed(2)} RGN</div>
                             </div>
-                            <div class="miner-name" title="${miner.name}">${miner.name}</div>
-                            <div class="miner-specs">
-                                <span>📦 Ölçü: <b>${miner.size}</b></span>
-                                <span>📅 Buraxılış: <b>${miner.date}</b></span>
-                            </div>
+                            <div class="miner-name">${miner.name}</div>
+                            <div class="miner-specs"><span>📈 Gəlir: <b>+${dailyProfit} RGN/gün</b></span></div>
                         </div>
-                        <div class="counter-buy-wrapper">
-                            <div class="quantity-box">
-                                <button class="qty-btn" onclick="adjustQty('${miner.id}', -1)">-</button>
-                                <input type="text" class="qty-input" id="qty-${miner.id}" value="1" readonly>
-                                <button class="qty-btn" onclick="adjustQty('${miner.id}', 1)">+</button>
-                            </div>
-                            <button class="btn-buy" onclick="buyMiner('${miner.id}')">Al</button>
-                        </div>
+                        <button class="btn-buy" onclick="buyMiner('${miner.id}')">Al ($${miner.price})</button>
                     </div>
                 `;
             });
         }
 
-        window.adjustQty = function(id, amount) {
-            let input = document.getElementById('qty-' + id);
-            let current = parseInt(input.value);
-            let updated = current + amount;
-            if (updated >= 1 && updated <= 99) input.value = updated;
-        }
-
         window.buyMiner = function(minerId) {
+            triggerHaptic('heavy');
             let miner = minersDatabase.find(m => m.id === minerId);
-            let qty = parseInt(document.getElementById('qty-' + minerId).value);
-            let totalCost = miner.price * qty;
-
-            if (userState.balances.RGN >= totalCost) {
-                userState.balances.RGN -= totalCost;
+            if (userState.balances.RGN >= miner.price) {
+                userState.balances.RGN -= miner.price;
                 let existing = userState.inventory.find(i => i.id === minerId);
-                if (existing) { existing.qty += qty; } 
-                else { userState.inventory.push({ ...miner, qty: qty }); }
-
+                if (existing) { existing.qty += 1; } else { userState.inventory.push({ ...miner, qty: 1 }); }
                 updateTopUI();
-                renderWallet();
                 saveUserDataToFirebase();
-                alert(`Uğurlu alış! ${qty} ədəd ${miner.name} inventarınıza əlavə olundu.`);
-            } else {
-                alert("Balansınızda kifayət qədər vəsait yoxdur! 'Faucet Bonus' düyməsindən pulsuz RGN ala bilərsiniz.");
+                showToast("Mayner uğurla alındı!", "success");
+            } else { 
+                showToast("Balansınız çatmır!", "error"); 
             }
-        }
-
-        window.adjustInvQty = function(id, amount, maxQty) {
-            let input = document.getElementById('inv-qty-' + id);
-            let current = parseInt(input.value);
-            let updated = current + amount;
-            if (updated >= 1 && updated <= maxQty) input.value = updated;
-        }
-
-        window.sellMiner = function(minerId) {
-            let item = userState.inventory.find(i => i.id === minerId);
-            if (!item) return;
-
-            let qtyInput = document.getElementById('inv-qty-' + minerId);
-            let qtyToSell = parseInt(qtyInput.value) || 1;
-
-            if (qtyToSell > item.qty) {
-                alert("Inventarda bu qədər yoxdur!");
-                return;
-            }
-
-            let refund = item.price * qtyToSell;
-            userState.balances.RGN += refund;
-            item.qty -= qtyToSell;
-
-            if (item.qty <= 0) {
-                userState.inventory = userState.inventory.filter(i => i.id !== minerId);
-            }
-
-            updateTopUI();
-            renderWallet();
-            renderInventory();
-            saveUserDataToFirebase();
-            alert(`Uğurlu satış! ${qtyToSell} ədəd ${item.name} satıldı.`);
-        }
-
-        window.claimMiningRewards = function() {
-            if (userState.unclaimedRgn <= 0) {
-                alert("Toplanacaq mədən gəliri yoxdur!");
-                return;
-            }
-            userState.balances.RGN += userState.unclaimedRgn;
-            let claimed = userState.unclaimedRgn;
-            userState.unclaimedRgn = 0;
-            updateTopUI();
-            document.getElementById('unclaimedRgnDisplay').innerText = "0.0000 RGN";
-            saveUserDataToFirebase();
-            alert(`Uğurla toplandı! Balansınıza +${claimed.toFixed(2)} RGN əlavə olundu.`);
         }
 
         window.renderInventory = function() {
             const grid = document.getElementById('inventoryGrid');
-            let totalPower = 0;
+            const p2pSelect = document.getElementById('p2pSellSelect');
+            let totalDailyGain = 0;
             grid.innerHTML = '';
-            
+            p2pSelect.innerHTML = '';
+
             if (userState.inventory.length === 0) {
-                grid.innerHTML = `<p style="color: var(--text-muted); font-size: 13px;">İnventarınızda hələ mayning avadanlığı yoxdur. Bazardan ala bilərsiniz.</p>`;
-                document.getElementById('totalHashrate').innerText = "0 GH/s";
-                document.getElementById('unclaimedRgnDisplay').innerText = "0.0000 RGN";
-                document.getElementById('dailyPassiveEarn').innerText = "0.00 RGN / gün";
-                document.getElementById('monthlyPassiveEarn').innerText = "0.00 RGN / ay";
+                grid.innerHTML = `<p style="color:var(--text-muted);">İnventarınız boşdur.</p>`;
+                document.getElementById('totalHashrate').innerText = "0.00 RGN/gün";
                 return;
             }
 
             userState.inventory.forEach(item => {
-                totalPower += item.power * item.qty;
+                let itemDailyGain = (item.earningPerSec * 86400) * item.qty;
+                totalDailyGain += itemDailyGain;
+                let upgradeCost = Math.round(item.price * 0.4);
+                let isUpgraded = (item.upgradeLevel || 0) > 0;
+
+                p2pSelect.innerHTML += `<option value="${item.id}">${item.name} (${item.tier})</option>`;
+
                 grid.innerHTML += `
-                    <div class="miner-card">
+                    <div class="miner-card ${isUpgraded ? 'upgraded' : ''}">
                         <div>
                             <div class="card-top-tags">
                                 <span class="tier-badge">${item.tier}</span>
-                                <span style="font-size:12px; color:var(--neon-green)">Mövcud: x${item.qty}</span>
+                                <span style="color: var(--neon-green)">Say: x${item.qty}</span>
                             </div>
                             <div class="miner-preview">
-                                <img src="${item.image}" alt="${item.name}">
+                                <img src="${item.image}">
                                 <div class="price-tag-top">${item.price.toFixed(2)} RGN</div>
                             </div>
                             <div class="miner-name">${item.name}</div>
                             <div class="miner-specs">
-                                <span>⚡ Ümumi Güc: <b>${item.power * item.qty} GH/s</b></span>
+                                <span>📈 Gəlir: <b>+${itemDailyGain.toFixed(2)} RGN/gün</b></span>
+                                <span>Səviyyə: <b>Lvl ${item.upgradeLevel || 0}</b></span>
                             </div>
                         </div>
-                        <div class="counter-buy-wrapper">
-                            <div class="quantity-box">
-                                <button class="qty-btn" onclick="adjustInvQty('${item.id}', -1, ${item.qty})">-</button>
-                                <input type="text" class="qty-input" id="inv-qty-${item.id}" value="1" readonly>
-                                <button class="qty-btn" onclick="adjustInvQty('${item.id}', 1, ${item.qty})">+</button>
-                            </div>
-                            <button class="btn-sell" onclick="sellMiner('${item.id}')">Sat</button>
-                        </div>
+                        <button class="btn-upgrade" onclick="upgradeMiner('${item.id}')">Yüksəlt (${upgradeCost} RGN)</button>
                     </div>
                 `;
             });
-            document.getElementById('totalHashrate').innerText = totalPower + " GH/s";
+            document.getElementById('totalHashrate').innerText = totalDailyGain.toFixed(2) + " RGN/gün";
         }
 
         window.openMysteryBox = function() {
-            let boxCost = 250;
-            const resDiv = document.getElementById('boxResult');
-
-            if (userState.balances.RGN < boxCost) {
-                alert("Balansınızda sandığı açmaq üçün kifayət qədər RGN yoxdur (Lazımdır: 250 RGN)!");
-                return;
+            triggerHaptic('heavy');
+            if (userState.balances.RGN < 50) { 
+                showToast("Sandığı açmaq üçün 50 RGN lazımdır!", "error"); 
+                return; 
             }
-
-            userState.balances.RGN -= boxCost;
+            userState.balances.RGN -= 50;
+            let prize = Math.floor(Math.random() * 80) + 20;
+            userState.balances.RGN += prize;
             updateTopUI();
-
-            let rand = Math.random() * 100;
-
-            if (rand < 55) {
-                let prize = 50;
-                userState.balances.RGN += prize;
-                resDiv.style.background = "rgba(239, 68, 68, 0.1)";
-                resDiv.style.border = "1px solid var(--neon-red)";
-                resDiv.innerHTML = `⚠️ Təəssüf, kiçik mükafat çıxdı: <b style="color:var(--neon-gold);">+${prize} RGN</b> qazandınız.`;
-            } else if (rand < 82) {
-                let prize = 150;
-                userState.balances.RGN += prize;
-                resDiv.style.background = "rgba(245, 158, 11, 0.1)";
-                resDiv.style.border = "1px solid var(--neon-gold)";
-                resDiv.innerHTML = `🎁 Orta mükafat! Balansınıza <b style="color:var(--neon-gold);">+${prize} RGN</b> əlavə olundu.`;
-            } else if (rand < 93) {
-                let pool = minersDatabase.filter(m => m.tier === 'L4' || m.tier === 'L3');
-                let foundMiner = pool[Math.floor(Math.random() * pool.length)];
-                let existing = userState.inventory.find(i => i.id === foundMiner.id);
-                if (existing) { existing.qty += 1; } else { userState.inventory.push({ ...foundMiner, qty: 1 }); }
-                resDiv.style.background = "rgba(0, 210, 255, 0.1)";
-                resDiv.style.border = "1px solid var(--neon-blue)";
-                resDiv.innerHTML = `🔥 Təbriklər! Yeni mayner qazandınız: <b style="color:var(--neon-blue);">${foundMiner.name} (${foundMiner.tier})</b>!`;
-            } else if (rand < 98) {
-                let prize = 1000;
-                userState.balances.RGN += prize;
-                resDiv.style.background = "rgba(16, 185, 129, 0.1)";
-                resDiv.style.border = "1px solid var(--neon-green)";
-                resDiv.innerHTML = `⚡ ƏLA! Bəxtiniz gətirdi, <b style="color:var(--neon-green);">+${prize} RGN</b> böyük mükafat vurdunuz!`;
-            } else {
-                let pool = minersDatabase.filter(m => m.tier === 'Elite' || m.tier === 'L1');
-                let foundMiner = pool[Math.floor(Math.random() * pool.length)];
-                let existing = userState.inventory.find(i => i.id === foundMiner.id);
-                if (existing) { existing.qty += 1; } else { userState.inventory.push({ ...foundMiner, qty: 1 }); }
-                resDiv.style.background = "rgba(168, 85, 247, 0.15)";
-                resDiv.style.border = "1px solid var(--neon-purple)";
-                resDiv.innerHTML = `🌟 QEYRİ-ADİ UĞUR! Ən nadir və güclü mayner çıxdı: <b style="color:var(--neon-purple);">${foundMiner.name} (${foundMiner.tier})</b>!`;
-            }
-
-            renderWallet();
             saveUserDataToFirebase();
+            document.getElementById('boxResult').innerHTML = `Sandıq açıldı! <b style="color:var(--neon-gold);">+${prize} RGN</b> qazandınız.`;
+            showToast(`Sandıqdan +${prize} RGN çıxdı!`, "gold");
         }
 
         window.renderWallet = function() {
             const container = document.getElementById('walletCardsContainer');
-            const currencies = [
-                { key: 'RGN', name: 'Regnorcoin', unit: 'RGN' },
-                { key: 'USDT', name: 'Tether USD', unit: 'USDT' },
-                { key: 'BTC', name: 'Bitcoin', unit: 'BTC' },
-                { key: 'ETH', name: 'Ethereum', unit: 'ETH' },
-                { key: 'SOL', name: 'Solana', unit: 'SOL' }
-            ];
-
-            container.innerHTML = '';
-            currencies.forEach(c => {
-                let bal = userState.balances[c.key];
-                let usdVal = bal * cryptoPricesUsd[c.key];
-                container.innerHTML += `
-                    <div class="crypto-wallet-card">
-                        <div>
-                            <div class="crypto-card-top">
-                                <span class="crypto-name">${c.name}</span>
-                                <span class="crypto-symbol">${c.unit}</span>
-                            </div>
-                            <div class="crypto-balance">${bal < 1 ? bal.toFixed(6) : bal.toFixed(4)} ${c.unit}</div>
-                            <div class="crypto-usd-equiv">≈ $${usdVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} USD</div>
-                        </div>
-                        <button class="btn-action" style="padding: 6px; margin-top: 12px;" onclick="depositCrypto('${c.key}')">Deposit (+)</button>
+            container.innerHTML = `
+                <div class="crypto-wallet-card">
+                    <div>
+                        <div class="crypto-card-top"><span class="crypto-name">Regnorcoin</span><span class="crypto-symbol">RGN</span></div>
+                        <div class="crypto-balance">${userState.balances.RGN.toFixed(2)} RGN</div>
                     </div>
-                `;
-            });
-        }
-
-        window.depositCrypto = function(key) {
-            let addAmount = key === 'RGN' ? 100.00 : (key === 'BTC' ? 0.01 : 50.00);
-            userState.balances[key] += addAmount;
-            updateTopUI();
-            renderWallet();
-            saveUserDataToFirebase();
-            alert(`Uğurlu deposit! Balansa əlavə olundu.`);
-        }
-
-        window.calculateSwap = function() {
-            let fromCur = document.getElementById('fromCurrency').value;
-            let toCur = document.getElementById('toCurrency').value;
-            let fromVal = parseFloat(document.getElementById('fromAmount').value) || 0;
-
-            let curBalance = userState.balances[fromCur] || 0;
-            document.getElementById('swapFromBalance').innerText = (curBalance < 1 ? curBalance.toFixed(6) : curBalance.toFixed(4)) + " " + fromCur;
-
-            let usdValue = fromVal * cryptoPricesUsd[fromCur];
-            let toVal = usdValue / cryptoPricesUsd[toCur];
-            document.getElementById('toAmount').value = toVal > 0 ? (toVal < 1 ? toVal.toFixed(6) : toVal.toFixed(4)) : '';
-        }
-
-        window.invertSwap = function() {
-            let f = document.getElementById('fromCurrency').value;
-            let t = document.getElementById('toCurrency').value;
-            document.getElementById('fromCurrency').value = t;
-            document.getElementById('toCurrency').value = f;
-            calculateSwap();
-        }
-
-        window.executeSwap = function() {
-            let fromCur = document.getElementById('fromCurrency').value;
-            let toCur = document.getElementById('toCurrency').value;
-            let fromVal = parseFloat(document.getElementById('fromAmount').value) || 0;
-
-            if (fromVal <= 0 || userState.balances[fromCur] < fromVal) {
-                alert("Balansda kifayət qədər vəsait yoxdur!");
-                return;
-            }
-
-            let usdValue = fromVal * cryptoPricesUsd[fromCur];
-            let toVal = usdValue / cryptoPricesUsd[toCur];
-
-            userState.balances[fromCur] -= fromVal;
-            userState.balances[toCur] += toVal;
-
-            updateTopUI();
-            renderWallet();
-            calculateSwap();
-            saveUserDataToFirebase();
-            alert("Swap uğurla tamamlandı!");
+                </div>
+            `;
         }
 
         function renderProfileData() {
@@ -1376,24 +1444,24 @@
             const container = document.getElementById('avatarSelector');
             container.innerHTML = '';
             avatarsList.forEach(url => {
-                let isSelected = userState.avatar === url ? 'selected' : '';
-                container.innerHTML += `<img src="${url}" class="avatar-option ${isSelected}" onclick="selectAvatar('${url}')">`;
+                container.innerHTML += `<img src="${url}" class="avatar-option ${userState.avatar === url ? 'selected' : ''}" onclick="selectAvatar('${url}')">`;
             });
         }
 
-        window.selectAvatar = function(url) {
-            userState.avatar = url;
-            renderAvatarSelector();
+        window.selectAvatar = function(url) { 
+            triggerHaptic('light');
+            userState.avatar = url; 
+            renderAvatarSelector(); 
         }
 
         window.saveProfile = function() {
+            triggerHaptic('medium');
             let newName = document.getElementById('usernameInput').value.trim();
-            if (newName) {
-                userState.name = newName;
-                updateTopUI();
-                document.getElementById('profileNameDisplay').innerText = newName;
-                saveUserDataToFirebase();
-                alert("Profil yeniləndi!");
+            if (newName) { 
+                userState.name = newName; 
+                updateTopUI(); 
+                saveUserDataToFirebase(); 
+                showToast("Profil uğurla yeniləndi!", "success"); 
             }
         }
 
