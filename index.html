@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexusCloud // Regnorcoin Mining Ecosystem</title>
-    <!-- Telegram WebApp SDK -->
+    <title>RGNCOIN // Mining Ecosystem</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Adsgram SDK -->
     <script src="https://sad.adsgram.ai/js/adsgram.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -41,7 +39,6 @@
             padding-bottom: 75px;
         }
 
-        /* Toast Bildirişləri */
         #toastContainer {
             position: fixed;
             top: 70px;
@@ -65,6 +62,8 @@
             backdrop-filter: blur(8px);
             animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1), fadeOut 0.3s ease 2.7s forwards;
             pointer-events: auto;
+            max-width: 320px;
+            word-break: break-word;
         }
 
         .toast.success { border-color: var(--neon-green); color: var(--neon-green); }
@@ -79,7 +78,6 @@
             to { opacity: 0; transform: translateY(-10px); }
         }
 
-        /* Skeleton Yüklənmə Effekti */
         .skeleton {
             background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
             background-size: 200% 100%;
@@ -95,24 +93,27 @@
             width: 100%;
             background: var(--bg-darker);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 12px 24px;
+            padding: 10px 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 10;
+            flex-wrap: wrap;
+            gap: 6px;
         }
 
         .hud-left {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .brand-logo {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             background: linear-gradient(135deg, var(--neon-purple), var(--neon-blue));
             border-radius: 8px;
             display: flex;
@@ -121,74 +122,73 @@
             font-weight: 700;
             color: #fff;
             font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
         }
 
         .balance-badge {
             background: var(--bg-card);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 6px 14px;
+            padding: 4px 12px;
             border-radius: 8px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--neon-gold);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .hud-right {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 6px;
+            flex-wrap: wrap;
         }
+
+        .hud-btn {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid;
+        }
+
+        .hud-btn-ads { background: rgba(0, 210, 255, 0.15); border-color: var(--neon-blue); color: var(--neon-blue); }
+        .hud-btn-faucet { background: rgba(16, 185, 129, 0.15); border-color: var(--neon-green); color: var(--neon-green); }
 
         .user-profile-btn {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
+            font-size: 11px;
             color: var(--text-main);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
             background: var(--bg-card);
-            padding: 6px 12px;
-            border-radius: 8px;
+            padding: 4px 8px;
+            border-radius: 6px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             cursor: pointer;
-            transition: 0.2s;
         }
 
-        .user-profile-btn:hover {
-            border-color: var(--neon-blue);
-        }
-
-        .user-avatar-sm {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
+        .user-avatar-sm { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; }
 
         .menu-dots-btn {
             background: rgba(0, 210, 255, 0.1);
             border: 1px solid var(--neon-blue);
             color: var(--neon-blue);
-            width: 38px;
-            height: 38px;
-            border-radius: 8px;
-            font-size: 18px;
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
+            font-size: 16px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 0.3s;
         }
 
-        .menu-dots-btn:hover {
-            background: var(--neon-blue);
-            color: #000;
-        }
-
-        /* Sidebar Sürüşən Menyu */
         .sidebar {
             position: fixed;
             top: 0;
@@ -204,81 +204,31 @@
             box-shadow: -20px 0 50px rgba(0,0,0,0.9);
             overflow-y: auto;
         }
+        .sidebar.active { right: 0; }
 
-        .sidebar.active {
-            right: 0;
-        }
+        .sidebar-header { padding: 16px 20px; display: flex; justify-content: flex-end; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .close-btn { background: transparent; border: none; color: var(--text-muted); font-size: 20px; cursor: pointer; }
 
-        .sidebar-header {
-            padding: 20px;
-            display: flex;
-            justify-content: flex-end;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .close-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        .sidebar-menu-list {
-            padding: 10px 0;
-            display: flex;
-            flex-direction: column;
-        }
-
+        .sidebar-menu-list { padding: 10px 0; display: flex; flex-direction: column; }
         .menu-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 14px 24px;
+            padding: 12px 20px;
             color: var(--text-main);
-            text-decoration: none;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
-            transition: 0.2s;
-            border-left: 3px solid transparent;
             cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: 0.2s;
         }
+        .menu-item:hover { background: rgba(255, 255, 255, 0.03); border-left-color: var(--neon-blue); color: var(--neon-blue); }
+        .menu-item-left { display: flex; align-items: center; gap: 12px; }
 
-        .menu-item:hover {
-            background: rgba(255, 255, 255, 0.03);
-            border-left-color: var(--neon-blue);
-            color: var(--neon-blue);
-        }
+        .menu-icon { width: 16px; height: 16px; fill: none; stroke: var(--text-muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .menu-item:hover .menu-icon { stroke: var(--neon-blue); }
 
-        .menu-item-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .menu-icon {
-            width: 18px;
-            height: 18px;
-            fill: none;
-            stroke: var(--text-muted);
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .menu-item:hover .menu-icon {
-            stroke: var(--neon-blue);
-        }
-
-        .badge-sale {
-            background: #ef4444;
-            color: #fff;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
+        .badge-sale { background: #ef4444; color: #fff; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
 
         .menu-overlay {
             position: fixed;
@@ -288,11 +238,8 @@
             z-index: 90;
             display: none;
         }
-        .menu-overlay.active {
-            display: block;
-        }
+        .menu-overlay.active { display: block; }
 
-        /* Alt Sabit Naviqasiya Paneli (Bottom Tab Bar) */
         .bottom-tab-bar {
             position: fixed;
             bottom: 0;
@@ -303,7 +250,7 @@
             border-top: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
             justify-content: space-around;
-            padding: 8px 0;
+            padding: 4px 0;
             z-index: 90;
         }
 
@@ -314,737 +261,593 @@
             color: var(--text-muted);
             background: none;
             border: none;
-            font-size: 10px;
+            font-size: 8px;
             font-family: 'JetBrains Mono', monospace;
             cursor: pointer;
             transition: 0.2s;
             flex: 1;
+            padding: 4px 0;
         }
+        .tab-item svg { width: 16px; height: 16px; margin-bottom: 1px; stroke: currentColor; fill: none; stroke-width: 2; }
+        .tab-item.active, .tab-item:hover { color: var(--neon-blue); }
 
-        .tab-item svg {
-            width: 20px;
-            height: 20px;
-            margin-bottom: 3px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
+        .container { max-width: 1100px; margin: 16px auto; padding: 0 12px; width: 100%; flex: 1; }
+        .app-view { display: none; }
+        .app-view.active { display: block; }
 
-        .tab-item.active, .tab-item:hover {
-            color: var(--neon-blue);
-        }
+        .section-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+        .section-title { font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 700; letter-spacing: 1px; color: var(--text-main); }
 
-        .container {
-            max-width: 1100px;
-            margin: 30px auto;
-            padding: 0 20px;
-            width: 100%;
-            flex: 1;
-        }
-
-        .app-view {
-            display: none;
-        }
-
-        .app-view.active {
-            display: block;
-        }
-
-        .section-header-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .section-title {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--text-main);
-        }
-
-        .filters-wrapper {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
+        .filters-wrapper { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
         .dropdown-select, .filter-input {
             background: var(--bg-card);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: var(--text-main);
-            padding: 9px 14px;
-            border-radius: 8px;
-            font-size: 13px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 11px;
             outline: none;
             cursor: pointer;
-            transition: 0.2s;
         }
 
-        .dropdown-select:hover, .filter-input:hover {
-            border-color: var(--neon-blue);
-        }
-
-        .miners-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 20px;
-        }
+        .miners-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
 
         .miner-card {
             background: var(--bg-card);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            padding: 20px;
-            position: relative;
+            border-radius: 12px;
+            padding: 14px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             transition: 0.3s;
         }
+        .miner-card:hover { border-color: var(--neon-blue); box-shadow: 0 10px 30px rgba(0, 210, 255, 0.1); }
+        .miner-card.upgraded { border-color: var(--neon-purple); box-shadow: 0 0 20px rgba(168, 85, 247, 0.15); }
 
-        .miner-card:hover {
-            border-color: var(--neon-blue);
-            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.1);
-        }
-
-        .miner-card.upgraded {
-            border-color: var(--neon-purple);
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.15);
-        }
-
-        .card-top-tags {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .tier-badge {
-            background: #1a233a;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #fff;
-            padding: 3px 10px;
-            border-radius: 6px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-        }
+        .card-top-tags { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .tier-badge { background: #1a233a; border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; padding: 2px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 9px; }
 
         .miner-preview {
             background: var(--bg-darker);
-            border-radius: 10px;
-            height: 130px;
+            border-radius: 8px;
+            height: 100px;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-bottom: 16px;
+            margin-bottom: 10px;
             border: 1px solid rgba(255, 255, 255, 0.05);
             position: relative;
             overflow: hidden;
         }
-
-        .miner-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            padding: 10px;
-        }
+        .miner-preview img { width: 100%; height: 100%; object-fit: contain; padding: 6px; }
 
         .price-tag-top {
             position: absolute;
-            bottom: 6px;
-            right: 8px;
+            bottom: 4px;
+            right: 6px;
             background: rgba(4, 6, 11, 0.85);
-            padding: 3px 8px;
+            padding: 2px 8px;
             border-radius: 4px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 700;
             color: var(--neon-gold);
             backdrop-filter: blur(4px);
             z-index: 2;
         }
 
-        .miner-name {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .miner-specs {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-            font-family: 'JetBrains Mono', monospace;
-        }
+        .miner-name { font-size: 13px; font-weight: 700; margin-bottom: 4px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .miner-specs { display: flex; flex-direction: column; gap: 2px; font-size: 10px; color: var(--text-muted); margin-bottom: 10px; font-family: 'JetBrains Mono', monospace; }
 
         .btn-buy {
             width: 100%;
             background: rgba(245, 158, 11, 0.15);
             border: 1px solid var(--neon-gold);
             color: var(--neon-gold);
-            height: 38px;
-            border-radius: 8px;
+            height: 32px;
+            border-radius: 6px;
             font-family: 'JetBrains Mono', monospace;
             font-weight: 700;
-            font-size: 12px;
+            font-size: 10px;
             cursor: pointer;
             text-transform: uppercase;
             transition: 0.3s;
         }
-
-        .btn-buy:hover {
-            background: var(--neon-gold);
-            color: #000;
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
-        }
+        .btn-buy:hover { background: var(--neon-gold); color: #000; box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
 
         .btn-upgrade {
             background: rgba(168, 85, 247, 0.15);
             border: 1px solid var(--neon-purple);
             color: var(--neon-purple);
-            padding: 6px 10px;
-            border-radius: 6px;
+            padding: 4px 8px;
+            border-radius: 4px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
+            font-size: 9px;
             font-weight: 700;
             cursor: pointer;
-            margin-top: 8px;
+            margin-top: 4px;
             width: 100%;
             transition: 0.3s;
-        }
-        .btn-upgrade:hover {
-            background: var(--neon-purple);
-            color: #fff;
         }
 
         .card-panel {
             background: var(--bg-card);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
-            padding: 24px;
-            margin-bottom: 20px;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 14px;
         }
 
-        .profile-flex {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
+        .profile-flex { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .profile-avatar-lg { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--neon-blue); object-fit: cover; }
 
-        .profile-avatar-lg {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            border: 2px solid var(--neon-blue);
-            object-fit: cover;
-        }
+        .avatar-selection { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+        .avatar-option { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; object-fit: cover; }
+        .avatar-option.selected { border-color: var(--neon-gold); }
 
-        .avatar-selection {
-            display: flex;
-            gap: 10px;
-            margin-top: 12px;
-        }
-
-        .avatar-option {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid transparent;
-            object-fit: cover;
-        }
-
-        .avatar-option.selected {
-            border-color: var(--neon-gold);
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 12px;
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--text-muted); margin-bottom: 3px; }
 
         .form-input {
             width: 100%;
             background: var(--bg-darker);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 10px 14px;
-            border-radius: 8px;
+            padding: 8px 12px;
+            border-radius: 6px;
             color: #fff;
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
         }
-
-        .form-input:focus {
-            border-color: var(--neon-blue);
-        }
+        .form-input:focus { border-color: var(--neon-blue); }
 
         .btn-action {
             background: rgba(0, 210, 255, 0.15);
             border: 1px solid var(--neon-blue);
             color: var(--neon-blue);
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
             font-family: 'JetBrains Mono', monospace;
             font-weight: 700;
             cursor: pointer;
             transition: 0.3s;
+            font-size: 12px;
         }
+        .btn-action:hover { background: var(--neon-blue); color: #000; }
 
-        .btn-action:hover {
-            background: var(--neon-blue);
-            color: #000;
-        }
-
-        .wallet-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-            margin-bottom: 20px;
-        }
+        .wallet-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-bottom: 16px; }
 
         .crypto-wallet-card {
             background: var(--bg-card);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 20px;
+            border-radius: 10px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+        }
+        .crypto-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .crypto-name { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 13px; color: #fff; }
+        .crypto-symbol { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--neon-gold); background: rgba(245, 158, 11, 0.1); padding: 2px 8px; border-radius: 4px; }
+        .crypto-balance { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; color: var(--text-main); }
+
+        .leaderboard-table { width: 100%; border-collapse: collapse; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+        .leaderboard-table th, .leaderboard-table td { padding: 8px 10px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .leaderboard-table th { color: var(--text-muted); font-size: 9px; text-transform: uppercase; }
+
+        .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+        .status-badge {
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .status-pending { background: rgba(245, 158, 11, 0.2); color: var(--neon-gold); }
+        .status-paid { background: rgba(16, 185, 129, 0.2); color: var(--neon-green); }
+        .status-confirmed { background: rgba(16, 185, 129, 0.3); color: var(--neon-green); }
+        .status-rejected { background: rgba(239, 68, 68, 0.2); color: var(--neon-red); }
+
+        @media (max-width: 600px) {
+            .grid-2col { grid-template-columns: 1fr; }
+            .miners-grid { grid-template-columns: 1fr 1fr; }
+            .top-hud { padding: 6px 10px; }
+            .balance-badge { font-size: 10px; padding: 3px 8px; }
+            .container { padding: 0 8px; margin: 10px auto; }
+            .sidebar { width: 280px; right: -280px; }
         }
 
-        .crypto-card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .crypto-name {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 700;
-            font-size: 14px;
-            color: #fff;
-        }
-
-        .crypto-symbol {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            color: var(--neon-gold);
-            background: rgba(245, 158, 11, 0.1);
-            padding: 2px 8px;
-            border-radius: 4px;
-        }
-
-        .crypto-balance {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 4px;
-        }
-
-        .leaderboard-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-        }
-        .leaderboard-table th, .leaderboard-table td {
-            padding: 12px 16px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .leaderboard-table th {
-            color: var(--text-muted);
-            font-size: 11px;
-            text-transform: uppercase;
+        @media (max-width: 400px) {
+            .miners-grid { grid-template-columns: 1fr; }
+            .hud-btn { font-size: 7px; padding: 2px 5px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Toast Bildiriş Konteyneri -->
     <div id="toastContainer"></div>
 
+    <!-- HEADER -->
     <header class="top-hud">
         <div class="hud-left">
             <div class="brand-logo">RGN</div>
             <div class="balance-badge">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"></circle><path d="M12 6v12M15 9.5H9.5a1.5 1.5 0 0 0 0 3h5a1.5 1.5 0 0 1 0 3H9"></path></svg>
-                <span id="topRegnorBalance">50.00</span> RGN
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M12 6v12M15 9.5H9.5a1.5 1.5 0 0 0 0 3h5a1.5 1.5 0 0 1 0 3H9"/></svg>
+                <span id="topRegnorBalance">0.00</span> RGN
             </div>
         </div>
         <div class="hud-right">
-            <button class="btn-action" style="padding: 5px 8px; font-size: 10px; background: rgba(0, 210, 255, 0.15); border-color: var(--neon-blue); color: var(--neon-blue);" onclick="watchAdForReward()">📺 Ads</button>
-            <button class="btn-action" style="padding: 5px 10px; font-size: 11px; background: rgba(16, 185, 129, 0.15); border-color: var(--neon-green); color: var(--neon-green);" onclick="claimFreeFaucet()">🎁 Faucet</button>
+            <button class="hud-btn hud-btn-ads" onclick="watchAdForReward()">📺 Ads</button>
+            <button class="hud-btn hud-btn-faucet" onclick="claimFreeFaucet()">🎁 Faucet</button>
             <div class="user-profile-btn" onclick="switchView('profile')">
-                <img id="navAvatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=SingleKing67" class="user-avatar-sm" alt="Avatar">
+                <img id="navAvatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=SingleKing67" class="user-avatar-sm">
                 <span id="navUsername">SingleKing67</span>
             </div>
             <button class="menu-dots-btn" onclick="toggleSidebar()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
             </button>
         </div>
     </header>
 
+    <!-- SIDEBAR -->
     <div class="menu-overlay" id="menuOverlay" onclick="toggleSidebar()"></div>
-
-    <!-- Sürüşən Menyu (Sidebar) -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <button class="close-btn" onclick="toggleSidebar()">✕</button>
         </div>
         <div class="sidebar-menu-list">
             <div class="menu-item" onclick="switchView('market'); toggleSidebar();">
-                <div class="menu-item-left">
-                    <svg class="menu-icon" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
-                    Bazar (100 Mayner)
-                </div>
+                <div class="menu-item-left"><svg class="menu-icon" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>Bazar</div>
                 <span class="badge-sale">100 Model</span>
             </div>
             <div class="menu-item" onclick="switchView('inventory'); toggleSidebar();">
-                <div class="menu-item-left">
-                    <svg class="menu-icon" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                    İnventar & Yüksəltmə
-                </div>
+                <div class="menu-item-left"><svg class="menu-icon" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>İnventar</div>
             </div>
             <div class="menu-item" onclick="switchView('p2p'); toggleSidebar();">
-                <div class="menu-item-left">
-                    <svg class="menu-icon" viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"></path><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline></svg>
-                    P2P İstifadəçi Bazarı
-                </div>
-                <span class="badge-sale" style="background: var(--neon-green);">P2P</span>
+                <div class="menu-item-left"><svg class="menu-icon" viewBox="0 0 24 24"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4"/></svg>P2P Bazar</div>
+                <span class="badge-sale" style="background:var(--neon-green);">P2P</span>
             </div>
             <div class="menu-item" onclick="switchView('boxes'); toggleSidebar();">
-                <div class="menu-item-left">
-                    <svg class="menu-icon" viewBox="0 0 24 24"><path d="M21 8V21H3V8"></path><path d="M1 3H23V8H1Z"></path><path d="M10 12H14"></path></svg>
-                    Mistik Sandıqlar
-                </div>
-                <span class="badge-sale" style="background: var(--neon-purple);">Loot</span>
+                <div class="menu-item-left"><svg class="menu-icon" viewBox="0 0 24 24"><path d="M21 8V21H3V8M1 3h22v5H1V3z"/></svg>Sandıqlar</div>
+                <span class="badge-sale" style="background:var(--neon-purple);">Loot</span>
             </div>
             <div class="menu-item" onclick="switchView('referral'); toggleSidebar();">
-                <div class="menu-item-left">
-                    <svg class="menu-icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
-                    Referal (10% Qazanc)
-                </div>
-                <span class="badge-sale" style="background: var(--neon-gold);">Bonus</span>
+                <div class="menu-item-left"><svg class="menu-icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>Referal</div>
+                <span class="badge-sale" style="background:var(--neon-gold);">10%</span>
             </div>
             <div class="menu-item" onclick="switchView('leaderboard'); toggleSidebar();">
-                <div class="menu-item-left">
-                    <svg class="menu-icon" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-                    Liderlər Lövhəsi
-                </div>
+                <div class="menu-item-left"><svg class="menu-icon" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>Liderlər</div>
             </div>
             <div class="menu-item" onclick="switchView('wallet'); toggleSidebar();">
-                <div class="menu-item-left">
-                    <svg class="menu-icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-                    Cüzdan & Kripto
-                </div>
+                <div class="menu-item-left"><svg class="menu-icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Cüzdan</div>
+            </div>
+            <div class="menu-item" id="adminMenuItem" style="display:none;" onclick="switchView('admin'); toggleSidebar();">
+                <div class="menu-item-left"><svg class="menu-icon" viewBox="0 0 24 24"><path d="M12 2l9 4-9 4-9-4 9-4zM2 11l10 5 10-5M2 16l10 5 10-5"/></svg>Admin Panel</div>
+                <span class="badge-sale" style="background:var(--neon-red);">Admin</span>
             </div>
             <div class="menu-item" onclick="switchView('profile'); toggleSidebar();">
-                <div class="menu-item-left">
-                    <svg class="menu-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    Profil & Ayarlar
-                </div>
+                <div class="menu-item-left"><svg class="menu-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profil</div>
             </div>
         </div>
     </div>
 
-    <!-- Alt Sabit Naviqasiya Paneli -->
+    <!-- BOTTOM TAB -->
     <nav class="bottom-tab-bar">
         <button class="tab-item active" id="tab-market" onclick="switchView('market')">
-            <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
-            Bazar
+            <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>Bazar
         </button>
         <button class="tab-item" id="tab-inventory" onclick="switchView('inventory')">
-            <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-            İnventar
+            <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>İnventar
         </button>
         <button class="tab-item" id="tab-p2p" onclick="switchView('p2p')">
-            <svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4"/></svg>
-            P2P
+            <svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4"/></svg>P2P
         </button>
         <button class="tab-item" id="tab-boxes" onclick="switchView('boxes')">
-            <svg viewBox="0 0 24 24"><path d="M21 8V21H3V8M1 3h22v5H1V3z"/></svg>
-            Sandıq
+            <svg viewBox="0 0 24 24"><path d="M21 8V21H3V8M1 3h22v5H1V3z"/></svg>Sandıq
         </button>
         <button class="tab-item" id="tab-wallet" onclick="switchView('wallet')">
-            <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-            Cüzdan
+            <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Cüzdan
         </button>
     </nav>
 
+    <!-- MAIN CONTENT -->
     <div class="container">
-        
+
+        <!-- MARKET VIEW -->
         <div id="marketView" class="app-view active">
             <div class="section-header-bar">
-                <div class="section-title">MAYNER BAZARI ($1-dan başlayır)</div>
+                <div class="section-title">MAYNER BAZARI</div>
                 <div class="filters-wrapper">
                     <select class="dropdown-select" id="sortSelect" onchange="renderMarket()">
-                        <option value="price-asc">Qiymət: Azdan çoxuna</option>
-                        <option value="price-desc">Qiymət: Çoxdan aza</option>
+                        <option value="price-asc">Qiymət: Azdan çox</option>
+                        <option value="price-desc">Qiymət: Çoxdan az</option>
                     </select>
-                    <input type="text" id="searchInput" class="filter-input" placeholder="Ada görə axtar..." onkeyup="renderMarket()">
+                    <input type="text" id="searchInput" class="filter-input" placeholder="Axtar..." onkeyup="renderMarket()">
                 </div>
             </div>
             <div class="miners-grid" id="minersMarketGrid"></div>
         </div>
 
+        <!-- INVENTORY VIEW -->
         <div id="inventoryView" class="app-view">
             <div class="section-header-bar">
-                <div class="section-title">ŞƏXSİ İNVENTAR & YÜKSƏLTMƏ</div>
-                <div style="font-family: 'JetBrains Mono'; font-size: 13px; color: var(--neon-blue);">
-                    Aktiv Gəlir: <b id="totalHashrate">0.00 RGN/gün</b>
-                </div>
+                <div class="section-title">İNVENTAR</div>
+                <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--neon-blue);">Gəlir: <b id="totalHashrate">0.00 RGN/gün</b></div>
             </div>
-
-            <div class="card-panel" style="background: linear-gradient(135deg, rgba(0,210,255,0.06), rgba(16,185,129,0.06)); border: 1px solid var(--neon-blue);">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
-                    <div>
-                        <h3 style="font-family: 'JetBrains Mono'; font-size: 14px; color: var(--neon-blue); margin-bottom: 4px;">// PASSİV QAZANC</h3>
-                        <p style="font-size: 12px; color: var(--text-muted);">Yığılan mədən gəlirini balansa köçürün:</p>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 16px;">
-                        <div style="font-family: 'JetBrains Mono'; font-size: 20px; font-weight: 700; color: var(--neon-gold);" id="unclaimedRgnDisplay">0.0000 RGN</div>
-                        <button class="btn-action" style="background: rgba(16, 185, 129, 0.15); border-color: var(--neon-green); color: var(--neon-green);" onclick="claimMiningRewards()">Balansa Köçir 📥</button>
+            <div class="card-panel" style="background:linear-gradient(135deg,rgba(0,210,255,0.06),rgba(16,185,129,0.06));border:1px solid var(--neon-blue);">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                    <div><h3 style="font-family:'JetBrains Mono';font-size:12px;color:var(--neon-blue);">// PASSİV QAZANC</h3></div>
+                    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                        <span style="font-family:'JetBrains Mono';font-size:16px;font-weight:700;color:var(--neon-gold);" id="unclaimedRgnDisplay">0.0000 RGN</span>
+                        <button class="btn-action" style="background:rgba(16,185,129,0.15);border-color:var(--neon-green);color:var(--neon-green);padding:6px 14px;font-size:10px;" onclick="claimMiningRewards()">Balansa Köçir</button>
                     </div>
                 </div>
             </div>
             <div class="miners-grid" id="inventoryGrid"></div>
         </div>
 
+        <!-- P2P VIEW -->
         <div id="p2pView" class="app-view">
-            <div class="section-header-bar">
-                <div class="section-title">P2P İSTİFADƏÇİ BAZARI</div>
-            </div>
+            <div class="section-header-bar"><div class="section-title">P2P BAZAR</div></div>
             <div class="card-panel">
-                <h3 style="font-family: 'JetBrains Mono'; font-size: 14px; color: var(--neon-green); margin-bottom: 12px;">// Öz Maynerini Satışa Çıxar</h3>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <select class="dropdown-select" id="p2pSellSelect" style="flex: 2;"></select>
-                    <input type="number" id="p2pSellPrice" class="form-input" placeholder="Qiymət (RGN)" style="flex: 1;">
-                    <button class="btn-action" onclick="createP2PListing()">Elan Yerləşdir</button>
+                <h3 style="font-family:'JetBrains Mono';font-size:12px;color:var(--neon-green);">// Maynerini Sat</h3>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <select class="dropdown-select" id="p2pSellSelect" style="flex:2;"></select>
+                    <input type="number" id="p2pSellPrice" class="form-input" placeholder="Qiymət" style="flex:1;min-width:80px;">
+                    <button class="btn-action" onclick="createP2PListing()" style="font-size:10px;padding:6px 12px;">Sat</button>
                 </div>
             </div>
             <div class="miners-grid" id="p2pMarketGrid"></div>
         </div>
 
+        <!-- BOXES VIEW -->
         <div id="boxesView" class="app-view">
-            <div class="section-header-bar">
-                <div class="section-title">MİSTİK SANDIQLAR</div>
-            </div>
-            <div class="card-panel" style="text-align: center; max-width: 600px; margin: 0 auto;">
-                <div style="font-size: 64px; margin-bottom: 16px;">🎁</div>
-                <h3 style="font-family: 'JetBrains Mono'; font-size: 18px; color: #fff; margin-bottom: 8px;">Regnor Mystery Box</h3>
-                <button class="btn-action" style="background: rgba(168, 85, 247, 0.15); border-color: var(--neon-purple); color: var(--neon-purple); width: 100%; font-size: 15px; padding: 14px;" onclick="openMysteryBox()">Sandığı Aç (50 RGN)</button>
-                <div id="boxResult" style="margin-top: 20px; font-family: 'JetBrains Mono'; font-size: 14px; min-height: 50px; padding: 10px; border-radius: 8px;"></div>
+            <div class="section-header-bar"><div class="section-title">MİSTİK SANDIQLAR</div></div>
+            <div class="card-panel" style="text-align:center;max-width:400px;margin:0 auto;">
+                <div style="font-size:48px;margin-bottom:8px;">🎁</div>
+                <h3 style="font-family:'JetBrains Mono';font-size:14px;color:#fff;">Regnor Mystery Box</h3>
+                <button class="btn-action" style="background:rgba(168,85,247,0.15);border-color:var(--neon-purple);color:var(--neon-purple);width:100%;font-size:13px;padding:10px;" onclick="openMysteryBox()">Aç (50 RGN)</button>
+                <div id="boxResult" style="margin-top:12px;font-family:'JetBrains Mono';font-size:12px;min-height:30px;padding:8px;border-radius:6px;"></div>
             </div>
         </div>
 
+        <!-- REFERRAL VIEW -->
         <div id="referralView" class="app-view">
-            <div class="section-header-bar">
-                <div class="section-title">REFERAL SİSTEMİ (10%)</div>
-            </div>
-            <div class="card-panel" style="max-width: 600px; margin: 0 auto; text-align: center;">
-                <h3 style="font-family: 'JetBrains Mono'; font-size: 16px; color: var(--neon-gold); margin-bottom: 12px;">Dostlarını Dəvət Et, RGN Qazan!</h3>
-                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">
-                    Sənin referal linkinlə qoşulanların qazancından **10% komissiya** birbaşa balansına gələcək.
-                </p>
-                <div class="form-group">
-                    <label>Şəxsi Referal Linkin:</label>
-                    <input type="text" id="referralLinkInput" class="form-input" readonly style="text-align: center; font-family: 'JetBrains Mono';">
-                </div>
-                <button class="btn-action" onclick="copyReferralLink()">Linkin Kopyala 📋</button>
+            <div class="section-header-bar"><div class="section-title">REFERAL (10%)</div></div>
+            <div class="card-panel" style="max-width:450px;margin:0 auto;text-align:center;">
+                <p style="color:var(--text-muted);font-size:12px;margin-bottom:12px;">Dostlarını dəvət et, qazancından 10% komissiya qazan!</p>
+                <input type="text" id="referralLinkInput" class="form-input" readonly style="text-align:center;font-family:'JetBrains Mono';font-size:11px;">
+                <button class="btn-action" onclick="copyReferralLink()" style="margin-top:8px;font-size:11px;">📋 Kopyala</button>
             </div>
         </div>
 
+        <!-- LEADERBOARD VIEW -->
         <div id="leaderboardView" class="app-view">
-            <div class="section-header-bar">
-                <div class="section-title">LİDERLƏR LÖVHƏSİ</div>
-            </div>
+            <div class="section-header-bar"><div class="section-title">LİDERLƏR</div></div>
             <div class="card-panel">
                 <table class="leaderboard-table">
-                    <thead>
-                        <tr>
-                            <th>Yer</th>
-                            <th>İstifadəçi</th>
-                            <th>Balans (RGN)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leaderboardBody">
-                        <tr><td colspan="3"><div class="skeleton" style="height: 20px; width: 100%;"></div></td></tr>
-                    </tbody>
+                    <thead><tr><th>Yer</th><th>İstifadəçi</th><th>Balans (RGN)</th></tr></thead>
+                    <tbody id="leaderboardBody"><tr><td colspan="3"><div class="skeleton" style="height:20px;"></div></td></tr></tbody>
                 </table>
             </div>
         </div>
 
+        <!-- WALLET VIEW -->
         <div id="walletView" class="app-view">
-            <div class="section-header-bar">
-                <div class="section-title">CÜZDAN</div>
-            </div>
+            <div class="section-header-bar"><div class="section-title">CÜZDAN</div></div>
             <div class="wallet-grid" id="walletCardsContainer"></div>
+
+            <div class="card-panel">
+                <h3 style="font-family:'JetBrains Mono';font-size:13px;color:var(--neon-blue);margin-bottom:12px;">// DEPOZİT & ÇIXARIŞ</h3>
+                
+                <div class="grid-2col">
+                    <!-- DEPOSIT -->
+                    <div style="background:rgba(0,210,255,0.05);padding:14px;border-radius:10px;border:1px solid rgba(0,210,255,0.2);">
+                        <h4 style="color:var(--neon-blue);margin-bottom:8px;font-size:13px;">📥 Depozit</h4>
+                        <div class="form-group">
+                            <label>Şəbəkə</label>
+                            <select id="depositNetwork" class="form-input" onchange="updateDepositNetwork()">
+                                <option value="polygon">🟣 Polygon</option>
+                                <option value="tron">🔴 TRON</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Token</label>
+                            <select id="depositToken" class="form-input">
+                                <option value="USDT">USDT</option>
+                                <option value="MATIC">MATIC</option>
+                                <option value="TRX">TRX</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Məbləğ (RGN)</label>
+                            <input type="number" id="depositAmount" class="form-input" placeholder="0.00" min="1" step="1">
+                        </div>
+                        <button class="btn-action" style="width:100%;background:rgba(0,210,255,0.15);border-color:var(--neon-blue);color:var(--neon-blue);font-size:11px;" onclick="createDepositRequest()">
+                            Depozit Et
+                        </button>
+                        <p style="font-size:9px;color:var(--text-muted);margin-top:6px;">Minimum: 10 USDT/TRX • Manuel təsdiqlənir</p>
+                    </div>
+
+                    <!-- WITHDRAW -->
+                    <div style="background:rgba(239,68,68,0.05);padding:14px;border-radius:10px;border:1px solid rgba(239,68,68,0.2);">
+                        <h4 style="color:var(--neon-red);margin-bottom:8px;font-size:13px;">📤 Çıxarış</h4>
+                        <div class="form-group">
+                            <label>Məbləğ (RGN)</label>
+                            <input type="number" id="withdrawAmount" class="form-input" placeholder="0.00" min="1" step="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Cüzdan Ünvanı</label>
+                            <input type="text" id="withdrawAddress" class="form-input" placeholder="Cüzdan ünvanı">
+                        </div>
+                        <button class="btn-action" style="width:100%;background:rgba(239,68,68,0.15);border-color:var(--neon-red);color:var(--neon-red);font-size:11px;" onclick="processWithdraw()">
+                            Çıxarış Et
+                        </button>
+                        <p style="font-size:9px;color:var(--text-muted);margin-top:6px;">Minimum: 10 RGN • Komissiya: 5%</p>
+                    </div>
+                </div>
+
+                <!-- DEPOSIT INFO -->
+                <div id="depositInfoDisplay" style="display:none;background:rgba(16,185,129,0.08);border:1px solid var(--neon-gold);border-radius:10px;padding:14px;margin-top:12px;">
+                    <h4 style="color:var(--neon-gold);font-size:12px;margin-bottom:6px;">📤 Depozit Məlumatları</h4>
+                    <div style="background:var(--bg-darker);padding:10px;border-radius:6px;margin-bottom:8px;">
+                        <p style="font-size:10px;color:var(--text-muted);">Aşağıdakı ünvana <b id="depositAmountDisplay">0</b> <span id="depositTokenDisplay">USDT</span> göndərin:</p>
+                        <div style="display:flex;gap:6px;align-items:center;margin-top:4px;">
+                            <input type="text" id="depositAddressField" class="form-input" readonly style="flex:1;font-size:10px;word-break:break-all;background:var(--bg-card);padding:6px;">
+                            <button onclick="copyDepositAddress()" style="background:rgba(0,210,255,0.15);border:1px solid var(--neon-blue);color:var(--neon-blue);padding:6px 10px;border-radius:6px;cursor:pointer;font-size:10px;white-space:nowrap;">📋 Kopyala</button>
+                        </div>
+                    </div>
+                    <div style="background:rgba(239,68,68,0.08);padding:8px;border-radius:6px;border-left:2px solid var(--neon-red);">
+                        <p style="font-size:10px;color:var(--text-muted);">⚠️ Ödəniş etdikdən sonra aşağıdakı düyməni basın:</p>
+                        <button onclick="confirmDepositPayment()" style="width:100%;margin-top:6px;background:rgba(16,185,129,0.15);border:1px solid var(--neon-green);color:var(--neon-green);padding:8px;border-radius:6px;cursor:pointer;font-family:'JetBrains Mono';font-weight:700;font-size:11px;">
+                            ✅ Ödəniş Etdim
+                        </button>
+                    </div>
+                    <div id="depositStatus" style="font-family:'JetBrains Mono';font-size:11px;margin-top:8px;padding:6px;border-radius:4px;text-align:center;background:rgba(245,158,11,0.1);color:var(--neon-gold);">
+                        ⏳ Admin təsdiqi gözlənilir...
+                    </div>
+                </div>
+
+                <!-- TRANSACTIONS -->
+                <div style="margin-top:14px;">
+                    <h4 style="font-family:'JetBrains Mono';font-size:11px;color:var(--text-muted);margin-bottom:8px;">// Son Əməliyyatlar</h4>
+                    <div id="transactionHistory" style="max-height:180px;overflow-y:auto;">
+                        <p style="color:var(--text-muted);font-size:11px;">Hələ əməliyyat yoxdur.</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div id="profileView" class="app-view">
-            <div class="section-header-bar">
-                <div class="section-title">ŞƏXSİ PROFİL</div>
+        <!-- ADMIN VIEW -->
+        <div id="adminView" class="app-view">
+            <div class="section-header-bar"><div class="section-title">ADMİN PANELİ</div></div>
+            
+            <div class="card-panel">
+                <h3 style="font-family:'JetBrains Mono';font-size:12px;color:var(--neon-red);margin-bottom:10px;">// Balans Dəyiş</h3>
+                <div class="form-group">
+                    <label>İstifadəçi ID</label>
+                    <input type="text" id="adminTargetUserId" class="form-input" placeholder="123456789">
+                </div>
+                <div class="form-group">
+                    <label>RGN Miqdarı (+/-)</label>
+                    <input type="number" id="adminRgnAmount" class="form-input" placeholder="100">
+                </div>
+                <button class="btn-action" style="border-color:var(--neon-red);color:var(--neon-red);background:rgba(239,68,68,0.15);width:100%;font-size:11px;" onclick="adminUpdateBalance()">Balansı Yenilə</button>
             </div>
+
+            <div id="adminDepositsPanel" class="card-panel">
+                <h3 style="font-family:'JetBrains Mono';font-size:12px;color:var(--neon-gold);margin-bottom:10px;">// Depozit Tələbləri</h3>
+                <div id="adminDepositsList">
+                    <p style="color:var(--text-muted);font-size:11px;">Yüklənir...</p>
+                </div>
+            </div>
+
+            <div id="adminWithdrawsPanel" class="card-panel">
+                <h3 style="font-family:'JetBrains Mono';font-size:12px;color:var(--neon-red);margin-bottom:10px;">// Çıxarış Tələbləri</h3>
+                <div id="adminWithdrawsList">
+                    <p style="color:var(--text-muted);font-size:11px;">Yüklənir...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROFILE VIEW -->
+        <div id="profileView" class="app-view">
+            <div class="section-header-bar"><div class="section-title">PROFİL</div></div>
             <div class="card-panel">
                 <div class="profile-flex">
-                    <img id="profileAvatarLg" src="" class="profile-avatar-lg" alt="Avatar">
+                    <img id="profileAvatarLg" src="" class="profile-avatar-lg">
                     <div>
-                        <h2 id="profileNameDisplay" style="margin-bottom: 4px;">SingleKing67</h2>
-                        <p style="font-family: 'JetBrains Mono'; font-size: 12px; color: var(--neon-gold);">Rank: <span id="userRankBadge">Mayner</span></p>
+                        <h2 id="profileNameDisplay" style="font-size:16px;">SingleKing67</h2>
+                        <p style="font-family:'JetBrains Mono';font-size:10px;color:var(--neon-gold);">Rank: <span id="userRankBadge">Mayner</span></p>
                     </div>
                 </div>
             </div>
             <div class="card-panel">
-                <h3 style="font-family: 'JetBrains Mono'; font-size: 14px; color: var(--neon-blue); margin-bottom: 16px;">// PROFİLİ TƏNZİMLƏ</h3>
+                <h3 style="font-family:'JetBrains Mono';font-size:12px;color:var(--neon-blue);">// Tənzimlə</h3>
                 <div class="form-group">
                     <label>İstifadəçi Adı</label>
-                    <input type="text" id="usernameInput" class="form-input" value="SingleKing67">
+                    <input type="text" id="usernameInput" class="form-input">
                 </div>
                 <div class="form-group">
-                    <label>Avatar Seçimi</label>
+                    <label>Avatar</label>
                     <div class="avatar-selection" id="avatarSelector"></div>
                 </div>
-                <button class="btn-action" onclick="saveProfile()">Yadda Saxla</button>
+                <button class="btn-action" onclick="saveProfile()" style="font-size:11px;">Yadda Saxla</button>
             </div>
         </div>
 
     </div>
 
+    <!-- ============================================ -->
+    <!-- SCRIPT -->
+    <!-- ============================================ -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, deleteDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import {
+            getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, deleteDoc,
+            query, orderBy, limit, where, onSnapshot
+        } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+        // ==========================================
+        // FIREBASE CONFIG
+        // ==========================================
         const firebaseConfig = {
-          apiKey: "AIzaSyArfgU34XyZH7TrRNJN-ApKl1MNwU31Sfs",
-          authDomain: "rgncoin-69d0c.firebaseapp.com",
-          projectId: "rgncoin-69d0c",
-          storageBucket: "rgncoin-69d0c.firebasestorage.app",
-          messagingSenderId: "206046770381",
-          appId: "1:206046770381:web:bcf3aa46196cc6c00ea584",
-          measurementId: "G-FXRC15WSQX"
+            apiKey: "AIzaSyArfgU34XyZH7TrRNJN-ApKl1MNwU31Sfs",
+            authDomain: "rgncoin-69d0c.firebaseapp.com",
+            projectId: "rgncoin-69d0c",
+            storageBucket: "rgncoin-69d0c.firebasestorage.app",
+            messagingSenderId: "206046770381",
+            appId: "1:206046770381:web:bcf3aa46196cc6c00ea584",
+            measurementId: "G-FXRC15WSQX"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Telegram WebApp və Haptic Feedback
+        // ==========================================
+        // TELEGRAM
+        // ==========================================
         const tg = window.Telegram?.WebApp;
-        if (tg) {
-            tg.ready();
-            tg.expand();
+        if (tg) { tg.ready(); tg.expand(); }
+
+        function triggerHaptic(s = 'medium') {
+            if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred(s);
         }
 
-        function triggerHaptic(style = 'medium') {
-            if (tg?.HapticFeedback) {
-                tg.HapticFeedback.impactOccurred(style);
-            }
+        function showToast(msg, type = 'success') {
+            const c = document.getElementById('toastContainer');
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            t.innerText = msg;
+            c.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
         }
 
-        // Toast Bildiriş Sistemi
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerText = message;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-
+        // ==========================================
+        // USER
+        // ==========================================
         const tgUser = tg?.initDataUnsafe?.user;
         let currentUserId = tgUser ? String(tgUser.id) : "SingleKing67";
         let currentUsername = tgUser ? (tgUser.username || tgUser.first_name || "Mayner") : "SingleKing67";
         let defaultAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${currentUsername}`;
+        const ADMIN_TG_ID = "8591374417";
 
-        // Adsgram İnteqrasiyası (Block ID: INT-40616, 5 dəqiqə cooldown)
-        let adController = null;
-        const COOLDOWN_TIME = 5 * 60 * 1000; // 5 dəqiqə (milliseyndə)
-
-        function initAdsgram() {
-            if (window.Adsgram) {
-                adController = window.Adsgram.init({ blockId: "INT-40616" });
-            } else {
-                console.warn("Adsgram SDK hələ yüklənməyib.");
+        // ==========================================
+        // SABİT DEPOZİT ÜNVANLARI - SİZİN ÜNVANLAR
+        // ==========================================
+        const DEPOSIT_ADDRESSES = {
+            polygon: {
+                USDT: '0x9f8bC82bC519F62d7bEd4aa3Af91859A3cd883f7',
+                MATIC: '0x9f8bC82bC519F62d7bEd4aa3Af91859A3cd883f7'
+            },
+            tron: {
+                USDT: 'TK9rwqjAsC4y5ZS3XGAswFsmkx24AfryVi',
+                TRX: 'TK9rwqjAsC4y5ZS3XGAswFsmkx24AfryVi'
             }
-        }
+        };
 
-        window.watchAdForReward = async function() {
-            if (!adController) {
-                showToast("Reklam modulu hələ hazır deyil.", "error");
-                return;
-            }
-
-            const now = Date.now();
-            const lastWatch = userState.lastAdWatch || 0;
-            const timeElapsed = now - lastWatch;
-
-            if (timeElapsed < COOLDOWN_TIME) {
-                const remainingMinutes = Math.ceil((COOLDOWN_TIME - timeElapsed) / 60000);
-                showToast(`Yenidən reklam izləmək üçün ${remainingMinutes} dəqiqə gözləməlisiniz.`, "error");
-                return;
-            }
-
-            try {
-                const result = await adController.show();
-                if (result.done) {
-                    grantAdReward();
-                }
-            } catch (error) {
-                console.error("Reklam xətası:", error);
-                showToast("Reklam tam izlənilmədi və ya xəta baş verdi.", "error");
-            }
-        }
-
-        async function grantAdReward() {
-            const rewardAmount = 0.001; // 0.001 RGN
-            const now = Date.now();
-            
-            userState.balances.RGN += rewardAmount;
-            userState.lastAdWatch = now;
-            
-            try {
-                await db.collection("istifadeciler").doc(currentUserId).update({
-                    balances: userState.balances,
-                    lastAdWatch: now
-                });
-
-                updateTopUI();
-                showToast(`Təbriklər! +${rewardAmount} RGN qazandınız!`, "success");
-            } catch (dbError) {
-                console.error("Firestore xətası:", dbError);
-                // Alternativ olaraq ümumi save funksiyasını çağırırıq
-                saveUserDataToFirebase();
-                updateTopUI();
-                showToast(`Təbriklər! +${rewardAmount} RGN qazandınız!`, "success");
-            }
-        }
-
+        // ==========================================
+        // MINERS DATABASE
+        // ==========================================
         const minersDatabase = [];
         const prefixList = ["Nano", "Micro", "Quantum", "Plasma", "Aether", "Solar", "Lunar", "Astral", "Void", "Nova"];
         const suffixList = ["Shard", "Cluster", "Node", "Monolith", "Prism", "Crystal", "Core", "Spire", "Matrix", "Gem"];
@@ -1054,13 +857,11 @@
             let tier = i <= 25 ? 'L4' : i <= 55 ? 'L3' : i <= 80 ? 'L2' : i <= 95 ? 'L1' : 'Elite';
             let dailyEarnings = price / 90;
             let earningPerSec = dailyEarnings / 86400;
-
             let hue1 = (i * 37) % 360;
             let color1 = `hsl(${hue1}, 90%, 55%)`;
             let color2 = `hsl(${(hue1+75)%360}, 85%, 25%)`;
             let svgString = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="g${i}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="${color1}"/><stop offset="100%" stop-color="${color2}"/></linearGradient></defs><rect width="200" height="200" fill="#04060b"/><polygon points="80,10 120,40 140,160 100,190 60,160" fill="url(#g${i})" opacity="0.95"/></svg>`;
             let name = `${prefixList[(i * 3) % prefixList.length]} ${suffixList[(i * 7) % suffixList.length]} #${i}`;
-
             minersDatabase.push({
                 id: 'm' + i,
                 name: name,
@@ -1072,10 +873,13 @@
             });
         }
 
+        // ==========================================
+        // USER STATE
+        // ==========================================
         let userState = {
             name: currentUsername,
             avatar: defaultAvatar,
-            balances: { RGN: 50.00, USDT: 0.00, BTC: 0.00 },
+            balances: { RGN: 0.00, USDT: 0.00, BTC: 0.00 },
             inventory: [],
             unclaimedRgn: 0.00,
             referredBy: null,
@@ -1085,33 +889,13 @@
         const avatarsList = [
             defaultAvatar,
             "https://api.dicebear.com/7.x/bottts/svg?seed=CryptoKing",
-            "https://api.dicebear.com/7.x/bottts/svg?seed=NexusNode"
+            "https://api.dicebear.com/7.x/bottts/svg?seed=NexusNode",
+            "https://api.dicebear.com/7.x/bottts/svg?seed=QuantumMiner"
         ];
 
-        function checkReferral() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const ref = urlParams.get('ref');
-            if (ref && ref !== currentUserId) {
-                userState.referredBy = ref;
-            }
-        }
-
-        async function rewardReferrer(amount) {
-            if (!userState.referredBy) return;
-            try {
-                const refDocRef = doc(db, "istifadeciler", userState.referredBy);
-                const refSnap = await getDoc(refDocRef);
-                if (refSnap.exists()) {
-                    let refData = refSnap.data();
-                    let commission = amount * 0.10;
-                    refData.balances.RGN += commission;
-                    await setDoc(refDocRef, refData);
-                }
-            } catch (e) {
-                console.error("Referal xətası:", e);
-            }
-        }
-
+        // ==========================================
+        // FIREBASE FUNCTIONS
+        // ==========================================
         async function saveUserDataToFirebase() {
             try {
                 await setDoc(doc(db, "istifadeciler", currentUserId), {
@@ -1125,19 +909,16 @@
                     lastAdWatch: userState.lastAdWatch || 0,
                     lastUpdated: new Date()
                 });
-            } catch (e) {
-                console.error("Firebase xətası:", e);
-            }
+            } catch (e) { console.error(e); }
         }
 
         async function loadUserDataFromFirebase() {
             try {
-                const docRef = doc(db, "istifadeciler", currentUserId);
-                const docSnap = await getDoc(docRef);
+                const docSnap = await getDoc(doc(db, "istifadeciler", currentUserId));
                 if (docSnap.exists()) {
                     let data = docSnap.data();
                     userState.name = data.name || userState.name;
-                    userState.balances = data.balances || userState.balances;
+                    userState.balances = data.balances || { RGN: 0.00, USDT: 0.00, BTC: 0.00 };
                     userState.inventory = data.inventory || [];
                     userState.unclaimedRgn = data.unclaimedRgn || 0.00;
                     userState.avatar = data.avatar || userState.avatar;
@@ -1146,62 +927,663 @@
                 } else {
                     await saveUserDataToFirebase();
                 }
-            } catch (e) {
-                console.error("Firebase yüklənmə xətası:", e);
-            }
+            } catch (e) { console.error(e); }
         }
 
+        // ==========================================
+        // REFERRAL
+        // ==========================================
+        function checkReferral() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const ref = urlParams.get('ref');
+            if (ref && ref !== currentUserId) userState.referredBy = ref;
+        }
+
+        async function rewardReferrer(amount) {
+            if (!userState.referredBy) return;
+            try {
+                const refDocRef = doc(db, "istifadeciler", userState.referredBy);
+                const refSnap = await getDoc(refDocRef);
+                if (refSnap.exists()) {
+                    let refData = refSnap.data();
+                    refData.balances.RGN += amount * 0.10;
+                    await setDoc(refDocRef, refData);
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        // ==========================================
+        // LEADERBOARD
+        // ==========================================
         async function renderLeaderboard() {
             const tbody = document.getElementById('leaderboardBody');
-            tbody.innerHTML = `
-                <tr><td colspan="3"><div class="skeleton" style="height: 25px; width: 100%;"></div></td></tr>
-                <tr><td colspan="3"><div class="skeleton" style="height: 25px; width: 100%;"></div></td></tr>
-                <tr><td colspan="3"><div class="skeleton" style="height: 25px; width: 100%;"></div></td></tr>
-            `;
+            tbody.innerHTML = `<tr><td colspan="3"><div class="skeleton" style="height:20px;"></div></td></tr>`;
             try {
                 const q = query(collection(db, "istifadeciler"), orderBy("balances.RGN", "desc"), limit(10));
-                const querySnapshot = await getDocs(q);
+                const snapshot = await getDocs(q);
                 tbody.innerHTML = '';
                 let rank = 1;
-                querySnapshot.forEach((docSnap) => {
+                snapshot.forEach((docSnap) => {
                     let data = docSnap.data();
-                    let rgn = data.balances && data.balances.RGN ? data.balances.RGN.toFixed(2) : "0.00";
-                    tbody.innerHTML += `
-                        <tr>
-                            <td><b>#${rank++}</b></td>
-                            <td style="color: var(--neon-blue);">${data.name}</td>
-                            <td style="color: var(--neon-gold);">${rgn} RGN</td>
-                        </tr>
-                    `;
+                    let rgn = data.balances?.RGN?.toFixed(2) || "0.00";
+                    tbody.innerHTML += `<tr><td><b>#${rank++}</b></td><td style="color:var(--neon-blue);">${data.name}</td><td style="color:var(--neon-gold);">${rgn} RGN</td></tr>`;
                 });
             } catch (e) {
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--neon-red);">Məlumat çəkilə bilmədi.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;color:var(--neon-red);">Xəta!</td></tr>`;
             }
         }
 
+        // ==========================================
+        // ADMIN - BALANS DƏYİŞ
+        // ==========================================
+        window.adminUpdateBalance = async function() {
+            if (currentUserId !== ADMIN_TG_ID) { showToast("Səlahiyyət yoxdur!", "error"); return; }
+            triggerHaptic('heavy');
+            let targetId = document.getElementById('adminTargetUserId').value.trim();
+            let amount = parseFloat(document.getElementById('adminRgnAmount').value);
+            if (!targetId || isNaN(amount)) { showToast("Düzgün daxil edin!", "error"); return; }
+            try {
+                let ref = doc(db, "istifadeciler", targetId);
+                let snap = await getDoc(ref);
+                if (!snap.exists()) { showToast("İstifadəçi tapılmadı!", "error"); return; }
+                let data = snap.data();
+                if (!data.balances) data.balances = { RGN: 0 };
+                data.balances.RGN += amount;
+                await setDoc(ref, data);
+                showToast(`Balans yeniləndi! ${data.balances.RGN.toFixed(2)} RGN`, "success");
+            } catch (e) { showToast("Xəta!", "error"); }
+        };
+
+        // ==========================================
+        // DEPOSIT SYSTEM
+        // ==========================================
+        let currentDepositId = null;
+
+        window.createDepositRequest = async function() {
+            triggerHaptic('heavy');
+            
+            const network = document.getElementById('depositNetwork').value;
+            const token = document.getElementById('depositToken').value;
+            const amount = parseFloat(document.getElementById('depositAmount').value);
+            
+            if (isNaN(amount) || amount < 10) {
+                showToast("Minimum depozit 10 RGN-dir!", "error");
+                return;
+            }
+            
+            try {
+                const depositData = {
+                    userId: currentUserId,
+                    username: userState.name,
+                    network: network,
+                    token: token,
+                    amount: amount,
+                    status: 'pending',
+                    createdAt: new Date()
+                };
+                
+                const docRef = await addDoc(collection(db, "deposits"), depositData);
+                currentDepositId = docRef.id;
+                
+                // Ünvanı göstər
+                const address = DEPOSIT_ADDRESSES[network]?.[token] || DEPOSIT_ADDRESSES[network]?.USDT || 'Ünvan tapılmadı';
+                
+                document.getElementById('depositInfoDisplay').style.display = 'block';
+                document.getElementById('depositAddressField').value = address;
+                document.getElementById('depositAmountDisplay').textContent = amount;
+                document.getElementById('depositTokenDisplay').textContent = token;
+                document.getElementById('depositStatus').innerHTML = '⏳ Ödəniş gözlənilir...';
+                document.getElementById('depositStatus').style.background = 'rgba(245,158,11,0.1)';
+                document.getElementById('depositStatus').style.color = 'var(--neon-gold)';
+                
+                showToast(`📤 ${amount} ${token} göndərin: ${address.substring(0,10)}...`, "gold");
+                
+                // Statusu izlə
+                listenDepositStatus(docRef.id);
+                
+            } catch (error) {
+                console.error(error);
+                showToast('Depozit yaradıla bilmədi!', 'error');
+            }
+        };
+
+        window.confirmDepositPayment = async function() {
+            triggerHaptic('medium');
+            
+            if (!currentDepositId) {
+                showToast('Depozit məlumatı tapılmadı!', 'error');
+                return;
+            }
+            
+            const txHash = prompt('Zəhmət olmasa əməliyyat ID-ni (TxID) daxil edin:');
+            if (!txHash || txHash.length < 5) {
+                showToast('Etibarlı TxID daxil edin!', 'error');
+                return;
+            }
+            
+            try {
+                await setDoc(doc(db, "deposits", currentDepositId), {
+                    status: 'paid',
+                    paidAt: new Date(),
+                    txHash: txHash
+                }, { merge: true });
+                
+                document.getElementById('depositStatus').innerHTML = '✅ Ödəniş qeydə alındı! Admin təsdiqi gözlənilir...';
+                document.getElementById('depositStatus').style.background = 'rgba(16,185,129,0.1)';
+                document.getElementById('depositStatus').style.color = 'var(--neon-green)';
+                
+                showToast('✅ Ödəniş qeydə alındı!', 'success');
+                
+            } catch (error) {
+                console.error(error);
+                showToast('Xəta!', 'error');
+            }
+        };
+
+        function listenDepositStatus(depositId) {
+            const unsubscribe = onSnapshot(doc(db, "deposits", depositId), (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    
+                    if (data.status === 'confirmed') {
+                        document.getElementById('depositStatus').innerHTML = '✅ Depozit təsdiqləndi!';
+                        document.getElementById('depositStatus').style.background = 'rgba(16,185,129,0.2)';
+                        document.getElementById('depositStatus').style.color = 'var(--neon-green)';
+                        
+                        loadUserDataFromFirebase();
+                        updateTopUI();
+                        renderWallet();
+                        
+                        showToast(`✅ ${data.amount} RGN balansınıza əlavə edildi!`, "success");
+                        unsubscribe();
+                    }
+                    
+                    if (data.status === 'rejected') {
+                        document.getElementById('depositStatus').innerHTML = '❌ Depozit rədd edildi!';
+                        document.getElementById('depositStatus').style.background = 'rgba(239,68,68,0.1)';
+                        document.getElementById('depositStatus').style.color = 'var(--neon-red)';
+                        showToast('❌ Depozit rədd edildi!', 'error');
+                        unsubscribe();
+                    }
+                }
+            });
+        }
+
+        window.copyDepositAddress = function() {
+            const field = document.getElementById('depositAddressField');
+            navigator.clipboard.writeText(field.value);
+            showToast('✅ Ünvan kopyalandı!', 'success');
+        };
+
+        window.updateDepositNetwork = function() {
+            const network = document.getElementById('depositNetwork').value;
+            const tokenSelect = document.getElementById('depositToken');
+            tokenSelect.innerHTML = '';
+            
+            if (network === 'polygon') {
+                tokenSelect.innerHTML = `
+                    <option value="USDT">USDT (Polygon)</option>
+                    <option value="MATIC">MATIC</option>
+                `;
+            } else if (network === 'tron') {
+                tokenSelect.innerHTML = `
+                    <option value="USDT">USDT (TRC20)</option>
+                    <option value="TRX">TRX</option>
+                `;
+            }
+        };
+
+        // ==========================================
+        // ADMIN - DEPOSIT PANEL
+        // ==========================================
+        window.renderAdminDeposits = async function() {
+            if (currentUserId !== ADMIN_TG_ID) return;
+            
+            try {
+                const q = query(
+                    collection(db, "deposits"),
+                    where("status", "in", ["pending", "paid"]),
+                    orderBy("createdAt", "desc")
+                );
+                
+                const snapshot = await getDocs(q);
+                const container = document.getElementById('adminDepositsList');
+                
+                if (snapshot.empty) {
+                    container.innerHTML = '<p style="color:var(--text-muted);font-size:11px;">Gözləyən depozit yoxdur.</p>';
+                    return;
+                }
+                
+                let html = '<div style="max-height:400px;overflow-y:auto;">';
+                
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const statusText = data.status === 'paid' ? '✅ Ödəniş edilib' : '⏳ Gözləmədə';
+                    const statusColor = data.status === 'paid' ? 'var(--neon-green)' : 'var(--neon-gold)';
+                    
+                    html += `
+                        <div style="border:1px solid rgba(255,255,255,0.1);padding:10px;border-radius:6px;margin-bottom:6px;font-size:11px;">
+                            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px;">
+                                <b>${data.username}</b> (${data.userId})
+                                <span style="color:${statusColor};">${statusText}</span>
+                            </div>
+                            <div>💰 ${data.amount} RGN • 🪙 ${data.token} • 🌐 ${data.network.toUpperCase()}</div>
+                            ${data.txHash ? `<div style="font-size:10px;color:var(--text-muted);word-break:break-all;">🔗 ${data.txHash}</div>` : ''}
+                            <div style="font-size:9px;color:var(--text-muted);">📅 ${data.createdAt?.toDate?.()?.toLocaleString() || ''}</div>
+                            <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                                <button onclick="confirmDepositAdmin('${docSnap.id}')" style="background:rgba(16,185,129,0.15);border:1px solid var(--neon-green);color:var(--neon-green);padding:3px 10px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono';font-size:10px;">✅ Təsdiqlə</button>
+                                <button onclick="rejectDepositAdmin('${docSnap.id}')" style="background:rgba(239,68,68,0.15);border:1px solid var(--neon-red);color:var(--neon-red);padding:3px 10px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono';font-size:10px;">❌ Rədd Et</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error(error);
+                document.getElementById('adminDepositsList').innerHTML = '<p style="color:var(--neon-red);font-size:11px;">Xəta!</p>';
+            }
+        };
+
+        window.confirmDepositAdmin = async function(depositId) {
+            try {
+                const docSnap = await getDoc(doc(db, "deposits", depositId));
+                if (!docSnap.exists()) { showToast('Depozit tapılmadı!', 'error'); return; }
+                
+                const data = docSnap.data();
+                if (data.status !== 'paid' && data.status !== 'pending') {
+                    showToast('Bu depozit artıq işlənib!', 'error');
+                    return;
+                }
+                
+                // Balansa əlavə et
+                const userRef = doc(db, "istifadeciler", data.userId);
+                const userSnap = await getDoc(userRef);
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    userData.balances.RGN += data.amount;
+                    await setDoc(userRef, userData);
+                }
+                
+                await setDoc(doc(db, "deposits", depositId), {
+                    status: 'confirmed',
+                    confirmedAt: new Date(),
+                    confirmedBy: currentUserId
+                }, { merge: true });
+                
+                await addDoc(collection(db, "transactions"), {
+                    userId: data.userId,
+                    type: 'deposit',
+                    network: data.network,
+                    token: data.token,
+                    amount: data.amount,
+                    status: 'Təsdiqləndi',
+                    txHash: data.txHash || 'admin_confirmed',
+                    timestamp: new Date()
+                });
+                
+                showToast('✅ Depozit təsdiqləndi!', 'success');
+                renderAdminDeposits();
+                
+            } catch (error) {
+                console.error(error);
+                showToast('Xəta!', 'error');
+            }
+        };
+
+        window.rejectDepositAdmin = async function(depositId) {
+            if (!confirm('Depoziti rədd etmək istədiyinizə əminsiniz?')) return;
+            
+            try {
+                await setDoc(doc(db, "deposits", depositId), {
+                    status: 'rejected',
+                    rejectedAt: new Date(),
+                    rejectedBy: currentUserId
+                }, { merge: true });
+                
+                showToast('❌ Depozit rədd edildi!', 'error');
+                renderAdminDeposits();
+            } catch (error) {
+                console.error(error);
+                showToast('Xəta!', 'error');
+            }
+        };
+
+        // ==========================================
+        // WITHDRAW SYSTEM
+        // ==========================================
+        window.processWithdraw = async function() {
+            triggerHaptic('heavy');
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const address = document.getElementById('withdrawAddress').value.trim();
+            
+            if (isNaN(amount) || amount < 10) {
+                showToast("Minimum çıxarış 10 RGN-dir!", "error");
+                return;
+            }
+            
+            if (!address || address.length < 10) {
+                showToast("Etibarlı cüzdan ünvanı daxil edin!", "error");
+                return;
+            }
+            
+            const fee = amount * 0.05;
+            const netAmount = amount - fee;
+            
+            if (userState.balances.RGN < amount) {
+                showToast(`Balansınızda kifayət qədər RGN yoxdur! (${userState.balances.RGN.toFixed(2)} RGN)`, "error");
+                return;
+            }
+            
+            if (confirm(`Çıxarış etmək istədiyinizə əminsiniz?\nMəbləğ: ${amount} RGN\nKomissiya: ${fee.toFixed(2)} RGN (5%)\nAlacağınız: ${netAmount.toFixed(2)} RGN\nÜnvan: ${address}`)) {
+                userState.balances.RGN -= amount;
+                updateTopUI();
+                await saveUserDataToFirebase();
+                addTransaction('withdraw', amount, 'Gözləmədə', address);
+                renderWallet();
+                showToast(`✅ ${netAmount.toFixed(2)} RGN çıxarış tələbiniz qeydə alındı!`, "gold");
+                showToast(`⏳ Təsdiqlənmə 24-48 saat çəkə bilər.`, "error");
+                
+                try {
+                    await addDoc(collection(db, "withdraw_requests"), {
+                        userId: currentUserId,
+                        username: userState.name,
+                        amount: amount,
+                        netAmount: netAmount,
+                        address: address,
+                        status: 'pending',
+                        timestamp: new Date()
+                    });
+                    renderAdminWithdraws();
+                } catch(e) { console.error(e); }
+            }
+        };
+
+        // ==========================================
+        // ADMIN - WITHDRAW PANEL
+        // ==========================================
+        window.renderAdminWithdraws = async function() {
+            if (currentUserId !== ADMIN_TG_ID) return;
+            
+            try {
+                const snapshot = await getDocs(collection(db, "withdraw_requests"));
+                const pending = [];
+                
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    if (data.status === 'pending') {
+                        pending.push({ id: docSnap.id, ...data });
+                    }
+                });
+                
+                pending.sort((a, b) => {
+                    return (b.timestamp?.toDate?.() || new Date(0)) - (a.timestamp?.toDate?.() || new Date(0));
+                });
+                
+                const container = document.getElementById('adminWithdrawsList');
+                
+                if (pending.length === 0) {
+                    container.innerHTML = '<p style="color:var(--text-muted);font-size:11px;">Gözləyən çıxarış yoxdur.</p>';
+                    return;
+                }
+                
+                let html = '<div style="max-height:400px;overflow-y:auto;">';
+                
+                pending.forEach((data) => {
+                    html += `
+                        <div style="border:1px solid rgba(255,255,255,0.1);padding:10px;border-radius:6px;margin-bottom:6px;font-size:11px;">
+                            <div><b>${data.username}</b> (${data.userId})</div>
+                            <div>💰 ${data.amount.toFixed(2)} RGN (Net: ${(data.netAmount || data.amount * 0.95).toFixed(2)})</div>
+                            <div style="font-size:10px;color:var(--text-muted);word-break:break-all;">📤 ${data.address || 'Yoxdur'}</div>
+                            <div style="font-size:9px;color:var(--text-muted);">📅 ${data.timestamp?.toDate?.()?.toLocaleString() || ''}</div>
+                            <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                                <button onclick="approveWithdraw('${data.id}')" style="background:rgba(16,185,129,0.15);border:1px solid var(--neon-green);color:var(--neon-green);padding:3px 10px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono';font-size:10px;">✅ Təsdiqlə</button>
+                                <button onclick="rejectWithdraw('${data.id}')" style="background:rgba(239,68,68,0.15);border:1px solid var(--neon-red);color:var(--neon-red);padding:3px 10px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono';font-size:10px;">❌ Rədd Et</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error(error);
+                document.getElementById('adminWithdrawsList').innerHTML = '<p style="color:var(--neon-red);font-size:11px;">Xəta!</p>';
+            }
+        };
+
+        window.approveWithdraw = async function(docId) {
+            try {
+                await setDoc(doc(db, "withdraw_requests", docId), {
+                    status: 'approved',
+                    approvedAt: new Date()
+                }, { merge: true });
+                showToast("✅ Çıxarış təsdiqləndi!", "success");
+                renderAdminWithdraws();
+            } catch(e) { showToast("Xəta!", "error"); }
+        };
+
+        window.rejectWithdraw = async function(docId) {
+            try {
+                const docSnap = await getDoc(doc(db, "withdraw_requests", docId));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.status === 'pending') {
+                        const userRef = doc(db, "istifadeciler", data.userId);
+                        const userSnap = await getDoc(userRef);
+                        if (userSnap.exists()) {
+                            const userData = userSnap.data();
+                            userData.balances.RGN += data.amount;
+                            await setDoc(userRef, userData);
+                        }
+                    }
+                }
+                
+                await setDoc(doc(db, "withdraw_requests", docId), {
+                    status: 'rejected',
+                    rejectedAt: new Date()
+                }, { merge: true });
+                
+                showToast("❌ Çıxarış rədd edildi! Balans geri qaytarıldı.", "error");
+                renderAdminWithdraws();
+            } catch(e) { showToast("Xəta!", "error"); }
+        };
+
+        // ==========================================
+        // TRANSACTIONS
+        // ==========================================
+        function addTransaction(type, amount, status, address = '') {
+            const history = document.getElementById('transactionHistory');
+            const date = new Date();
+            
+            try {
+                addDoc(collection(db, "transactions"), {
+                    userId: currentUserId,
+                    type: type,
+                    amount: amount,
+                    status: status,
+                    address: address || '',
+                    timestamp: date
+                }).catch(e => console.error(e));
+            } catch(e) { console.error(e); }
+            
+            if (history.querySelector('p')) history.innerHTML = '';
+            
+            const icon = type === 'deposit' ? '📥' : '📤';
+            const color = type === 'deposit' ? 'var(--neon-green)' : 'var(--neon-red)';
+            
+            const entry = document.createElement('div');
+            entry.style.cssText = `display:flex;justify-content:space-between;padding:4px 8px;border-bottom:1px solid rgba(255,255,255,0.05);font-family:'JetBrains Mono';font-size:10px;flex-wrap:wrap;gap:2px;`;
+            entry.innerHTML = `
+                <span>${icon} ${type.toUpperCase()}</span>
+                <span style="color:${color};">${amount.toFixed(2)} RGN</span>
+                <span style="color:${status === 'Təsdiqləndi' ? 'var(--neon-green)' : 'var(--neon-gold)'};">${status}</span>
+                <span style="color:var(--text-muted);font-size:9px;">${date.toLocaleString()}</span>
+            `;
+            history.prepend(entry);
+        }
+
+        async function loadTransactionHistory() {
+            try {
+                const snapshot = await getDocs(collection(db, "transactions"));
+                const history = document.getElementById('transactionHistory');
+                const myTxs = [];
+                
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    if (data.userId === currentUserId) {
+                        myTxs.push({ id: docSnap.id, ...data });
+                    }
+                });
+                
+                myTxs.sort((a, b) => {
+                    return (b.timestamp?.toDate?.() || new Date(0)) - (a.timestamp?.toDate?.() || new Date(0));
+                });
+                
+                const recent = myTxs.slice(0, 20);
+                
+                if (recent.length === 0) {
+                    history.innerHTML = '<p style="color:var(--text-muted);font-size:11px;">Hələ əməliyyat yoxdur.</p>';
+                    return;
+                }
+                
+                history.innerHTML = '';
+                recent.forEach((data) => {
+                    const icon = data.type === 'deposit' ? '📥' : '📤';
+                    const color = data.type === 'deposit' ? 'var(--neon-green)' : 'var(--neon-red)';
+                    const time = data.timestamp?.toDate?.() || new Date();
+                    
+                    const entry = document.createElement('div');
+                    entry.style.cssText = `display:flex;justify-content:space-between;padding:4px 8px;border-bottom:1px solid rgba(255,255,255,0.05);font-family:'JetBrains Mono';font-size:10px;flex-wrap:wrap;gap:2px;`;
+                    entry.innerHTML = `
+                        <span>${icon} ${data.type.toUpperCase()}</span>
+                        <span style="color:${color};">${data.amount.toFixed(2)} RGN</span>
+                        <span style="color:${data.status === 'Təsdiqləndi' ? 'var(--neon-green)' : 'var(--neon-gold)'};">${data.status}</span>
+                        <span style="color:var(--text-muted);font-size:9px;">${time.toLocaleString()}</span>
+                    `;
+                    history.appendChild(entry);
+                });
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        // ==========================================
+        // MINER FUNCTIONS
+        // ==========================================
+        window.buyMiner = function(minerId) {
+            triggerHaptic('heavy');
+            let miner = minersDatabase.find(m => m.id === minerId);
+            if (userState.balances.RGN >= miner.price) {
+                userState.balances.RGN -= miner.price;
+                let existing = userState.inventory.find(i => i.id === minerId);
+                if (existing) { existing.qty += 1; } else { userState.inventory.push({ ...miner, qty: 1 }); }
+                updateTopUI();
+                saveUserDataToFirebase();
+                showToast("Mayner alındı!", "success");
+            } else { showToast("Balans çatmır!", "error"); }
+        };
+
+        window.renderMarket = function() {
+            const grid = document.getElementById('minersMarketGrid');
+            grid.innerHTML = '';
+            minersDatabase.forEach(miner => {
+                let dailyProfit = (miner.earningPerSec * 86400).toFixed(2);
+                grid.innerHTML += `
+                    <div class="miner-card">
+                        <div>
+                            <div class="card-top-tags"><span class="tier-badge">${miner.tier}</span></div>
+                            <div class="miner-preview"><img src="${miner.image}"><div class="price-tag-top">${miner.price.toFixed(2)} RGN</div></div>
+                            <div class="miner-name">${miner.name}</div>
+                            <div class="miner-specs">📈 +${dailyProfit} RGN/gün</div>
+                        </div>
+                        <button class="btn-buy" onclick="buyMiner('${miner.id}')">Al (${miner.price.toFixed(2)} RGN)</button>
+                    </div>
+                `;
+            });
+        };
+
+        window.upgradeMiner = function(minerId) {
+            triggerHaptic('medium');
+            let item = userState.inventory.find(i => i.id === minerId);
+            if (!item) return;
+            let cost = Math.round(item.price * 0.4);
+            if (userState.balances.RGN < cost) {
+                showToast(`Lazımdır: ${cost} RGN`, "error");
+                return;
+            }
+            userState.balances.RGN -= cost;
+            item.upgradeLevel = (item.upgradeLevel || 0) + 1;
+            item.earningPerSec *= 1.20;
+            updateTopUI();
+            renderInventory();
+            saveUserDataToFirebase();
+            showToast("Səviyyə artırıldı!", "gold");
+        };
+
+        window.renderInventory = function() {
+            const grid = document.getElementById('inventoryGrid');
+            const p2pSelect = document.getElementById('p2pSellSelect');
+            let total = 0;
+            grid.innerHTML = '';
+            p2pSelect.innerHTML = '';
+            
+            if (userState.inventory.length === 0) {
+                grid.innerHTML = '<p style="color:var(--text-muted);">İnventar boşdur.</p>';
+                document.getElementById('totalHashrate').innerText = "0.00 RGN/gün";
+                return;
+            }
+            
+            userState.inventory.forEach(item => {
+                let daily = (item.earningPerSec * 86400) * item.qty;
+                total += daily;
+                let cost = Math.round(item.price * 0.4);
+                let upgraded = (item.upgradeLevel || 0) > 0;
+                
+                p2pSelect.innerHTML += `<option value="${item.id}">${item.name}</option>`;
+                
+                grid.innerHTML += `
+                    <div class="miner-card ${upgraded ? 'upgraded' : ''}">
+                        <div>
+                            <div class="card-top-tags"><span class="tier-badge">${item.tier}</span><span style="color:var(--neon-green);font-size:10px;">x${item.qty}</span></div>
+                            <div class="miner-preview"><img src="${item.image}"><div class="price-tag-top">${item.price.toFixed(2)}</div></div>
+                            <div class="miner-name">${item.name}</div>
+                            <div class="miner-specs">📈 +${daily.toFixed(2)} RGN/gün<br>Səviyyə: Lvl ${item.upgradeLevel || 0}</div>
+                        </div>
+                        <button class="btn-upgrade" onclick="upgradeMiner('${item.id}')">Yüksəlt (${cost} RGN)</button>
+                    </div>
+                `;
+            });
+            document.getElementById('totalHashrate').innerText = total.toFixed(2) + " RGN/gün";
+        };
+
+        // ==========================================
+        // P2P
+        // ==========================================
         window.createP2PListing = async function() {
             triggerHaptic('medium');
             let select = document.getElementById('p2pSellSelect');
             let priceInput = document.getElementById('p2pSellPrice');
             let minerId = select.value;
             let price = parseFloat(priceInput.value);
-
+            
             if (!minerId || isNaN(price) || price <= 0) {
-                showToast("Zəhmət olmasa düzgün qiymət daxil edin.", "error");
+                showToast("Düzgün qiymət daxil edin!", "error");
                 return;
             }
-
+            
             let item = userState.inventory.find(i => i.id === minerId);
             if (!item || item.qty <= 0) {
-                showToast("Bu mayner inventarınızda yoxdur.", "error");
+                showToast("Bu mayner yoxdur!", "error");
                 return;
             }
-
+            
             item.qty -= 1;
-            if (item.qty <= 0) {
-                userState.inventory = userState.inventory.filter(i => i.id !== minerId);
-            }
-
+            if (item.qty <= 0) userState.inventory = userState.inventory.filter(i => i.id !== minerId);
+            
             try {
                 await addDoc(collection(db, "p2p_listings"), {
                     sellerId: currentUserId,
@@ -1214,97 +1596,61 @@
                     image: item.image,
                     createdAt: new Date()
                 });
-                showToast("Elan P2P bazarına əlavə olundu!", "success");
+                showToast("Elan yerləşdirildi!", "success");
                 renderInventory();
                 renderP2PMarket();
                 saveUserDataToFirebase();
-            } catch (e) {
-                showToast("Xəta baş verdi.", "error");
-            }
-        }
+            } catch (e) { showToast("Xəta!", "error"); }
+        };
 
-        window.renderP2PMarket = async function() {
+        async function renderP2PMarket() {
             const grid = document.getElementById('p2pMarketGrid');
-            grid.innerHTML = `<p style="color:var(--text-muted);">Yüklənir...</p>`;
+            grid.innerHTML = '<p style="color:var(--text-muted);">Yüklənir...</p>';
             try {
-                const querySnapshot = await getDocs(collection(db, "p2p_listings"));
+                const snapshot = await getDocs(collection(db, "p2p_listings"));
                 grid.innerHTML = '';
-                if (querySnapshot.empty) {
-                    grid.innerHTML = `<p style="color:var(--text-muted);">Aktiv P2P elanı yoxdur.</p>`;
+                if (snapshot.empty) {
+                    grid.innerHTML = '<p style="color:var(--text-muted);">Aktiv elan yoxdur.</p>';
                     return;
                 }
-                querySnapshot.forEach((docSnap) => {
+                snapshot.forEach((docSnap) => {
                     let listing = docSnap.data();
-                    let docId = docSnap.id;
-                    let dailyReturn = (listing.earningPerSec * 86400).toFixed(2);
+                    let daily = (listing.earningPerSec * 86400).toFixed(2);
                     grid.innerHTML += `
                         <div class="miner-card">
                             <div>
-                                <div class="card-top-tags">
-                                    <span class="tier-badge">${listing.tier}</span>
-                                    <span style="font-size: 11px; color: var(--neon-gold);">Satıcı: ${listing.seller}</span>
-                                </div>
-                                <div class="miner-preview">
-                                    <img src="${listing.image}" alt="${listing.name}">
-                                    <div class="price-tag-top">${listing.price} RGN</div>
-                                </div>
+                                <div class="card-top-tags"><span class="tier-badge">${listing.tier}</span><span style="font-size:9px;color:var(--neon-gold);">${listing.seller}</span></div>
+                                <div class="miner-preview"><img src="${listing.image}"><div class="price-tag-top">${listing.price} RGN</div></div>
                                 <div class="miner-name">${listing.name}</div>
-                                <div class="miner-specs"><span>📈 Gəlir: <b>+${dailyReturn} RGN/gün</b></span></div>
+                                <div class="miner-specs">📈 +${daily} RGN/gün</div>
                             </div>
-                            <button class="btn-buy" onclick="buyP2PMiningItem('${docId}', ${listing.price}, '${listing.minerId}', '${listing.name}', '${listing.tier}', ${listing.earningPerSec}, '${listing.image}', '${listing.sellerId}')">Al</button>
+                            <button class="btn-buy" onclick="buyP2P('${docSnap.id}', ${listing.price}, '${listing.minerId}', '${listing.name}', '${listing.tier}', ${listing.earningPerSec}, '${listing.image}', '${listing.sellerId}')">Al</button>
                         </div>
                     `;
                 });
-            } catch (e) {
-                grid.innerHTML = `<p style="color:var(--neon-red);">Xəta baş verdi.</p>`;
-            }
+            } catch (e) { grid.innerHTML = '<p style="color:var(--neon-red);">Xəta!</p>'; }
         }
 
-        window.buyP2PMiningItem = async function(docId, price, minerId, name, tier, earningPerSec, image, sellerId) {
+        window.buyP2P = async function(docId, price, minerId, name, tier, earningPerSec, image, sellerId) {
             triggerHaptic('heavy');
-            if (sellerId === currentUserId) {
-                showToast("Öz elanınızı ala bilməzsiniz!", "error");
-                return;
-            }
-            if (userState.balances.RGN < price) {
-                showToast("Balansınızda kifayət qədər RGN yoxdur!", "error");
-                return;
-            }
-
+            if (sellerId === currentUserId) { showToast("Öz elanını ala bilməzsən!", "error"); return; }
+            if (userState.balances.RGN < price) { showToast("Balans çatmır!", "error"); return; }
+            
             userState.balances.RGN -= price;
             let existing = userState.inventory.find(i => i.id === minerId);
-            if (existing) { existing.qty += 1; }
-            else { userState.inventory.push({ id: minerId, name, tier, price, earningPerSec, upgradeLevel: 0, image, qty: 1 }); }
-
-            await deleteDoc(doc(db, "p2p_listings", docId));
+            if (existing) { existing.qty += 1; } else { userState.inventory.push({ id: minerId, name, tier, price, earningPerSec, upgradeLevel: 0, image, qty: 1 }); }
+            
+            try { await deleteDoc(doc(db, "p2p_listings", docId)); } catch(e) {}
             updateTopUI();
             renderInventory();
             renderP2PMarket();
             saveUserDataToFirebase();
-            showToast("Mayner uğurla alındı!", "success");
-        }
+            showToast("Mayner alındı!", "success");
+        };
 
-        window.upgradeMiner = function(minerId) {
-            triggerHaptic('medium');
-            let item = userState.inventory.find(i => i.id === minerId);
-            if (!item) return;
-            let upgradeCost = Math.round(item.price * 0.4);
-
-            if (userState.balances.RGN < upgradeCost) {
-                showToast(`Balansınız çatmır! Lazımdır: ${upgradeCost} RGN`, "error");
-                return;
-            }
-
-            userState.balances.RGN -= upgradeCost;
-            item.upgradeLevel = (item.upgradeLevel || 0) + 1;
-            item.earningPerSec *= 1.20;
-
-            updateTopUI();
-            renderInventory();
-            saveUserDataToFirebase();
-            showToast("Mayner səviyyəsi artırıldı (+20% qazanc)!", "gold");
-        }
-
+        // ==========================================
+        // OTHER
+        // ==========================================
         window.claimFreeFaucet = function() {
             triggerHaptic('success');
             let bonus = 5.00;
@@ -1312,15 +1658,12 @@
             rewardReferrer(bonus);
             updateTopUI();
             saveUserDataToFirebase();
-            showToast("+5.00 RGN Faucet bonusu qazanıldı!", "gold");
-        }
+            showToast("+5 RGN Faucet!", "gold");
+        };
 
         window.claimMiningRewards = function() {
             triggerHaptic('success');
-            if (userState.unclaimedRgn <= 0) {
-                showToast("Toplanacaq gəlir yoxdur!", "error");
-                return;
-            }
+            if (userState.unclaimedRgn <= 0) { showToast("Gəlir yoxdur!", "error"); return; }
             let claimed = userState.unclaimedRgn;
             userState.balances.RGN += claimed;
             rewardReferrer(claimed);
@@ -1328,169 +1671,67 @@
             updateTopUI();
             document.getElementById('unclaimedRgnDisplay').innerText = "0.0000 RGN";
             saveUserDataToFirebase();
-            showToast(`Uğurla toplandı: +${claimed.toFixed(2)} RGN`, "gold");
-        }
-
-        window.copyReferralLink = function() {
-            triggerHaptic('light');
-            let linkInput = document.getElementById('referralLinkInput');
-            linkInput.select();
-            navigator.clipboard.writeText(linkInput.value);
-            showToast("Referal link kopyalandı!", "success");
-        }
-
-        async function initApp() {
-            checkReferral();
-            await loadUserDataFromFirebase();
-            initAdsgram();
-            renderMarket();
-            renderProfileData();
-            renderAvatarSelector();
-            updateTopUI();
-
-            document.getElementById('referralLinkInput').value = window.location.origin + window.location.pathname + "?ref=" + currentUserId;
-
-            setInterval(() => {
-                let totalEarningPerSec = 0;
-                userState.inventory.forEach(item => {
-                    totalEarningPerSec += item.earningPerSec * item.qty;
-                });
-                if (totalEarningPerSec > 0) {
-                    userState.unclaimedRgn += totalEarningPerSec;
-                    document.getElementById('unclaimedRgnDisplay').innerText = userState.unclaimedRgn.toFixed(4) + " RGN";
-                }
-            }, 1000);
-
-            setInterval(() => { saveUserDataToFirebase(); }, 30000);
-        }
-
-        window.toggleSidebar = function() {
-            triggerHaptic('light');
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('menuOverlay').classList.toggle('active');
-        }
-
-        window.switchView = function(viewId) {
-            triggerHaptic('light');
-            document.querySelectorAll('.app-view').forEach(el => el.classList.remove('active'));
-            document.getElementById(viewId + 'View').classList.add('active');
-            
-            document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
-            let activeTab = document.getElementById('tab-' + viewId);
-            if (activeTab) activeTab.classList.add('active');
-
-            if(viewId === 'inventory') renderInventory();
-            if(viewId === 'p2p') renderP2PMarket();
-            if(viewId === 'leaderboard') renderLeaderboard();
-            if(viewId === 'wallet') renderWallet();
-        }
-
-        function updateTopUI() {
-            document.getElementById('topRegnorBalance').innerText = userState.balances.RGN.toFixed(2);
-            document.getElementById('navUsername').innerText = userState.name;
-            document.getElementById('navAvatar').src = userState.avatar;
-        }
-
-        window.renderMarket = function() {
-            const grid = document.getElementById('minersMarketGrid');
-            grid.innerHTML = '';
-            minersDatabase.forEach(miner => {
-                let dailyProfit = (miner.earningPerSec * 86400).toFixed(2);
-                grid.innerHTML += `
-                    <div class="miner-card">
-                        <div>
-                            <div class="card-top-tags">
-                                <span class="tier-badge">${miner.tier}</span>
-                                <span style="font-size: 11px; color: var(--neon-green)">Aktiv</span>
-                            </div>
-                            <div class="miner-preview">
-                                <img src="${miner.image}">
-                                <div class="price-tag-top">${miner.price.toFixed(2)} RGN</div>
-                            </div>
-                            <div class="miner-name">${miner.name}</div>
-                            <div class="miner-specs"><span>📈 Gəlir: <b>+${dailyProfit} RGN/gün</b></span></div>
-                        </div>
-                        <button class="btn-buy" onclick="buyMiner('${miner.id}')">Al ($${miner.price})</button>
-                    </div>
-                `;
-            });
-        }
-
-        window.buyMiner = function(minerId) {
-            triggerHaptic('heavy');
-            let miner = minersDatabase.find(m => m.id === minerId);
-            if (userState.balances.RGN >= miner.price) {
-                userState.balances.RGN -= miner.price;
-                let existing = userState.inventory.find(i => i.id === minerId);
-                if (existing) { existing.qty += 1; } else { userState.inventory.push({ ...miner, qty: 1 }); }
-                updateTopUI();
-                saveUserDataToFirebase();
-                showToast("Mayner uğurla alındı!", "success");
-            } else { 
-                showToast("Balansınız çatmır!", "error"); 
-            }
-        }
-
-        window.renderInventory = function() {
-            const grid = document.getElementById('inventoryGrid');
-            const p2pSelect = document.getElementById('p2pSellSelect');
-            let totalDailyGain = 0;
-            grid.innerHTML = '';
-            p2pSelect.innerHTML = '';
-
-            if (userState.inventory.length === 0) {
-                grid.innerHTML = `<p style="color:var(--text-muted);">İnventarınız boşdur.</p>`;
-                document.getElementById('totalHashrate').innerText = "0.00 RGN/gün";
-                return;
-            }
-
-            userState.inventory.forEach(item => {
-                let itemDailyGain = (item.earningPerSec * 86400) * item.qty;
-                totalDailyGain += itemDailyGain;
-                let upgradeCost = Math.round(item.price * 0.4);
-                let isUpgraded = (item.upgradeLevel || 0) > 0;
-
-                p2pSelect.innerHTML += `<option value="${item.id}">${item.name} (${item.tier})</option>`;
-
-                grid.innerHTML += `
-                    <div class="miner-card ${isUpgraded ? 'upgraded' : ''}">
-                        <div>
-                            <div class="card-top-tags">
-                                <span class="tier-badge">${item.tier}</span>
-                                <span style="color: var(--neon-green)">Say: x${item.qty}</span>
-                            </div>
-                            <div class="miner-preview">
-                                <img src="${item.image}">
-                                <div class="price-tag-top">${item.price.toFixed(2)} RGN</div>
-                            </div>
-                            <div class="miner-name">${item.name}</div>
-                            <div class="miner-specs">
-                                <span>📈 Gəlir: <b>+${itemDailyGain.toFixed(2)} RGN/gün</b></span>
-                                <span>Səviyyə: <b>Lvl ${item.upgradeLevel || 0}</b></span>
-                            </div>
-                        </div>
-                        <button class="btn-upgrade" onclick="upgradeMiner('${item.id}')">Yüksəlt (${upgradeCost} RGN)</button>
-                    </div>
-                `;
-            });
-            document.getElementById('totalHashrate').innerText = totalDailyGain.toFixed(2) + " RGN/gün";
-        }
+            showToast(`+${claimed.toFixed(2)} RGN toplandı!`, "gold");
+        };
 
         window.openMysteryBox = function() {
             triggerHaptic('heavy');
-            if (userState.balances.RGN < 50) { 
-                showToast("Sandığı açmaq üçün 50 RGN lazımdır!", "error"); 
-                return; 
-            }
+            if (userState.balances.RGN < 50) { showToast("50 RGN lazımdır!", "error"); return; }
             userState.balances.RGN -= 50;
             let prize = Math.floor(Math.random() * 80) + 20;
             userState.balances.RGN += prize;
             updateTopUI();
             saveUserDataToFirebase();
-            document.getElementById('boxResult').innerHTML = `Sandıq açıldı! <b style="color:var(--neon-gold);">+${prize} RGN</b> qazandınız.`;
-            showToast(`Sandıqdan +${prize} RGN çıxdı!`, "gold");
+            document.getElementById('boxResult').innerHTML = `🎉 +${prize} RGN qazandın!`;
+            showToast(`+${prize} RGN!`, "gold");
+        };
+
+        window.copyReferralLink = function() {
+            triggerHaptic('light');
+            let input = document.getElementById('referralLinkInput');
+            navigator.clipboard.writeText(input.value);
+            showToast("Link kopyalandı!", "success");
+        };
+
+        // ==========================================
+        // ADSGRAM
+        // ==========================================
+        let adController = null;
+        const ADSGRAM_BLOCK_ID = "int-40616";
+        const COOLDOWN_TIME = 5 * 60 * 1000;
+
+        function initAdsgram() {
+            if (window.Adsgram) {
+                adController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
+            }
         }
 
+        window.watchAdForReward = async function() {
+            if (!adController) { showToast("Reklam hazır deyil.", "error"); return; }
+            const now = Date.now();
+            const lastWatch = userState.lastAdWatch || 0;
+            if ((now - lastWatch) < COOLDOWN_TIME) {
+                const mins = Math.ceil((COOLDOWN_TIME - (now - lastWatch)) / 60000);
+                showToast(`${mins} dəqiqə gözlə!`, "error");
+                return;
+            }
+            try {
+                const result = await adController.show();
+                if (result.done) {
+                    userState.balances.RGN += 0.001;
+                    userState.lastAdWatch = now;
+                    await saveUserDataToFirebase();
+                    updateTopUI();
+                    showToast("+0.001 RGN!", "success");
+                }
+            } catch (error) {
+                showToast("Reklam xətası!", "error");
+            }
+        };
+
+        // ==========================================
+        // WALLET
+        // ==========================================
         window.renderWallet = function() {
             const container = document.getElementById('walletCardsContainer');
             container.innerHTML = `
@@ -1498,11 +1739,20 @@
                     <div>
                         <div class="crypto-card-top"><span class="crypto-name">Regnorcoin</span><span class="crypto-symbol">RGN</span></div>
                         <div class="crypto-balance">${userState.balances.RGN.toFixed(2)} RGN</div>
+                        <div style="font-size:10px;color:var(--text-muted);">≈ $${(userState.balances.RGN * 0.12).toFixed(2)} USD</div>
                     </div>
                 </div>
             `;
-        }
+            loadTransactionHistory();
+            if (currentUserId === ADMIN_TG_ID) {
+                renderAdminDeposits();
+                renderAdminWithdraws();
+            }
+        };
 
+        // ==========================================
+        // PROFILE
+        // ==========================================
         function renderProfileData() {
             document.getElementById('profileNameDisplay').innerText = userState.name;
             document.getElementById('profileAvatarLg').src = userState.avatar;
@@ -1517,25 +1767,98 @@
             });
         }
 
-        window.selectAvatar = function(url) { 
+        window.selectAvatar = function(url) {
             triggerHaptic('light');
-            userState.avatar = url; 
-            renderAvatarSelector(); 
-        }
+            userState.avatar = url;
+            renderAvatarSelector();
+        };
 
         window.saveProfile = function() {
             triggerHaptic('medium');
             let newName = document.getElementById('usernameInput').value.trim();
-            if (newName) { 
-                userState.name = newName; 
-                updateTopUI(); 
-                saveUserDataToFirebase(); 
-                showToast("Profil uğurla yeniləndi!", "success"); 
+            if (newName) {
+                userState.name = newName;
+                updateTopUI();
+                saveUserDataToFirebase();
+                showToast("Profil yeniləndi!", "success");
             }
+        };
+
+        // ==========================================
+        // UI
+        // ==========================================
+        function updateTopUI() {
+            document.getElementById('topRegnorBalance').innerText = userState.balances.RGN.toFixed(2);
+            document.getElementById('navUsername').innerText = userState.name;
+            document.getElementById('navAvatar').src = userState.avatar;
+        }
+
+        window.toggleSidebar = function() {
+            triggerHaptic('light');
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('menuOverlay').classList.toggle('active');
+        };
+
+        window.switchView = function(viewId) {
+            if (viewId === 'admin' && currentUserId !== ADMIN_TG_ID) {
+                showToast("İcazə yoxdur!", "error");
+                return;
+            }
+            
+            triggerHaptic('light');
+            document.querySelectorAll('.app-view').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById(viewId + 'View');
+            if (target) target.classList.add('active');
+            
+            document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
+            let tab = document.getElementById('tab-' + viewId);
+            if (tab) tab.classList.add('active');
+            
+            if (viewId === 'inventory') renderInventory();
+            if (viewId === 'p2p') renderP2PMarket();
+            if (viewId === 'leaderboard') renderLeaderboard();
+            if (viewId === 'wallet') renderWallet();
+            if (viewId === 'admin' && currentUserId === ADMIN_TG_ID) {
+                renderAdminDeposits();
+                renderAdminWithdraws();
+            }
+        };
+
+        // ==========================================
+        // INIT
+        // ==========================================
+        async function initApp() {
+            checkReferral();
+            await loadUserDataFromFirebase();
+            initAdsgram();
+            renderMarket();
+            renderProfileData();
+            renderAvatarSelector();
+            updateTopUI();
+
+            if (currentUserId === ADMIN_TG_ID) {
+                document.getElementById('adminMenuItem').style.display = 'flex';
+            }
+
+            document.getElementById('referralLinkInput').value = window.location.origin + window.location.pathname + "?ref=" + currentUserId;
+
+            // Mining earnings
+            setInterval(() => {
+                let total = 0;
+                userState.inventory.forEach(item => { total += item.earningPerSec * item.qty; });
+                if (total > 0) {
+                    userState.unclaimedRgn += total;
+                    document.getElementById('unclaimedRgnDisplay').innerText = userState.unclaimedRgn.toFixed(4) + " RGN";
+                }
+            }, 1000);
+
+            // Auto-save
+            setInterval(() => { saveUserDataToFirebase(); }, 30000);
+
+            renderWallet();
         }
 
         window.onload = initApp;
     </script>
 </body>
-</html>
-
+    </html>
