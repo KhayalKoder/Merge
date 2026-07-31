@@ -807,7 +807,7 @@
     </div>
 
     <script>
-        // Öz hazırladığım xüsusi kristal və avadanlıq illüstrasiyaları (Dəyərinə və formalı rənglərinə uyğun SVG data URI-lər)
+        // SVG xarab olmaması üçün encodeURIComponent ilə şifrələnmiş unikal kristal dizaynları
         const minersDatabase = [
             { 
                 id: 'nano', 
@@ -817,7 +817,7 @@
                 power: 15, 
                 price: 2.50, 
                 date: 2024,
-                image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="c1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%2300d2ff"/><stop offset="100%" stop-color="%230369a1"/></linearGradient></defs><rect width="200" height="200" fill="%2304060b"/><polygon points="100,30 130,90 115,170 85,170 70,90" fill="url(%23c1)" opacity="0.9"/><polygon points="100,30 100,170 115,170 130,90" fill="%2338bdf8" opacity="0.4"/><circle cx="100" cy="100" r="50" fill="%2300d2ff" filter="blur(25px)" opacity="0.3"/></svg>'
+                image: 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="c1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00d2ff"/><stop offset="100%" stop-color="#0369a1"/></linearGradient></defs><rect width="200" height="200" fill="#04060b"/><polygon points="100,30 130,90 115,170 85,170 70,90" fill="url(#c1)" opacity="0.9"/><polygon points="100,30 100,170 115,170 130,90" fill="#38bdf8" opacity="0.4"/><circle cx="100" cy="100" r="50" fill="#00d2ff" filter="blur(25px)" opacity="0.3"/></svg>')
             },
             { 
                 id: 'blade', 
@@ -827,7 +827,7 @@
                 power: 45, 
                 price: 7.00, 
                 date: 2025,
-                image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="c2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%2310b981"/><stop offset="100%" stop-color="%23047857"/></linearGradient></defs><rect width="200" height="200" fill="%2304060b"/><polygon points="80,40 110,60 95,160 65,140" fill="url(%23c2)" opacity="0.9"/><polygon points="120,60 150,80 135,180 105,160" fill="%2334d399" opacity="0.8"/><circle cx="100" cy="100" r="60" fill="%2310b981" filter="blur(25px)" opacity="0.3"/></svg>'
+                image: 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="c2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#047857"/></linearGradient></defs><rect width="200" height="200" fill="#04060b"/><polygon points="80,40 110,60 95,160 65,140" fill="url(#c2)" opacity="0.9"/><polygon points="120,60 150,80 135,180 105,160" fill="#34d399" opacity="0.8"/><circle cx="100" cy="100" r="60" fill="#10b981" filter="blur(25px)" opacity="0.3"/></svg>')
             },
             { 
                 id: 'alpha', 
@@ -837,7 +837,7 @@
                 power: 90, 
                 price: 15.00, 
                 date: 2023,
-                image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="c3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23a855f7"/><stop offset="100%" stop-color="%236b21a8"/></linearGradient></defs><rect width="200" height="200" fill="%2304060b"/><polygon points="100,20 140,70 120,170 80,170 60,70" fill="url(%23c3)" opacity="0.95"/><polygon points="100,20 100,170 120,170 140,70" fill="%23e879f9" opacity="0.5"/><polygon points="100,50 115,85 100,130 85,85" fill="%23f3e8ff" opacity="0.7"/><circle cx="100" cy="100" r="60" fill="%23a855f7" filter="blur(30px)" opacity="0.4"/></svg>'
+                image: 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="c3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#a855f7"/><stop offset="100%" stop-color="#6b21a8"/></linearGradient></defs><rect width="200" height="200" fill="#04060b"/><polygon points="100,20 140,70 120,170 80,170 60,70" fill="url(#c3)" opacity="0.95"/><polygon points="100,20 100,170 120,170 140,70" fill="#e879f9" opacity="0.5"/><polygon points="100,50 115,85 100,130 85,85" fill="#f3e8ff" opacity="0.7"/><circle cx="100" cy="100" r="60" fill="#a855f7" filter="blur(30px)" opacity="0.4"/></svg>')
             },
             { 
                 id: 'tor50', 
@@ -847,11 +847,10 @@
                 power: 200, 
                 price: 35.00, 
                 date: 2026,
-                image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="c4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23f59e0b"/><stop offset="100%" stop-color="%23b45309"/></linearGradient></defs><rect width="200" height="200" fill="%2304060b"/><polygon points="100,15 135,50 150,110 125,185 75,185 50,110 65,50" fill="url(%23c4)" opacity="0.95"/><polygon points="100,15 100,185 125,185 150,110 135,50" fill="%23fbbf24" opacity="0.4"/><polygon points="100,45 120,80 110,140 90,140 80,80" fill="%23fef3c7" opacity="0.8"/><circle cx="100" cy="100" r="65" fill="%23f59e0b" filter="blur(35px)" opacity="0.4"/></svg>'
+                image: 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="c4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#b45309"/></linearGradient></defs><rect width="200" height="200" fill="#04060b"/><polygon points="100,15 135,50 150,110 125,185 75,185 50,110 65,50" fill="url(#c4)" opacity="0.95"/><polygon points="100,15 100,185 125,185 150,110 135,50" fill="#fbbf24" opacity="0.4"/><polygon points="100,45 120,80 110,140 90,140 80,80" fill="#fef3c7" opacity="0.8"/><circle cx="100" cy="100" r="65" fill="#f59e0b" filter="blur(35px)" opacity="0.4"/></svg>')
             }
         ];
 
-        // Canlı bazar qiymətləri obyekti (Binance Live API vasitəsilə avtomatik yenilənir)
         let cryptoPricesUsd = {
             RGN: 1.00,
             USDT: 1.00,
@@ -886,7 +885,6 @@
             "https://api.dicebear.com/7.x/bottts/svg?seed=CyberMiner"
         ];
 
-        // Binance API vasitəsilə birbaşa canlı real qiymətləri çəkən funksiya
         async function fetchLivePrices() {
             try {
                 let response = await fetch('https://api.binance.com/api/v3/ticker/price');
@@ -905,7 +903,7 @@
                     if (priceMap['TONUSDT']) cryptoPricesUsd.TON = priceMap['TONUSDT'];
                     if (priceMap['DOGEUSDT']) cryptoPricesUsd.DOGE = priceMap['DOGEUSDT'];
                     cryptoPricesUsd.USDT = 1.00;
-                    cryptoPricesUsd.RGN = 1.00; // Platforma valyutası sabit qalır
+                    cryptoPricesUsd.RGN = 1.00;
                 }
             } catch (error) {
                 console.warn("Canlı bazar qiymətlərini çəkmək mümkün olmadı:", error);
