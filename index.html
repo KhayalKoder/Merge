@@ -6,6 +6,8 @@
     <title>NexusCloud // Regnorcoin Mining Ecosystem</title>
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Adsgram SDK -->
+    <script src="https://sad.adsgram.ai/js/adsgram.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -36,7 +38,7 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
-            padding-bottom: 75px; /* Alt tab bar üçün boşluq */
+            padding-bottom: 75px;
         }
 
         /* Toast Bildirişləri */
@@ -137,7 +139,7 @@
         .hud-right {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
         }
 
         .user-profile-btn {
@@ -413,7 +415,6 @@
             box-shadow: 0 10px 30px rgba(0, 210, 255, 0.1);
         }
 
-        /* Yüksəldilmiş Kart Dinamik Parıltı Effekti */
         .miner-card.upgraded {
             border-color: var(--neon-purple);
             box-shadow: 0 0 20px rgba(168, 85, 247, 0.15);
@@ -698,6 +699,7 @@
             </div>
         </div>
         <div class="hud-right">
+            <button class="btn-action" style="padding: 5px 8px; font-size: 10px; background: rgba(0, 210, 255, 0.15); border-color: var(--neon-blue); color: var(--neon-blue);" onclick="watchAdForReward()">📺 Ads</button>
             <button class="btn-action" style="padding: 5px 10px; font-size: 11px; background: rgba(16, 185, 129, 0.15); border-color: var(--neon-green); color: var(--neon-green);" onclick="claimFreeFaucet()">🎁 Faucet</button>
             <div class="user-profile-btn" onclick="switchView('profile')">
                 <img id="navAvatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=SingleKing67" class="user-avatar-sm" alt="Avatar">
@@ -772,7 +774,7 @@
         </div>
     </div>
 
-    <!-- Alt Sabit Naviqasiya Paneli (Bottom Tab Bar) -->
+    <!-- Alt Sabit Naviqasiya Paneli -->
     <nav class="bottom-tab-bar">
         <button class="tab-item active" id="tab-market" onclick="switchView('market')">
             <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
@@ -965,7 +967,7 @@
             }
         }
 
-        // Müasir Toast Bildiriş Sistemi (Alert əvəzinə)
+        // Toast Bildiriş Sistemi
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -979,6 +981,69 @@
         let currentUserId = tgUser ? String(tgUser.id) : "SingleKing67";
         let currentUsername = tgUser ? (tgUser.username || tgUser.first_name || "Mayner") : "SingleKing67";
         let defaultAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${currentUsername}`;
+
+        // Adsgram İnteqrasiyası (Block ID: INT-40616, 5 dəqiqə cooldown)
+        let adController = null;
+        const COOLDOWN_TIME = 5 * 60 * 1000; // 5 dəqiqə (milliseyndə)
+
+        function initAdsgram() {
+            if (window.Adsgram) {
+                adController = window.Adsgram.init({ blockId: "INT-40616" });
+            } else {
+                console.warn("Adsgram SDK hələ yüklənməyib.");
+            }
+        }
+
+        window.watchAdForReward = async function() {
+            if (!adController) {
+                showToast("Reklam modulu hələ hazır deyil.", "error");
+                return;
+            }
+
+            const now = Date.now();
+            const lastWatch = userState.lastAdWatch || 0;
+            const timeElapsed = now - lastWatch;
+
+            if (timeElapsed < COOLDOWN_TIME) {
+                const remainingMinutes = Math.ceil((COOLDOWN_TIME - timeElapsed) / 60000);
+                showToast(`Yenidən reklam izləmək üçün ${remainingMinutes} dəqiqə gözləməlisiniz.`, "error");
+                return;
+            }
+
+            try {
+                const result = await adController.show();
+                if (result.done) {
+                    grantAdReward();
+                }
+            } catch (error) {
+                console.error("Reklam xətası:", error);
+                showToast("Reklam tam izlənilmədi və ya xəta baş verdi.", "error");
+            }
+        }
+
+        async function grantAdReward() {
+            const rewardAmount = 0.001; // 0.001 RGN
+            const now = Date.now();
+            
+            userState.balances.RGN += rewardAmount;
+            userState.lastAdWatch = now;
+            
+            try {
+                await db.collection("istifadeciler").doc(currentUserId).update({
+                    balances: userState.balances,
+                    lastAdWatch: now
+                });
+
+                updateTopUI();
+                showToast(`Təbriklər! +${rewardAmount} RGN qazandınız!`, "success");
+            } catch (dbError) {
+                console.error("Firestore xətası:", dbError);
+                // Alternativ olaraq ümumi save funksiyasını çağırırıq
+                saveUserDataToFirebase();
+                updateTopUI();
+                showToast(`Təbriklər! +${rewardAmount} RGN qazandınız!`, "success");
+            }
+        }
 
         const minersDatabase = [];
         const prefixList = ["Nano", "Micro", "Quantum", "Plasma", "Aether", "Solar", "Lunar", "Astral", "Void", "Nova"];
@@ -1013,7 +1078,8 @@
             balances: { RGN: 50.00, USDT: 0.00, BTC: 0.00 },
             inventory: [],
             unclaimedRgn: 0.00,
-            referredBy: null
+            referredBy: null,
+            lastAdWatch: 0
         };
 
         const avatarsList = [
@@ -1056,6 +1122,7 @@
                     inventory: userState.inventory,
                     unclaimedRgn: userState.unclaimedRgn,
                     referredBy: userState.referredBy,
+                    lastAdWatch: userState.lastAdWatch || 0,
                     lastUpdated: new Date()
                 });
             } catch (e) {
@@ -1075,6 +1142,7 @@
                     userState.unclaimedRgn = data.unclaimedRgn || 0.00;
                     userState.avatar = data.avatar || userState.avatar;
                     userState.referredBy = data.referredBy || null;
+                    userState.lastAdWatch = data.lastAdWatch || 0;
                 } else {
                     await saveUserDataToFirebase();
                 }
@@ -1274,6 +1342,7 @@
         async function initApp() {
             checkReferral();
             await loadUserDataFromFirebase();
+            initAdsgram();
             renderMarket();
             renderProfileData();
             renderAvatarSelector();
