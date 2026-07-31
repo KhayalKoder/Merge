@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexusCloud // Regnorcoin Mining Ecosystem</title>
+    <title>NexusCloud // Regnorcoin Mining Ecosystem (0 Balance & Real Passive Income)</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,6 +14,8 @@
             --neon-green: #10b981;
             --neon-gold: #f59e0b;
             --neon-purple: #a855f7;
+            --neon-red: #ef4444;
+            --neon-pink: #ec4899;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border-glass: rgba(0, 210, 255, 0.15);
@@ -378,10 +380,13 @@
         }
 
         .miner-name {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
             margin-bottom: 8px;
             color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .miner-specs {
@@ -457,6 +462,27 @@
             background: var(--neon-gold);
             color: #000;
             box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-sell {
+            flex: 1;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--neon-red);
+            color: var(--neon-red);
+            height: 38px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .btn-sell:hover {
+            background: var(--neon-red);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
         }
 
         /* Profile & Wallet Styling */
@@ -611,10 +637,11 @@
             <div class="brand-logo">RGN</div>
             <div class="balance-badge">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"></circle><path d="M12 6v12M15 9.5H9.5a1.5 1.5 0 0 0 0 3h5a1.5 1.5 0 0 1 0 3H9"></path></svg>
-                <span id="topRegnorBalance">50.00</span> RGN
+                <span id="topRegnorBalance">0.00</span> RGN
             </div>
         </div>
         <div class="hud-right">
+            <button class="btn-action" style="padding: 5px 10px; font-size: 11px; background: rgba(16, 185, 129, 0.15); border-color: var(--neon-green); color: var(--neon-green);" onclick="claimFreeFaucet()">🎁 Faucet Bonus</button>
             <div class="user-profile-btn" onclick="switchView('profile')">
                 <img id="navAvatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=SingleKing67" class="user-avatar-sm" alt="Avatar">
                 <span id="navUsername">SingleKing67</span>
@@ -637,26 +664,33 @@
             <div class="menu-item" onclick="switchView('market'); toggleSidebar();">
                 <div class="menu-item-left">
                     <svg class="menu-icon" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
-                    Bazar
+                    Bazar (100 Kristal Mayner)
                 </div>
-                <span class="badge-sale">Aktiv</span>
+                <span class="badge-sale">100 Model</span>
             </div>
             <div class="menu-item" onclick="switchView('inventory'); toggleSidebar();">
                 <div class="menu-item-left">
                     <svg class="menu-icon" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                    İnventar
+                    İnventar & Passiv Gəlir
                 </div>
+            </div>
+            <div class="menu-item" onclick="switchView('boxes'); toggleSidebar();">
+                <div class="menu-item-left">
+                    <svg class="menu-icon" viewBox="0 0 24 24"><path d="M21 8V21H3V8"></path><path d="M1 3H23V8H1Z"></path><path d="M10 12H14"></path></svg>
+                    Mistik Sandıqlar
+                </div>
+                <span class="badge-sale" style="background: var(--neon-purple);">Loot</span>
             </div>
             <div class="menu-item" onclick="switchView('wallet'); toggleSidebar();">
                 <div class="menu-item-left">
                     <svg class="menu-icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-                    Cüzdan (Canlı Kripto & RGN)
+                    Cüzdan & Canlı Kripto
                 </div>
             </div>
             <div class="menu-item" onclick="switchView('swap'); toggleSidebar();">
                 <div class="menu-item-left">
                     <svg class="menu-icon" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
-                    Kripto Swap (Mübadilə)
+                    Kripto Swap
                 </div>
             </div>
             <div class="menu-item" onclick="switchView('profile'); toggleSidebar();">
@@ -674,56 +708,97 @@
         <!-- 1. BAZAR (MARKETPLACE) VIEW -->
         <div id="marketView" class="app-view active">
             <div class="section-header-bar">
-                <div class="section-title">MƏDƏNÇİLƏR BAZARI</div>
+                <div class="section-title">100 KRİSTAL MAYNER BAZARI ($1 - $1000)</div>
                 <div class="filters-wrapper">
                     <select class="dropdown-select" id="sortSelect" onchange="renderMarket()">
                         <option value="price-desc">Qiymət: Çoxdan aza</option>
                         <option value="price-asc">Qiymət: Azdan çoxuna</option>
                         <option value="power-desc">Güc: Ən güclü (Çox)</option>
                         <option value="power-asc">Güc: Ən zəif (Az)</option>
-                        <option value="newest">Buraxılış: Ən yeni</option>
-                        <option value="oldest">Buraxılış: Köhnə</option>
                     </select>
                     <input type="text" id="searchInput" class="filter-input" placeholder="Ada görə axtar..." onkeyup="renderMarket()">
                 </div>
             </div>
 
-            <div class="miners-grid" id="minersMarketGrid">
-                <!-- Javascript tərəfindən dinamik doldurulur -->
-            </div>
+            <div class="miners-grid" id="minersMarketGrid"></div>
         </div>
 
-        <!-- 2. İNVENTAR (OWNED MINERS) VIEW -->
+        <!-- 2. İNVENTAR & MAYNİNG VIEW -->
         <div id="inventoryView" class="app-view">
             <div class="section-header-bar">
-                <div class="section-title">ŞƏXSİ İNVENTAR & MAYNINGLƏR</div>
+                <div class="section-title">ŞƏXSİ İNVENTAR & HASH GÜCÜ PASSİV GƏLİRİ</div>
                 <div style="font-family: 'JetBrains Mono'; font-size: 13px; color: var(--neon-blue);">
-                    Ümumi Güc: <b id="totalHashrate">0 GH/s</b>
+                    Ümumi Hash Gücü: <b id="totalHashrate">0 GH/s</b>
                 </div>
             </div>
-            <div class="miners-grid" id="inventoryGrid">
-                <!-- İstifadəçinin aldıqları buraya düşəcək -->
+
+            <!-- Real Passive Income & ROI Analytics Panel -->
+            <div class="card-panel" style="background: linear-gradient(135deg, rgba(0,210,255,0.06), rgba(16,185,129,0.06)); border: 1px solid var(--neon-blue);">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+                    <div>
+                        <h3 style="font-family: 'JetBrains Mono'; font-size: 14px; color: var(--neon-blue); margin-bottom: 4px;">// HASH GÜCÜNƏ GÖRƏ REAL PASSİV GƏLİR</h3>
+                        <p style="font-size: 12px; color: var(--text-muted);">Aktiv maynerlərinizin gücünə əsaslanan real-vaxt qazanc göstəriciləri (3 aylıq ROI sistemi):</p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div style="font-family: 'JetBrains Mono'; font-size: 20px; font-weight: 700; color: var(--neon-gold);" id="unclaimedRgnDisplay">0.0000 RGN</div>
+                        <button class="btn-action" style="background: rgba(16, 185, 129, 0.15); border-color: var(--neon-green); color: var(--neon-green);" onclick="claimMiningRewards()">Balansa Köçir 📥</button>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-family: 'JetBrains Mono'; font-size: 12px;">
+                    <div style="background: var(--bg-darker); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                        <span style="color: var(--text-muted);">Gündəlik Qazanc:</span><br>
+                        <b id="dailyPassiveEarn" style="color: var(--neon-green); font-size: 14px;">0.00 RGN / gün</b>
+                    </div>
+                    <div style="background: var(--bg-darker); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                        <span style="color: var(--text-muted);">Aylıq Qazanc (30 gün):</span><br>
+                        <b id="monthlyPassiveEarn" style="color: var(--neon-blue); font-size: 14px;">0.00 RGN / ay</b>
+                    </div>
+                    <div style="background: var(--bg-darker); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                        <span style="color: var(--text-muted);">İnvestisiya Qaytarması (ROI):</span><br>
+                        <b style="color: var(--neon-gold); font-size: 14px;">90 Gün (3 Ay)</b>
+                    </div>
+                </div>
+            </div>
+
+            <div class="miners-grid" id="inventoryGrid"></div>
+        </div>
+
+        <!-- 3. MİSTİK SANDIQLAR (LOOT BOXES) VIEW -->
+        <div id="boxesView" class="app-view">
+            <div class="section-header-bar">
+                <div class="section-title">MİSTİK SANDIQLAR & MÜKAFATLAR</div>
+                <div style="font-family: 'JetBrains Mono'; font-size: 13px; color: var(--neon-purple);">
+                    Sandıq Açma Qiyməti: <b>250 RGN</b>
+                </div>
+            </div>
+            <div class="card-panel" style="text-align: center; max-width: 600px; margin: 0 auto;">
+                <div style="font-size: 64px; margin-bottom: 16px; animation: pulse 2s infinite;">🎁</div>
+                <h3 style="font-family: 'JetBrains Mono'; font-size: 18px; color: #fff; margin-bottom: 8px;">Regnor Mystery Box</h3>
+                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">
+                    Bu sandığı açaraq dəyərli maynerlər və ya böyük məbləğdə RGN qazana bilərsiniz. Dəyərli hədiyyələrin çıxma ehtimalı çox azdır!
+                </p>
+                <button class="btn-action" style="background: rgba(168, 85, 247, 0.15); border-color: var(--neon-purple); color: var(--neon-purple); width: 100%; font-size: 15px; padding: 14px;" onclick="openMysteryBox()">Sandığı Aç (250 RGN)</button>
+                <div id="boxResult" style="margin-top: 20px; font-family: 'JetBrains Mono'; font-size: 14px; min-height: 50px; padding: 10px; border-radius: 8px;"></div>
             </div>
         </div>
 
-        <!-- 3. CÜZDAN (WALLET - LIVE CRYPTO & REGNORCOIN) VIEW -->
+        <!-- 4. CÜZDAN (WALLET) VIEW -->
         <div id="walletView" class="app-view">
             <div class="section-header-bar">
                 <div class="section-title">CÜZDAN & CANLI BAZAR QİYMƏTLƏRİ</div>
-                <button class="btn-action" style="padding: 6px 12px; font-size: 11px;" onclick="fetchLivePrices()">Qiymətləri Yenilə 🔄</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-action" style="padding: 6px 12px; font-size: 11px; background: rgba(16, 185, 129, 0.15); border-color: var(--neon-green); color: var(--neon-green);" onclick="claimFreeFaucet()">Pulsuz Faucet (+5 RGN)</button>
+                    <button class="btn-action" style="padding: 6px 12px; font-size: 11px;" onclick="fetchLivePrices()">Qiymətləri Yenilə 🔄</button>
+                </div>
             </div>
-            
-            <div class="wallet-grid" id="walletCardsContainer">
-                <!-- Dinamik olaraq BTC, ETH, SOL, BNB, TON, DOGE, USDT və RGN kartları gələcək -->
-            </div>
+            <div class="wallet-grid" id="walletCardsContainer"></div>
         </div>
 
-        <!-- 4. KRİPTO SWAP VIEW -->
+        <!-- 5. KRİPTO SWAP VIEW -->
         <div id="swapView" class="app-view">
             <div class="section-header-bar">
                 <div class="section-title">KRİPTO SWAP & MÜBADİLƏ</div>
             </div>
-
             <div class="card-panel" style="max-width: 520px; margin: 0 auto;">
                 <div class="form-group">
                     <label>Verirsən (Satırsan)</label>
@@ -734,9 +809,6 @@
                             <option value="BTC">Bitcoin (BTC)</option>
                             <option value="ETH">Ethereum (ETH)</option>
                             <option value="SOL">Solana (SOL)</option>
-                            <option value="BNB">Binance Coin (BNB)</option>
-                            <option value="TON">Toncoin (TON)</option>
-                            <option value="DOGE">Dogecoin (DOGE)</option>
                         </select>
                         <input type="number" id="fromAmount" class="form-input" placeholder="0.00" oninput="calculateSwap()" style="flex: 1;">
                     </div>
@@ -744,50 +816,43 @@
                 </div>
 
                 <div style="text-align: center; margin: 12px 0;">
-                    <button class="menu-dots-btn" onclick="invertSwap()" style="margin: 0 auto; border-radius: 50%;" title="Valyutaların yerini dəyiş">
+                    <button class="menu-dots-btn" onclick="invertSwap()" style="margin: 0 auto; border-radius: 50%;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 16V4M7 4L3 8M7 4l4 4M17 8v12M17 20l4-4M17 20l-4-4"/></svg>
                     </button>
                 </div>
 
                 <div class="form-group">
-                    <label>Alırsan (Qəbul edirsən)</label>
+                    <label>Alırsan</label>
                     <div style="display: flex; gap: 10px;">
                         <select class="dropdown-select" id="toCurrency" onchange="calculateSwap()" style="flex: 1;">
                             <option value="USDT">Tether USD (USDT)</option>
                             <option value="RGN" selected>Regnorcoin (RGN)</option>
                             <option value="BTC">Bitcoin (BTC)</option>
                             <option value="ETH">Ethereum (ETH)</option>
-                            <option value="SOL">Solana (SOL)</option>
-                            <option value="BNB">Binance Coin (BNB)</option>
-                            <option value="TON">Toncoin (TON)</option>
-                            <option value="DOGE">Dogecoin (DOGE)</option>
                         </select>
                         <input type="text" id="toAmount" class="form-input" placeholder="0.00" readonly style="flex: 1; background: var(--bg-darker);">
                     </div>
-                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 6px; font-family: 'JetBrains Mono';">Təxmini məzənnə: <span id="exchangeRateText">1 RGN = 1 USD</span></div>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 6px; font-family: 'JetBrains Mono';">Məzənnə: <span id="exchangeRateText">1 RGN = 1 USD</span></div>
                 </div>
-
-                <button class="btn-action" style="width: 100%; margin-top: 10px;" onclick="executeSwap()">Swap Et (Mübadiləni Tamamla)</button>
+                <button class="btn-action" style="width: 100%; margin-top: 10px;" onclick="executeSwap()">Swap Et</button>
             </div>
         </div>
 
-        <!-- 5. PROFİL & SETTINGS VIEW -->
+        <!-- 6. PROFİL VIEW -->
         <div id="profileView" class="app-view">
             <div class="section-header-bar">
                 <div class="section-title">ŞƏXSİ PROFİL</div>
             </div>
-
             <div class="card-panel">
                 <div class="profile-flex">
                     <img id="profileAvatarLg" src="" class="profile-avatar-lg" alt="Avatar">
                     <div>
                         <h2 id="profileNameDisplay" style="margin-bottom: 4px;">SingleKing67</h2>
-                        <p style="font-family: 'JetBrains Mono'; font-size: 12px; color: var(--neon-gold);">Rank: <span id="userRankBadge">Bronz Mayner</span></p>
+                        <p style="font-family: 'JetBrains Mono'; font-size: 12px; color: var(--neon-gold);">Rank: <span id="userRankBadge">Yeni Başlayan Mayner</span></p>
                         <p style="font-family: 'JetBrains Mono'; font-size: 12px; color: var(--neon-blue); margin-top: 4px;">Mayning Səviyyəsi: <span id="userLevelDisplay">Level 1</span></p>
                     </div>
                 </div>
             </div>
-
             <div class="card-panel">
                 <h3 style="font-family: 'JetBrains Mono'; font-size: 14px; color: var(--neon-blue); margin-bottom: 16px;">// PROFİLİ TƏNZİMLƏ</h3>
                 <div class="form-group">
@@ -796,9 +861,7 @@
                 </div>
                 <div class="form-group">
                     <label>Avatar Seçimi</label>
-                    <div class="avatar-selection" id="avatarSelector">
-                        <!-- Dinamik yaradılacaq -->
-                    </div>
+                    <div class="avatar-selection" id="avatarSelector"></div>
                 </div>
                 <button class="btn-action" onclick="saveProfile()">Yadda Saxla</button>
             </div>
@@ -806,76 +869,81 @@
 
     </div>
 
-    <script>
-        // SVG xarab olmaması üçün encodeURIComponent ilə şifrələnmiş unikal kristal dizaynları
-        const minersDatabase = [
-            { 
-                id: 'nano', 
-                name: 'USB Nano Rig', 
-                tier: 'L3', 
-                size: 'Kiçik', 
-                power: 15, 
-                price: 2.50, 
-                date: 2024,
-                image: 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="c1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00d2ff"/><stop offset="100%" stop-color="#0369a1"/></linearGradient></defs><rect width="200" height="200" fill="#04060b"/><polygon points="100,30 130,90 115,170 85,170 70,90" fill="url(#c1)" opacity="0.9"/><polygon points="100,30 100,170 115,170 130,90" fill="#38bdf8" opacity="0.4"/><circle cx="100" cy="100" r="50" fill="#00d2ff" filter="blur(25px)" opacity="0.3"/></svg>')
-            },
-            { 
-                id: 'blade', 
-                name: 'Quantum Blade X', 
-                tier: 'L2', 
-                size: 'Orta', 
-                power: 45, 
-                price: 7.00, 
-                date: 2025,
-                image: 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="c2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#047857"/></linearGradient></defs><rect width="200" height="200" fill="#04060b"/><polygon points="80,40 110,60 95,160 65,140" fill="url(#c2)" opacity="0.9"/><polygon points="120,60 150,80 135,180 105,160" fill="#34d399" opacity="0.8"/><circle cx="100" cy="100" r="60" fill="#10b981" filter="blur(25px)" opacity="0.3"/></svg>')
-            },
-            { 
-                id: 'alpha', 
-                name: 'Alpha Core 7', 
-                tier: 'L2', 
-                size: 'Orta', 
-                power: 90, 
-                price: 15.00, 
-                date: 2023,
-                image: 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="c3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#a855f7"/><stop offset="100%" stop-color="#6b21a8"/></linearGradient></defs><rect width="200" height="200" fill="#04060b"/><polygon points="100,20 140,70 120,170 80,170 60,70" fill="url(#c3)" opacity="0.95"/><polygon points="100,20 100,170 120,170 140,70" fill="#e879f9" opacity="0.5"/><polygon points="100,50 115,85 100,130 85,85" fill="#f3e8ff" opacity="0.7"/><circle cx="100" cy="100" r="60" fill="#a855f7" filter="blur(30px)" opacity="0.4"/></svg>')
-            },
-            { 
-                id: 'tor50', 
-                name: 'LimerMiner Tor50', 
-                tier: 'L1', 
-                size: 'Böyük', 
-                power: 200, 
-                price: 35.00, 
-                date: 2026,
-                image: 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="c4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#b45309"/></linearGradient></defs><rect width="200" height="200" fill="#04060b"/><polygon points="100,15 135,50 150,110 125,185 75,185 50,110 65,50" fill="url(#c4)" opacity="0.95"/><polygon points="100,15 100,185 125,185 150,110 135,50" fill="#fbbf24" opacity="0.4"/><polygon points="100,45 120,80 110,140 90,140 80,80" fill="#fef3c7" opacity="0.8"/><circle cx="100" cy="100" r="65" fill="#f59e0b" filter="blur(35px)" opacity="0.4"/></svg>')
-            }
-        ];
+    <!-- Firebase SDK (Modular CDN) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyArfgU34XyZH7TrRNJN-ApKl1MNwU31Sfs",
+          authDomain: "rgncoin-69d0c.firebaseapp.com",
+          projectId: "rgncoin-69d0c",
+          storageBucket: "rgncoin-69d0c.firebasestorage.app",
+          messagingSenderId: "206046770381",
+          appId: "1:206046770381:web:bcf3aa46196cc6c00ea584",
+          measurementId: "G-FXRC15WSQX"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const minersDatabase = [];
+        const prefixList = ["Nano", "Micro", "Quantum", "Plasma", "Aether", "Solar", "Lunar", "Astral", "Void", "Nova", "Stellar", "Core", "Vortex", "Matrix", "Nexus", "Titan", "Omega", "Prime", "Apex", "Singularity"];
+        const suffixList = ["Shard", "Cluster", "Node", "Monolith", "Prism", "Crystal", "Core", "Spire", "Matrix", "Gem", "Pylon", "Beacon", "Fragment", "Obelisk", "Sphere"];
+
+        for (let i = 1; i <= 100; i++) {
+            let price = parseFloat((1 + (999 * Math.pow((i - 1) / 99, 1.3))).toFixed(2));
+            let power = Math.round(price * 3.8 + (i * 1.2));
+            let tier = price < 50 ? 'L4' : price < 250 ? 'L3' : price < 600 ? 'L2' : price < 900 ? 'L1' : 'Elite';
+            let size = price < 50 ? 'Kiçik' : price < 250 ? 'Orta' : price < 600 ? 'Böyük' : 'Ultra';
+
+            let hue1 = (i * 37) % 360;
+            let hue2 = (hue1 + 75) % 360;
+            let color1 = `hsl(${hue1}, 90%, 55%)`;
+            let color2 = `hsl(${hue2}, 85%, 25%)`;
+            let glowColor = `hsl(${hue1}, 100%, 50%)`;
+
+            let p1x = 80 + (i % 40);
+            let p1y = 10 + (i % 25);
+            let p2x = 120 + (i % 35);
+            let p2y = 40 + (i % 30);
+
+            let svgString = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="g${i}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="${color1}"/><stop offset="100%" stop-color="${color2}"/></linearGradient></defs><rect width="200" height="200" fill="#04060b"/><polygon points="${p1x},${p1y} ${p2x},${p2y} 140,160 100,190 60,160" fill="url(#g${i})" opacity="0.95"/><polygon points="${p1x},${p1y} 100,190 ${p2x},${p2y}" fill="${color1}" opacity="0.45"/><circle cx="100" cy="100" r="${45 + (i % 25)}" fill="${glowColor}" filter="blur(35px)" opacity="0.45"/></svg>`;
+
+            let name = `${prefixList[(i * 3) % prefixList.length]} ${suffixList[(i * 7) % suffixList.length]} #${i}`;
+
+            minersDatabase.push({
+                id: 'm' + i,
+                name: name,
+                tier: tier,
+                size: size,
+                power: power,
+                price: price,
+                date: 2024 + (i % 3),
+                image: 'data:image/svg+xml;utf8,' + encodeURIComponent(svgString)
+            });
+        }
 
         let cryptoPricesUsd = {
             RGN: 1.00,
             USDT: 1.00,
             BTC: 65000.00,
             ETH: 3500.00,
-            SOL: 150.00,
-            BNB: 580.00,
-            TON: 6.00,
-            DOGE: 0.15
+            SOL: 150.00
         };
 
         let userState = {
             name: "SingleKing67",
             avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=SingleKing67",
             balances: {
-                RGN: 50.00,
-                USDT: 10.00,
-                BTC: 0.0005,
-                ETH: 0.01,
-                SOL: 0.2,
-                BNB: 0.05,
-                TON: 2.50,
-                DOGE: 25.00
+                RGN: 0.00,
+                USDT: 0.00,
+                BTC: 0.0000,
+                ETH: 0.0000,
+                SOL: 0.0000
             },
-            inventory: []
+            inventory: [],
+            unclaimedRgn: 0.00
         };
 
         const avatarsList = [
@@ -885,55 +953,98 @@
             "https://api.dicebear.com/7.x/bottts/svg?seed=CyberMiner"
         ];
 
+        // Firestore-a məlumatı yazmaq üçün funksiya
+        async function saveUserDataToFirebase() {
+            try {
+                await setDoc(doc(db, "istifadeciler", userState.name), {
+                    name: userState.name,
+                    avatar: userState.avatar,
+                    balances: userState.balances,
+                    inventory: userState.inventory,
+                    unclaimedRgn: userState.unclaimedRgn,
+                    lastUpdated: new Date()
+                });
+            } catch (e) {
+                console.error("Firestore-a yazılarkən xəta baş verdi: ", e);
+            }
+        }
+
+        // Firestore-dan məlumatı çəkmək üçün funksiya
+        async function loadUserDataFromFirebase() {
+            try {
+                const docRef = doc(db, "istifadeciler", userState.name);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    let data = docSnap.data();
+                    userState.balances = data.balances || userState.balances;
+                    userState.inventory = data.inventory || [];
+                    userState.unclaimedRgn = data.unclaimedRgn || 0.00;
+                    userState.avatar = data.avatar || userState.avatar;
+                }
+            } catch (e) {
+                console.error("Firestore-dan oxunarkən xəta baş verdi: ", e);
+            }
+        }
+
         async function fetchLivePrices() {
             try {
                 let response = await fetch('https://api.binance.com/api/v3/ticker/price');
                 let data = await response.json();
-                
                 if (Array.isArray(data)) {
                     let priceMap = {};
-                    data.forEach(item => {
-                        priceMap[item.symbol] = parseFloat(item.price);
-                    });
-
+                    data.forEach(item => { priceMap[item.symbol] = parseFloat(item.price); });
                     if (priceMap['BTCUSDT']) cryptoPricesUsd.BTC = priceMap['BTCUSDT'];
                     if (priceMap['ETHUSDT']) cryptoPricesUsd.ETH = priceMap['ETHUSDT'];
                     if (priceMap['SOLUSDT']) cryptoPricesUsd.SOL = priceMap['SOLUSDT'];
-                    if (priceMap['BNBUSDT']) cryptoPricesUsd.BNB = priceMap['BNBUSDT'];
-                    if (priceMap['TONUSDT']) cryptoPricesUsd.TON = priceMap['TONUSDT'];
-                    if (priceMap['DOGEUSDT']) cryptoPricesUsd.DOGE = priceMap['DOGEUSDT'];
-                    cryptoPricesUsd.USDT = 1.00;
-                    cryptoPricesUsd.RGN = 1.00;
                 }
             } catch (error) {
-                console.warn("Canlı bazar qiymətlərini çəkmək mümkün olmadı:", error);
+                console.warn("Canlı qiymətlər yenilənmədi:", error);
             }
-
             renderWallet();
             calculateSwap();
         }
 
         async function initApp() {
+            await loadUserDataFromFirebase();
             await fetchLivePrices();
             renderMarket();
             renderProfileData();
             renderAvatarSelector();
             updateTopUI();
+            
+            setInterval(() => {
+                let totalPower = 0;
+                userState.inventory.forEach(item => {
+                    totalPower += item.power * item.qty;
+                });
+                if (totalPower > 0) {
+                    let earnedPerSec = totalPower * (1 / 360 / 86400); 
+                    userState.unclaimedRgn += earnedPerSec;
+                    document.getElementById('unclaimedRgnDisplay').innerText = userState.unclaimedRgn.toFixed(4) + " RGN";
+                    
+                    let dailyEarn = totalPower * (1 / 360);
+                    let monthlyEarn = dailyEarn * 30;
+                    document.getElementById('dailyPassiveEarn').innerText = dailyEarn.toFixed(2) + " RGN / gün";
+                    document.getElementById('monthlyPassiveEarn').innerText = monthlyEarn.toFixed(2) + " RGN / ay";
+                }
+            }, 1000);
+
+            // Hər 30 saniyədən bir məlumatları avtomatik Firebase-ə qeyd et
+            setInterval(() => {
+                saveUserDataToFirebase();
+            }, 30000);
         }
 
-        function toggleSidebar() {
+        window.toggleSidebar = function() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('menuOverlay').classList.toggle('active');
         }
 
-        function switchView(viewId) {
+        window.switchView = function(viewId) {
             document.querySelectorAll('.app-view').forEach(el => el.classList.remove('active'));
             document.getElementById(viewId + 'View').classList.add('active');
             if(viewId === 'inventory') renderInventory();
-            if(viewId === 'wallet') {
-                fetchLivePrices(); 
-                renderWallet();
-            }
+            if(viewId === 'wallet') { fetchLivePrices(); renderWallet(); }
             if(viewId === 'swap') calculateSwap();
         }
 
@@ -943,7 +1054,15 @@
             document.getElementById('navAvatar').src = userState.avatar;
         }
 
-        function renderMarket() {
+        window.claimFreeFaucet = function() {
+            userState.balances.RGN += 5.00;
+            updateTopUI();
+            renderWallet();
+            saveUserDataToFirebase();
+            alert("Təbriklər! Faucet bonusundan +5.00 RGN qazandınız.");
+        }
+
+        window.renderMarket = function() {
             const grid = document.getElementById('minersMarketGrid');
             const sortVal = document.getElementById('sortSelect').value;
             const searchVal = document.getElementById('searchInput').value.toLowerCase();
@@ -955,8 +1074,6 @@
                 if (sortVal === 'price-asc') return a.price - b.price;
                 if (sortVal === 'power-desc') return b.power - a.power;
                 if (sortVal === 'power-asc') return a.power - b.power;
-                if (sortVal === 'newest') return b.date - a.date;
-                if (sortVal === 'oldest') return a.date - b.date;
             });
 
             grid.innerHTML = '';
@@ -972,7 +1089,7 @@
                                 <img src="${miner.image}" alt="${miner.name}">
                                 <div class="price-tag-top">${miner.price.toFixed(2)} RGN</div>
                             </div>
-                            <div class="miner-name">${miner.name}</div>
+                            <div class="miner-name" title="${miner.name}">${miner.name}</div>
                             <div class="miner-specs">
                                 <span>📦 Ölçü: <b>${miner.size}</b></span>
                                 <span>📅 Buraxılış: <b>${miner.date}</b></span>
@@ -991,46 +1108,92 @@
             });
         }
 
-        function adjustQty(id, amount) {
+        window.adjustQty = function(id, amount) {
             let input = document.getElementById('qty-' + id);
             let current = parseInt(input.value);
             let updated = current + amount;
-            if (updated >= 1 && updated <= 99) {
-                input.value = updated;
-            }
+            if (updated >= 1 && updated <= 99) input.value = updated;
         }
 
-        function buyMiner(minerId) {
+        window.buyMiner = function(minerId) {
             let miner = minersDatabase.find(m => m.id === minerId);
             let qty = parseInt(document.getElementById('qty-' + minerId).value);
             let totalCost = miner.price * qty;
 
             if (userState.balances.RGN >= totalCost) {
                 userState.balances.RGN -= totalCost;
-                
                 let existing = userState.inventory.find(i => i.id === minerId);
-                if (existing) {
-                    existing.qty += qty;
-                } else {
-                    userState.inventory.push({ ...miner, qty: qty });
-                }
+                if (existing) { existing.qty += qty; } 
+                else { userState.inventory.push({ ...miner, qty: qty }); }
 
                 updateTopUI();
                 renderWallet();
+                saveUserDataToFirebase();
                 alert(`Uğurlu alış! ${qty} ədəd ${miner.name} inventarınıza əlavə olundu.`);
             } else {
-                alert("Balansınızda (Regnorcoin) kifayət qədər vəsait yoxdur!");
+                alert("Balansınızda kifayət qədər vəsait yoxdur! 'Faucet Bonus' düyməsindən pulsuz RGN ala bilərsiniz.");
             }
         }
 
-        function renderInventory() {
+        window.adjustInvQty = function(id, amount, maxQty) {
+            let input = document.getElementById('inv-qty-' + id);
+            let current = parseInt(input.value);
+            let updated = current + amount;
+            if (updated >= 1 && updated <= maxQty) input.value = updated;
+        }
+
+        window.sellMiner = function(minerId) {
+            let item = userState.inventory.find(i => i.id === minerId);
+            if (!item) return;
+
+            let qtyInput = document.getElementById('inv-qty-' + minerId);
+            let qtyToSell = parseInt(qtyInput.value) || 1;
+
+            if (qtyToSell > item.qty) {
+                alert("Inventarda bu qədər yoxdur!");
+                return;
+            }
+
+            let refund = item.price * qtyToSell;
+            userState.balances.RGN += refund;
+            item.qty -= qtyToSell;
+
+            if (item.qty <= 0) {
+                userState.inventory = userState.inventory.filter(i => i.id !== minerId);
+            }
+
+            updateTopUI();
+            renderWallet();
+            renderInventory();
+            saveUserDataToFirebase();
+            alert(`Uğurlu satış! ${qtyToSell} ədəd ${item.name} satıldı.`);
+        }
+
+        window.claimMiningRewards = function() {
+            if (userState.unclaimedRgn <= 0) {
+                alert("Toplanacaq mədən gəliri yoxdur!");
+                return;
+            }
+            userState.balances.RGN += userState.unclaimedRgn;
+            let claimed = userState.unclaimedRgn;
+            userState.unclaimedRgn = 0;
+            updateTopUI();
+            document.getElementById('unclaimedRgnDisplay').innerText = "0.0000 RGN";
+            saveUserDataToFirebase();
+            alert(`Uğurla toplandı! Balansınıza +${claimed.toFixed(2)} RGN əlavə olundu.`);
+        }
+
+        window.renderInventory = function() {
             const grid = document.getElementById('inventoryGrid');
             let totalPower = 0;
-
             grid.innerHTML = '';
+            
             if (userState.inventory.length === 0) {
-                grid.innerHTML = `<p style="color: var(--text-muted); font-size: 13px;">İnventarınızda hələ heç bir mayning avadanlığı yoxdur. Bazardan əldə edə bilərsiniz.</p>`;
+                grid.innerHTML = `<p style="color: var(--text-muted); font-size: 13px;">İnventarınızda hələ mayning avadanlığı yoxdur. Bazardan ala bilərsiniz.</p>`;
                 document.getElementById('totalHashrate').innerText = "0 GH/s";
+                document.getElementById('unclaimedRgnDisplay').innerText = "0.0000 RGN";
+                document.getElementById('dailyPassiveEarn').innerText = "0.00 RGN / gün";
+                document.getElementById('monthlyPassiveEarn').innerText = "0.00 RGN / ay";
                 return;
             }
 
@@ -1041,43 +1204,99 @@
                         <div>
                             <div class="card-top-tags">
                                 <span class="tier-badge">${item.tier}</span>
-                                <span style="font-size:12px; color:var(--neon-green)">Say: x${item.qty}</span>
+                                <span style="font-size:12px; color:var(--neon-green)">Mövcud: x${item.qty}</span>
                             </div>
                             <div class="miner-preview">
                                 <img src="${item.image}" alt="${item.name}">
-                                <div class="price-tag-top">x${item.qty}</div>
+                                <div class="price-tag-top">${item.price.toFixed(2)} RGN</div>
                             </div>
                             <div class="miner-name">${item.name}</div>
                             <div class="miner-specs">
                                 <span>⚡ Ümumi Güc: <b>${item.power * item.qty} GH/s</b></span>
                             </div>
                         </div>
+                        <div class="counter-buy-wrapper">
+                            <div class="quantity-box">
+                                <button class="qty-btn" onclick="adjustInvQty('${item.id}', -1, ${item.qty})">-</button>
+                                <input type="text" class="qty-input" id="inv-qty-${item.id}" value="1" readonly>
+                                <button class="qty-btn" onclick="adjustInvQty('${item.id}', 1, ${item.qty})">+</button>
+                            </div>
+                            <button class="btn-sell" onclick="sellMiner('${item.id}')">Sat</button>
+                        </div>
                     </div>
                 `;
             });
-
             document.getElementById('totalHashrate').innerText = totalPower + " GH/s";
         }
 
-        function renderWallet() {
+        window.openMysteryBox = function() {
+            let boxCost = 250;
+            const resDiv = document.getElementById('boxResult');
+
+            if (userState.balances.RGN < boxCost) {
+                alert("Balansınızda sandığı açmaq üçün kifayət qədər RGN yoxdur (Lazımdır: 250 RGN)!");
+                return;
+            }
+
+            userState.balances.RGN -= boxCost;
+            updateTopUI();
+
+            let rand = Math.random() * 100;
+
+            if (rand < 55) {
+                let prize = 50;
+                userState.balances.RGN += prize;
+                resDiv.style.background = "rgba(239, 68, 68, 0.1)";
+                resDiv.style.border = "1px solid var(--neon-red)";
+                resDiv.innerHTML = `⚠️ Təəssüf, kiçik mükafat çıxdı: <b style="color:var(--neon-gold);">+${prize} RGN</b> qazandınız.`;
+            } else if (rand < 82) {
+                let prize = 150;
+                userState.balances.RGN += prize;
+                resDiv.style.background = "rgba(245, 158, 11, 0.1)";
+                resDiv.style.border = "1px solid var(--neon-gold)";
+                resDiv.innerHTML = `🎁 Orta mükafat! Balansınıza <b style="color:var(--neon-gold);">+${prize} RGN</b> əlavə olundu.`;
+            } else if (rand < 93) {
+                let pool = minersDatabase.filter(m => m.tier === 'L4' || m.tier === 'L3');
+                let foundMiner = pool[Math.floor(Math.random() * pool.length)];
+                let existing = userState.inventory.find(i => i.id === foundMiner.id);
+                if (existing) { existing.qty += 1; } else { userState.inventory.push({ ...foundMiner, qty: 1 }); }
+                resDiv.style.background = "rgba(0, 210, 255, 0.1)";
+                resDiv.style.border = "1px solid var(--neon-blue)";
+                resDiv.innerHTML = `🔥 Təbriklər! Yeni mayner qazandınız: <b style="color:var(--neon-blue);">${foundMiner.name} (${foundMiner.tier})</b>!`;
+            } else if (rand < 98) {
+                let prize = 1000;
+                userState.balances.RGN += prize;
+                resDiv.style.background = "rgba(16, 185, 129, 0.1)";
+                resDiv.style.border = "1px solid var(--neon-green)";
+                resDiv.innerHTML = `⚡ ƏLA! Bəxtiniz gətirdi, <b style="color:var(--neon-green);">+${prize} RGN</b> böyük mükafat vurdunuz!`;
+            } else {
+                let pool = minersDatabase.filter(m => m.tier === 'Elite' || m.tier === 'L1');
+                let foundMiner = pool[Math.floor(Math.random() * pool.length)];
+                let existing = userState.inventory.find(i => i.id === foundMiner.id);
+                if (existing) { existing.qty += 1; } else { userState.inventory.push({ ...foundMiner, qty: 1 }); }
+                resDiv.style.background = "rgba(168, 85, 247, 0.15)";
+                resDiv.style.border = "1px solid var(--neon-purple)";
+                resDiv.innerHTML = `🌟 QEYRİ-ADİ UĞUR! Ən nadir və güclü mayner çıxdı: <b style="color:var(--neon-purple);">${foundMiner.name} (${foundMiner.tier})</b>!`;
+            }
+
+            renderWallet();
+            saveUserDataToFirebase();
+        }
+
+        window.renderWallet = function() {
             const container = document.getElementById('walletCardsContainer');
             const currencies = [
-                { key: 'RGN', name: 'Regnorcoin (Platforma)', unit: 'RGN' },
+                { key: 'RGN', name: 'Regnorcoin', unit: 'RGN' },
                 { key: 'USDT', name: 'Tether USD', unit: 'USDT' },
                 { key: 'BTC', name: 'Bitcoin', unit: 'BTC' },
                 { key: 'ETH', name: 'Ethereum', unit: 'ETH' },
-                { key: 'SOL', name: 'Solana', unit: 'SOL' },
-                { key: 'BNB', name: 'Binance Coin', unit: 'BNB' },
-                { key: 'TON', name: 'Toncoin', unit: 'TON' },
-                { key: 'DOGE', name: 'Dogecoin', unit: 'DOGE' }
+                { key: 'SOL', name: 'Solana', unit: 'SOL' }
             ];
 
             container.innerHTML = '';
             currencies.forEach(c => {
                 let bal = userState.balances[c.key];
                 let usdVal = bal * cryptoPricesUsd[c.key];
-                let usdEquivText = `<div class="crypto-usd-equiv">≈ $${usdVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} USD (1 ${c.unit} = $${cryptoPricesUsd[c.key].toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})})</div>`;
-                
                 container.innerHTML += `
                     <div class="crypto-wallet-card">
                         <div>
@@ -1086,25 +1305,24 @@
                                 <span class="crypto-symbol">${c.unit}</span>
                             </div>
                             <div class="crypto-balance">${bal < 1 ? bal.toFixed(6) : bal.toFixed(4)} ${c.unit}</div>
-                            ${usdEquivText}
+                            <div class="crypto-usd-equiv">≈ $${usdVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} USD</div>
                         </div>
-                        <div style="display: flex; gap: 8px; margin-top: 12px;">
-                            <button class="btn-action" style="flex:1; padding: 6px;" onclick="depositCrypto('${c.key}')">Deposit</button>
-                        </div>
+                        <button class="btn-action" style="padding: 6px; margin-top: 12px;" onclick="depositCrypto('${c.key}')">Deposit (+)</button>
                     </div>
                 `;
             });
         }
 
-        function depositCrypto(key) {
-            let addAmount = key === 'RGN' ? 10.00 : (key === 'BTC' ? 0.001 : (key === 'ETH' ? 0.05 : (key === 'SOL' ? 0.5 : 1.00)));
+        window.depositCrypto = function(key) {
+            let addAmount = key === 'RGN' ? 100.00 : (key === 'BTC' ? 0.01 : 50.00);
             userState.balances[key] += addAmount;
             updateTopUI();
             renderWallet();
-            alert(`Uğurlu deposit! ${addAmount} ${key} balansınıza əlavə olundu.`);
+            saveUserDataToFirebase();
+            alert(`Uğurlu deposit! Balansa əlavə olundu.`);
         }
 
-        function calculateSwap() {
+        window.calculateSwap = function() {
             let fromCur = document.getElementById('fromCurrency').value;
             let toCur = document.getElementById('toCurrency').value;
             let fromVal = parseFloat(document.getElementById('fromAmount').value) || 0;
@@ -1114,41 +1332,24 @@
 
             let usdValue = fromVal * cryptoPricesUsd[fromCur];
             let toVal = usdValue / cryptoPricesUsd[toCur];
-
             document.getElementById('toAmount').value = toVal > 0 ? (toVal < 1 ? toVal.toFixed(6) : toVal.toFixed(4)) : '';
-
-            let rate = cryptoPricesUsd[fromCur] / cryptoPricesUsd[toCur];
-            document.getElementById('exchangeRateText').innerText = `1 ${fromCur} ≈ ${rate < 1 ? rate.toFixed(6) : rate.toFixed(4)} ${toCur}`;
         }
 
-        function invertSwap() {
-            let fromCur = document.getElementById('fromCurrency').value;
-            let toCur = document.getElementById('toCurrency').value;
-            
-            document.getElementById('fromCurrency').value = toCur;
-            document.getElementById('toCurrency').value = fromCur;
-            document.getElementById('fromAmount').value = '';
-            document.getElementById('toAmount').value = '';
+        window.invertSwap = function() {
+            let f = document.getElementById('fromCurrency').value;
+            let t = document.getElementById('toCurrency').value;
+            document.getElementById('fromCurrency').value = t;
+            document.getElementById('toCurrency').value = f;
             calculateSwap();
         }
 
-        function executeSwap() {
+        window.executeSwap = function() {
             let fromCur = document.getElementById('fromCurrency').value;
             let toCur = document.getElementById('toCurrency').value;
             let fromVal = parseFloat(document.getElementById('fromAmount').value) || 0;
 
-            if (fromVal <= 0) {
-                alert("Zəhmət olmasa etibarlı məbləğ daxil edin!");
-                return;
-            }
-
-            if (userState.balances[fromCur] < fromVal) {
-                alert(`Balansınızda kifayət qədər ${fromCur} yoxdur!`);
-                return;
-            }
-
-            if (fromCur === toCur) {
-                alert("Eyni valyutanı bir-birinə dəyişə bilməzsiniz!");
+            if (fromVal <= 0 || userState.balances[fromCur] < fromVal) {
+                alert("Balansda kifayət qədər vəsait yoxdur!");
                 return;
             }
 
@@ -1161,23 +1362,14 @@
             updateTopUI();
             renderWallet();
             calculateSwap();
-
-            alert(`Uğurlu swap! Mübadilə tamamlandı.`);
+            saveUserDataToFirebase();
+            alert("Swap uğurla tamamlandı!");
         }
 
         function renderProfileData() {
             document.getElementById('profileNameDisplay').innerText = userState.name;
             document.getElementById('profileAvatarLg').src = userState.avatar;
             document.getElementById('usernameInput').value = userState.name;
-            
-            let totalPower = userState.inventory.reduce((acc, item) => acc + (item.power * item.qty), 0);
-            let level = Math.floor(totalPower / 100) + 1;
-            document.getElementById('userLevelDisplay').innerText = "Level " + level;
-
-            let rank = "Bronz Mayner";
-            if (totalPower > 100) rank = "Gümüş Mayner";
-            if (totalPower > 500) rank = "Qızıl Mayner";
-            document.getElementById('userRankBadge').innerText = rank;
         }
 
         function renderAvatarSelector() {
@@ -1189,20 +1381,19 @@
             });
         }
 
-        function selectAvatar(url) {
+        window.selectAvatar = function(url) {
             userState.avatar = url;
             renderAvatarSelector();
         }
 
-        function saveProfile() {
+        window.saveProfile = function() {
             let newName = document.getElementById('usernameInput').value.trim();
             if (newName) {
                 userState.name = newName;
                 updateTopUI();
-                profileNameDisplay.innerText = newName;
-                alert("Profil məlumatları uğurla yadda saxlanıldı!");
-            } else {
-                alert("İstifadəçi adı boş ola bilməz!");
+                document.getElementById('profileNameDisplay').innerText = newName;
+                saveUserDataToFirebase();
+                alert("Profil yeniləndi!");
             }
         }
 
