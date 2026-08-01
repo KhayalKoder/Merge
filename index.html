@@ -1203,7 +1203,6 @@
             return;
         }
         
-        // Yüksəltmə qiyməti - maynerin qiymətinin 40%-i + səviyyə * 10%
         let baseCost = item.price * 0.4;
         let levelBonus = (item.upgradeLevel || 0) * 0.1;
         let cost = Math.round(baseCost + (baseCost * levelBonus));
@@ -1213,16 +1212,9 @@
             return;
         }
         
-        // RGN çıx
         userState.balances.RGN -= cost;
-        
-        // Səviyyə artır
         item.upgradeLevel = (item.upgradeLevel || 0) + 1;
-        
-        // Qazancı artır (hər səviyyə üçün +20%)
         item.earningPerSec *= 1.20;
-        
-        // Günlük qazancı yenilə
         let dailyGain = (item.earningPerSec * 86400) * item.qty;
         
         updateTopUI();
@@ -1591,7 +1583,6 @@
 
         document.getElementById('referralLinkInput').value = window.location.origin + window.location.pathname + "?ref=" + currentUserId;
 
-        // Mining earnings
         setInterval(() => {
             let total = 0;
             userState.inventory.forEach(item => { total += item.earningPerSec * item.qty; });
@@ -1601,7 +1592,6 @@
             }
         }, 1000);
 
-        // Auto-save
         setInterval(() => { saveUserDataToFirebase(); }, 30000);
 
         renderWallet();
@@ -1610,4 +1600,5 @@
     window.onload = initApp;
 </script>
 </body>
-                        </html>
+</html>
+
