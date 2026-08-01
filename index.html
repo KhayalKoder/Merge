@@ -13,7 +13,7 @@
     <!-- Adsgram Video Reklam -->
     <script src="https://sad.adsgram.ai/js/adsgram.min.js"></script>
     
-    <!-- ✅ ADSTERRA SOCIAL BAR - ƏLAVƏ EDİLDİ -->
+    <!-- ✅ ADSTERRA SOCIAL BAR -->
     <script src="https://pl30633276.effectivecpmnetwork.com/31/f3/94/31f3946beaebbd46f8c7000249ad2ea4.js"></script>
     
     <!-- Monetag Popunder -->
@@ -143,7 +143,6 @@
 
         .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         
-        /* Social Bar üçün stil */
         .social-bar-wrapper {
             margin: 10px 0;
             min-height: 50px;
@@ -277,7 +276,7 @@
         <div class="miners-grid" id="minersMarketGrid"></div>
     </div>
 
-    <!-- FAUCET VIEW - ADSTERRA SOCIAL BAR İLƏ -->
+    <!-- FAUCET VIEW -->
     <div id="faucetView" class="app-view">
         <div class="section-header-bar">
             <div class="section-title">💧 RGN FAUCET</div>
@@ -286,9 +285,7 @@
             </span>
         </div>
         
-        <!-- ✅ ADSTERRA SOCIAL BAR - GÖRÜNƏN YER -->
         <div class="social-bar-wrapper" id="socialBarContainer">
-            <!-- Social Bar avtomatik burada görünəcək -->
             <div id="adsterra-social-bar"></div>
         </div>
         
@@ -317,7 +314,6 @@
             </p>
         </div>
         
-        <!-- STATİSTİKA -->
         <div class="card-panel" style="background:var(--bg-darker);border:1px solid rgba(255,255,255,0.05);">
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
                 <div>
@@ -543,9 +539,7 @@
 
 </div>
 
-<!-- ============================================ -->
 <!-- SCRIPT -->
-<!-- ============================================ -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import {
@@ -553,9 +547,6 @@
         query, orderBy, limit, where, onSnapshot
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    // ==========================================
-    // FIREBASE CONFIG
-    // ==========================================
     const firebaseConfig = {
         apiKey: "AIzaSyArfgU34XyZH7TrRNJN-ApKl1MNwU31Sfs",
         authDomain: "rgncoin-69d0c.firebaseapp.com",
@@ -569,9 +560,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // ==========================================
-    // TELEGRAM
-    // ==========================================
     const tg = window.Telegram?.WebApp;
     if (tg) { tg.ready(); tg.expand(); }
 
@@ -588,26 +576,17 @@
         setTimeout(() => t.remove(), 3000);
     }
 
-    // ==========================================
-    // USER
-    // ==========================================
     const tgUser = tg?.initDataUnsafe?.user;
     let currentUserId = tgUser ? String(tgUser.id) : "SingleKing67";
     let currentUsername = tgUser ? (tgUser.username || tgUser.first_name || "Mayner") : "SingleKing67";
     let defaultAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${currentUsername}`;
     const ADMIN_TG_ID = "8591374417";
 
-    // ==========================================
-    // FAUCET KONFİQURASİYASI
-    // ==========================================
     const FAUCET_AMOUNT = 0.050;
     const FAUCET_COOLDOWN = 5 * 60 * 1000;
     const DAILY_LIMIT = 20;
     let socialBarClicked = false;
 
-    // ==========================================
-    // SABİT DEPOZİT ÜNVANLARI
-    // ==========================================
     const DEPOSIT_ADDRESSES = {
         polygon: {
             USDT: '0x9f8bC82bC519F62d7bEd4aa3Af91859A3cd883f7',
@@ -619,9 +598,6 @@
         }
     };
 
-    // ==========================================
-    // MINERS DATABASE - 100 mayner
-    // ==========================================
     const minersDatabase = [];
     const prefixList = ["Nano", "Micro", "Quantum", "Plasma", "Aether", "Solar", "Lunar", "Astral", "Void", "Nova"];
     const suffixList = ["Shard", "Cluster", "Node", "Monolith", "Prism", "Crystal", "Core", "Spire", "Matrix", "Gem"];
@@ -647,9 +623,6 @@
         });
     }
 
-    // ==========================================
-    // USER STATE
-    // ==========================================
     let userState = {
         name: currentUsername,
         avatar: defaultAvatar,
@@ -672,9 +645,6 @@
         "https://api.dicebear.com/7.x/bottts/svg?seed=QuantumMiner"
     ];
 
-    // ==========================================
-    // FIREBASE FUNCTIONS
-    // ==========================================
     async function saveUserDataToFirebase() {
         try {
             await setDoc(doc(db, "istifadeciler", currentUserId), {
@@ -719,13 +689,7 @@
         } catch (e) { console.error(e); }
     }
 
-    // ==========================================
-    // FAUCET + SOCIAL BAR
-    // ==========================================
-    
-    // Social Bar klik izləmə
     function trackSocialBarClick() {
-        // Social Bar elementlərini tap
         const selectors = [
             '.adsterra-social-bar',
             '[class*="social-bar"]',
@@ -741,20 +705,15 @@
         }
         
         if (socialBar) {
-            // Klik hadisəsi
             socialBar.addEventListener('click', function(e) {
-                // Sosial Bar daxilindəki linklərə klikləmə
                 handleSocialBarClick();
             });
-            
-            // Linklərə klik
             socialBar.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', function(e) {
                     handleSocialBarClick();
                 });
             });
         } else {
-            // Social Bar hələ yüklənməyibsə, gözlə
             setTimeout(trackSocialBarClick, 1000);
         }
     }
@@ -763,7 +722,6 @@
         if (!socialBarClicked) {
             socialBarClicked = true;
             
-            // Mükafat ver
             const now = Date.now();
             userState.balances.RGN += FAUCET_AMOUNT;
             userState.faucetLastClaim = now;
@@ -777,18 +735,15 @@
             
             showToast(`🎉 +${FAUCET_AMOUNT.toFixed(3)} RGN qazandınız!`, "success");
             
-            // 5 saniyə sonra yenidən klik edə bilər
             setTimeout(() => {
                 socialBarClicked = false;
             }, 5000);
         }
     }
 
-    // Faucet açma funksiyası
     window.claimFaucetWithSocialBar = function() {
         triggerHaptic('medium');
         
-        // 1. Cooldown
         const now = Date.now();
         const lastClaim = userState.faucetLastClaim || 0;
         if (now - lastClaim < FAUCET_COOLDOWN) {
@@ -797,7 +752,6 @@
             return;
         }
         
-        // 2. Gündəlik limit
         const today = new Date().toDateString();
         if (userState.faucetDailyDate !== today) {
             userState.faucetDailyCount = 0;
@@ -808,10 +762,8 @@
             return;
         }
         
-        // 3. Social Bar-a diqqət çək
         showToast('👆 Reklama klikləyin!', 'gold');
         
-        // Social Bar elementini yanıb-sönən et
         const container = document.getElementById('socialBarContainer');
         if (container) {
             container.style.animation = 'pulse 0.8s ease-in-out 3';
@@ -822,13 +774,11 @@
             }, 3000);
         }
         
-        // İstifadəçi artıq klikləyibsə, mükafatı ver
         if (socialBarClicked) {
             handleSocialBarClick();
         }
     };
 
-    // UI yeniləmə
     function updateFaucetUI() {
         const now = Date.now();
         const lastClaim = userState.faucetLastClaim || 0;
@@ -843,7 +793,6 @@
             btn.style.opacity = isReady ? '1' : '0.5';
         }
         
-        // Gündəlik sıfırlama
         const today = new Date().toDateString();
         if (userState.faucetDailyDate !== today) {
             userState.faucetDailyCount = 0;
@@ -860,9 +809,6 @@
             userState.faucetAdClicks || 0;
     }
 
-    // ==========================================
-    // REFERRAL
-    // ==========================================
     function checkReferral() {
         const urlParams = new URLSearchParams(window.location.search);
         const ref = urlParams.get('ref');
@@ -882,9 +828,6 @@
         } catch (e) { console.error(e); }
     }
 
-    // ==========================================
-    // LEADERBOARD
-    // ==========================================
     async function renderLeaderboard() {
         const tbody = document.getElementById('leaderboardBody');
         tbody.innerHTML = `<tr><td colspan="3"><div class="skeleton" style="height:20px;"></div></td></tr>`;
@@ -903,9 +846,6 @@
         }
     }
 
-    // ==========================================
-    // ADMIN - BALANS DƏYİŞ
-    // ==========================================
     window.adminUpdateBalance = async function() {
         if (currentUserId !== ADMIN_TG_ID) { showToast("Səlahiyyət yoxdur!", "error"); return; }
         triggerHaptic('heavy');
@@ -924,9 +864,6 @@
         } catch (e) { showToast("Xəta!", "error"); }
     };
 
-    // ==========================================
-    // DEPOSIT SYSTEM
-    // ==========================================
     let currentDepositId = null;
 
     window.createDepositRequest = async function() {
@@ -1061,9 +998,6 @@
         }
     };
 
-    // ==========================================
-    // ADMIN - DEPOSIT PANEL
-    // ==========================================
     window.renderAdminDeposits = async function() {
         if (currentUserId !== ADMIN_TG_ID) return;
         
@@ -1178,9 +1112,6 @@
         }
     };
 
-    // ==========================================
-    // WITHDRAW SYSTEM
-    // ==========================================
     window.processWithdraw = async function() {
         triggerHaptic('heavy');
         const amount = parseFloat(document.getElementById('withdrawAmount').value);
@@ -1228,9 +1159,6 @@
         }
     };
 
-    // ==========================================
-    // ADMIN - WITHDRAW PANEL
-    // ==========================================
     window.renderAdminWithdraws = async function() {
         if (currentUserId !== ADMIN_TG_ID) return;
         
@@ -1319,9 +1247,6 @@
         } catch(e) { showToast("Xəta!", "error"); }
     };
 
-    // ==========================================
-    // TRANSACTIONS
-    // ==========================================
     function addTransaction(type, amount, status, address = '') {
         const history = document.getElementById('transactionHistory');
         const date = new Date();
@@ -1398,9 +1323,6 @@
         }
     }
 
-    // ==========================================
-    // MINER FUNCTIONS
-    // ==========================================
     window.buyMiner = function(minerId) {
         triggerHaptic('heavy');
         let miner = minersDatabase.find(m => m.id === minerId);
@@ -1441,9 +1363,6 @@
         });
     };
 
-    // ==========================================
-    // UPGRADE MINER
-    // ==========================================
     window.upgradeMiner = function(minerId) {
         triggerHaptic('medium');
         let item = userState.inventory.find(i => i.id === minerId);
@@ -1464,7 +1383,6 @@
         userState.balances.RGN -= cost;
         item.upgradeLevel = (item.upgradeLevel || 0) + 1;
         item.earningPerSec *= 1.20;
-        let dailyGain = (item.earningPerSec * 86400) * item.qty;
         
         updateTopUI();
         renderInventory();
@@ -1519,9 +1437,6 @@
         document.getElementById('totalHashrate').innerText = total.toFixed(2) + " RGN/gün";
     };
 
-    // ==========================================
-    // P2P
-    // ==========================================
     window.createP2PListing = async function() {
         triggerHaptic('medium');
         let select = document.getElementById('p2pSellSelect');
@@ -1607,9 +1522,6 @@
         showToast("Mayner alındı!", "success");
     };
 
-    // ==========================================
-    // OTHER FUNCTIONS
-    // ==========================================
     window.claimMiningRewards = function() {
         triggerHaptic('success');
         if (userState.unclaimedRgn <= 0) { showToast("Gəlir yoxdur!", "error"); return; }
@@ -1642,11 +1554,8 @@
         showToast("Link kopyalandı!", "success");
     };
 
-    // ==========================================
-    // ADS + MONETAG
-    // ==========================================
     let adController = null;
-    const ADSGRAM_BLOCK_ID = "int-40616";
+    const ADSGRAM_BLOCK_ID = "int-40734"; // ✅ Yeniləndi
     const COOLDOWN_TIME = 5 * 60 * 1000;
 
     function initAdsgram() {
@@ -1709,9 +1618,6 @@
         }
     };
 
-    // ==========================================
-    // WALLET
-    // ==========================================
     window.renderWallet = function() {
         const container = document.getElementById('walletCardsContainer');
         container.innerHTML = `
@@ -1730,9 +1636,6 @@
         }
     };
 
-    // ==========================================
-    // PROFILE
-    // ==========================================
     function renderProfileData() {
         document.getElementById('profileNameDisplay').innerText = userState.name;
         document.getElementById('profileAvatarLg').src = userState.avatar;
@@ -1764,9 +1667,6 @@
         }
     };
 
-    // ==========================================
-    // UI
-    // ==========================================
     function updateTopUI() {
         document.getElementById('topRegnorBalance').innerText = userState.balances.RGN.toFixed(2);
         document.getElementById('navUsername').innerText = userState.name;
@@ -1805,9 +1705,6 @@
         }
     };
 
-    // ==========================================
-    // INIT
-    // ==========================================
     async function initApp() {
         checkReferral();
         await loadUserDataFromFirebase();
@@ -1824,10 +1721,8 @@
 
         document.getElementById('referralLinkInput').value = window.location.origin + window.location.pathname + "?ref=" + currentUserId;
 
-        // Social Bar klik izləmə
         setTimeout(trackSocialBarClick, 3000);
 
-        // Mining gəlir
         setInterval(() => {
             let total = 0;
             userState.inventory.forEach(item => { total += item.earningPerSec * item.qty; });
@@ -1837,16 +1732,12 @@
             }
         }, 1000);
 
-        // Faucet UI yeniləmə
         setInterval(updateFaucetUI, 10000);
-
-        // Firebase yeniləmə
         setInterval(() => { saveUserDataToFirebase(); }, 30000);
 
         renderWallet();
     }
 
-    // Pulse animasiyası
     const style = document.createElement('style');
     style.textContent = `
         @keyframes pulse {
@@ -1860,4 +1751,5 @@
     window.onload = initApp;
 </script>
 </body>
-                </html>
+</html>
+
