@@ -6,9 +6,17 @@
     <meta name="monetag" content="617f7ba9115faefe7af3e40051647a9e">
     <meta name="6a97888e-site-verification" content="7600df923dec1526e65c2bf26b08d627">
     <title>RGNCOIN // Mining Ecosystem</title>
+    
+    <!-- Telegram Web App -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- Adsgram Video Reklam -->
     <script src="https://sad.adsgram.ai/js/adsgram.min.js"></script>
-    <script src="https://pl30631134.effectivecpmnetwork.com/88/96/00/889600b66c0d83a2d78930784a806ad7.js"></script>
+    
+    <!-- ✅ ADSTERRA SOCIAL BAR - ƏLAVƏ EDİLDİ -->
+    <script src="https://pl30633276.effectivecpmnetwork.com/31/f3/94/31f3946beaebbd46f8c7000249ad2ea4.js"></script>
+    
+    <!-- Monetag Popunder -->
     <script type="text/javascript">
         var adfly_id = 12345678;
         var adfly_advert = 'int';
@@ -19,7 +27,10 @@
         var init_delay = 3;
     </script>
     <script src="https://cdn.monetag.com/static/js/pop.js"></script>
+    
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --bg-main: #060913;
@@ -131,11 +142,22 @@
         .leaderboard-table th { color: var(--text-muted); font-size: 9px; text-transform: uppercase; }
 
         .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-        .status-badge { padding: 2px 10px; border-radius: 12px; font-size: 10px; font-weight: 600; }
-        .status-pending { background: rgba(245,158,11,0.2); color: var(--neon-gold); }
-        .status-paid { background: rgba(16,185,129,0.2); color: var(--neon-green); }
-        .status-confirmed { background: rgba(16,185,129,0.3); color: var(--neon-green); }
-        .status-rejected { background: rgba(239,68,68,0.2); color: var(--neon-red); }
+        
+        /* Social Bar üçün stil */
+        .social-bar-wrapper {
+            margin: 10px 0;
+            min-height: 50px;
+            background: var(--bg-darker);
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 4px;
+            overflow: hidden;
+        }
+        .social-bar-wrapper iframe,
+        .social-bar-wrapper div[class*="social"] {
+            width: 100% !important;
+            border: none !important;
+        }
 
         @media (max-width: 600px) {
             .grid-2col { grid-template-columns: 1fr; }
@@ -166,7 +188,7 @@
     </div>
     <div class="hud-right">
         <button class="hud-btn hud-btn-ads" onclick="watchAdForReward()">📺 Ads</button>
-        <button class="hud-btn hud-btn-faucet" onclick="claimFreeFaucet()">🎁 Faucet</button>
+        <button class="hud-btn hud-btn-faucet" onclick="switchView('faucet')">💧 Faucet</button>
         <div class="user-profile-btn" onclick="switchView('profile')">
             <img id="navAvatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=SingleKing67" class="user-avatar-sm">
             <span id="navUsername">SingleKing67</span>
@@ -197,6 +219,10 @@
             <div class="menu-item-left"><svg class="menu-icon" viewBox="0 0 24 24"><path d="M21 8V21H3V8M1 3h22v5H1V3z"/></svg>Sandıqlar</div>
             <span class="badge-sale" style="background:var(--neon-purple);">Loot</span>
         </div>
+        <div class="menu-item" onclick="switchView('faucet'); toggleSidebar();">
+            <div class="menu-item-left"><svg class="menu-icon" viewBox="0 0 24 24"><path d="M12 2v4M4 6h16v4H4z"/><path d="M8 14h8M12 14v6"/><circle cx="12" cy="12" r="10"/></svg>Faucet</div>
+            <span class="badge-sale" style="background:var(--neon-gold);">💧</span>
+        </div>
         <div class="menu-item" onclick="switchView('referral'); toggleSidebar();">
             <div class="menu-item-left"><svg class="menu-icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>Referal</div>
             <span class="badge-sale" style="background:var(--neon-gold);">10%</span>
@@ -222,14 +248,11 @@
     <button class="tab-item active" id="tab-market" onclick="switchView('market')">
         <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>Bazar
     </button>
+    <button class="tab-item" id="tab-faucet" onclick="switchView('faucet')">
+        <svg viewBox="0 0 24 24"><path d="M12 2v4M4 6h16v4H4z"/><path d="M8 14h8M12 14v6"/><circle cx="12" cy="12" r="10"/></svg>Faucet
+    </button>
     <button class="tab-item" id="tab-inventory" onclick="switchView('inventory')">
         <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>İnventar
-    </button>
-    <button class="tab-item" id="tab-p2p" onclick="switchView('p2p')">
-        <svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4"/></svg>P2P
-    </button>
-    <button class="tab-item" id="tab-boxes" onclick="switchView('boxes')">
-        <svg viewBox="0 0 24 24"><path d="M21 8V21H3V8M1 3h22v5H1V3z"/></svg>Sandıq
     </button>
     <button class="tab-item" id="tab-wallet" onclick="switchView('wallet')">
         <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Cüzdan
@@ -252,6 +275,70 @@
             </div>
         </div>
         <div class="miners-grid" id="minersMarketGrid"></div>
+    </div>
+
+    <!-- FAUCET VIEW - ADSTERRA SOCIAL BAR İLƏ -->
+    <div id="faucetView" class="app-view">
+        <div class="section-header-bar">
+            <div class="section-title">💧 RGN FAUCET</div>
+            <span style="font-size:9px;color:var(--text-muted);font-family:'JetBrains Mono';">
+                📢 Reklam ilə
+            </span>
+        </div>
+        
+        <!-- ✅ ADSTERRA SOCIAL BAR - GÖRÜNƏN YER -->
+        <div class="social-bar-wrapper" id="socialBarContainer">
+            <!-- Social Bar avtomatik burada görünəcək -->
+            <div id="adsterra-social-bar"></div>
+        </div>
+        
+        <div class="card-panel" style="text-align:center;background:linear-gradient(145deg,rgba(16,185,129,0.05),rgba(0,210,255,0.05));border:1px solid var(--neon-green);">
+            <div style="font-size:48px;margin-bottom:8px;">💧</div>
+            <h2 style="font-family:'JetBrains Mono';font-size:18px;color:var(--neon-green);">PULSUZ RGN Qazan</h2>
+            
+            <div style="font-size:42px;font-weight:700;color:var(--neon-gold);margin:10px 0;">
+                0.050 RGN
+            </div>
+            <p style="color:var(--text-muted);font-size:11px;font-family:'JetBrains Mono';">
+                ⏱ Hər 5 dəqiqə bir dəfə
+            </p>
+            <p style="color:var(--neon-gold);font-size:10px;margin:6px 0;">
+                👆 Reklama kliklə, sonra RGN al!
+            </p>
+            
+            <button id="faucetClaimBtn" class="btn-action" 
+                style="width:100%;padding:14px;font-size:16px;background:rgba(16,185,129,0.15);border-color:var(--neon-green);color:var(--neon-green);margin:10px 0;"
+                onclick="claimFaucetWithSocialBar()">
+                🎁 Faucet Aç
+            </button>
+            
+            <p style="color:var(--text-muted);font-size:9px;font-family:'JetBrains Mono';">
+                Reklama kliklə, 0.050 RGN qazan!
+            </p>
+        </div>
+        
+        <!-- STATİSTİKA -->
+        <div class="card-panel" style="background:var(--bg-darker);border:1px solid rgba(255,255,255,0.05);">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
+                <div>
+                    <p style="font-size:9px;color:var(--text-muted);font-family:'JetBrains Mono';">Ümumi</p>
+                    <p id="faucetTotalEarned" style="font-size:16px;font-weight:700;color:var(--neon-gold);">0.000 RGN</p>
+                </div>
+                <div>
+                    <p style="font-size:9px;color:var(--text-muted);font-family:'JetBrains Mono';">Bugün</p>
+                    <p id="faucetTodayEarned" style="font-size:16px;font-weight:700;color:var(--neon-blue);">0.000 RGN</p>
+                </div>
+                <div>
+                    <p style="font-size:9px;color:var(--text-muted);font-family:'JetBrains Mono';">📢 Klik</p>
+                    <p id="faucetAdClicks" style="font-size:16px;font-weight:700;color:var(--neon-purple);">0</p>
+                </div>
+            </div>
+            <div style="text-align:center;margin-top:8px;">
+                <p style="font-size:9px;color:var(--text-muted);font-family:'JetBrains Mono';">
+                    📊 Bugün: <span id="faucetTodayCount">0/20</span>
+                </p>
+            </div>
+        </div>
     </div>
 
     <!-- INVENTORY VIEW -->
@@ -327,7 +414,6 @@
             <h3 style="font-family:'JetBrains Mono';font-size:13px;color:var(--neon-blue);margin-bottom:12px;">// DEPOZİT & ÇIXARIŞ</h3>
             
             <div class="grid-2col">
-                <!-- DEPOSIT -->
                 <div style="background:rgba(0,210,255,0.05);padding:14px;border-radius:10px;border:1px solid rgba(0,210,255,0.2);">
                     <h4 style="color:var(--neon-blue);margin-bottom:8px;font-size:13px;">📥 Depozit</h4>
                     <div class="form-group">
@@ -355,7 +441,6 @@
                     <p style="font-size:9px;color:var(--text-muted);margin-top:6px;">Minimum: 10 USDT/TRX • Manuel təsdiqlənir</p>
                 </div>
 
-                <!-- WITHDRAW -->
                 <div style="background:rgba(239,68,68,0.05);padding:14px;border-radius:10px;border:1px solid rgba(239,68,68,0.2);">
                     <h4 style="color:var(--neon-red);margin-bottom:8px;font-size:13px;">📤 Çıxarış</h4>
                     <div class="form-group">
@@ -373,7 +458,6 @@
                 </div>
             </div>
 
-            <!-- DEPOSIT INFO -->
             <div id="depositInfoDisplay" style="display:none;background:rgba(16,185,129,0.08);border:1px solid var(--neon-gold);border-radius:10px;padding:14px;margin-top:12px;">
                 <h4 style="color:var(--neon-gold);font-size:12px;margin-bottom:6px;">📤 Depozit Məlumatları</h4>
                 <div style="background:var(--bg-darker);padding:10px;border-radius:6px;margin-bottom:8px;">
@@ -394,7 +478,6 @@
                 </div>
             </div>
 
-            <!-- TRANSACTIONS -->
             <div style="margin-top:14px;">
                 <h4 style="font-family:'JetBrains Mono';font-size:11px;color:var(--text-muted);margin-bottom:8px;">// Son Əməliyyatlar</h4>
                 <div id="transactionHistory" style="max-height:180px;overflow-y:auto;">
@@ -515,6 +598,14 @@
     const ADMIN_TG_ID = "8591374417";
 
     // ==========================================
+    // FAUCET KONFİQURASİYASI
+    // ==========================================
+    const FAUCET_AMOUNT = 0.050;
+    const FAUCET_COOLDOWN = 5 * 60 * 1000;
+    const DAILY_LIMIT = 20;
+    let socialBarClicked = false;
+
+    // ==========================================
     // SABİT DEPOZİT ÜNVANLARI
     // ==========================================
     const DEPOSIT_ADDRESSES = {
@@ -566,7 +657,12 @@
         inventory: [],
         unclaimedRgn: 0.00,
         referredBy: null,
-        lastAdWatch: 0
+        lastAdWatch: 0,
+        faucetLastClaim: 0,
+        faucetDailyCount: 0,
+        faucetDailyDate: new Date().toDateString(),
+        faucetTotalClaimed: 0,
+        faucetAdClicks: 0
     };
 
     const avatarsList = [
@@ -590,6 +686,11 @@
                 unclaimedRgn: userState.unclaimedRgn,
                 referredBy: userState.referredBy,
                 lastAdWatch: userState.lastAdWatch || 0,
+                faucetLastClaim: userState.faucetLastClaim || 0,
+                faucetDailyCount: userState.faucetDailyCount || 0,
+                faucetDailyDate: userState.faucetDailyDate || new Date().toDateString(),
+                faucetTotalClaimed: userState.faucetTotalClaimed || 0,
+                faucetAdClicks: userState.faucetAdClicks || 0,
                 lastUpdated: new Date()
             });
         } catch (e) { console.error(e); }
@@ -607,10 +708,156 @@
                 userState.avatar = data.avatar || userState.avatar;
                 userState.referredBy = data.referredBy || null;
                 userState.lastAdWatch = data.lastAdWatch || 0;
+                userState.faucetLastClaim = data.faucetLastClaim || 0;
+                userState.faucetDailyCount = data.faucetDailyCount || 0;
+                userState.faucetDailyDate = data.faucetDailyDate || new Date().toDateString();
+                userState.faucetTotalClaimed = data.faucetTotalClaimed || 0;
+                userState.faucetAdClicks = data.faucetAdClicks || 0;
             } else {
                 await saveUserDataToFirebase();
             }
         } catch (e) { console.error(e); }
+    }
+
+    // ==========================================
+    // FAUCET + SOCIAL BAR
+    // ==========================================
+    
+    // Social Bar klik izləmə
+    function trackSocialBarClick() {
+        // Social Bar elementlərini tap
+        const selectors = [
+            '.adsterra-social-bar',
+            '[class*="social-bar"]',
+            '[class*="SocialBar"]',
+            '.adsterra-native',
+            'iframe[src*="adsterra"]'
+        ];
+        
+        let socialBar = null;
+        for (const selector of selectors) {
+            socialBar = document.querySelector(selector);
+            if (socialBar) break;
+        }
+        
+        if (socialBar) {
+            // Klik hadisəsi
+            socialBar.addEventListener('click', function(e) {
+                // Sosial Bar daxilindəki linklərə klikləmə
+                handleSocialBarClick();
+            });
+            
+            // Linklərə klik
+            socialBar.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    handleSocialBarClick();
+                });
+            });
+        } else {
+            // Social Bar hələ yüklənməyibsə, gözlə
+            setTimeout(trackSocialBarClick, 1000);
+        }
+    }
+    
+    function handleSocialBarClick() {
+        if (!socialBarClicked) {
+            socialBarClicked = true;
+            
+            // Mükafat ver
+            const now = Date.now();
+            userState.balances.RGN += FAUCET_AMOUNT;
+            userState.faucetLastClaim = now;
+            userState.faucetDailyCount = (userState.faucetDailyCount || 0) + 1;
+            userState.faucetTotalClaimed = (userState.faucetTotalClaimed || 0) + FAUCET_AMOUNT;
+            userState.faucetAdClicks = (userState.faucetAdClicks || 0) + 1;
+            
+            updateFaucetUI();
+            updateTopUI();
+            saveUserDataToFirebase();
+            
+            showToast(`🎉 +${FAUCET_AMOUNT.toFixed(3)} RGN qazandınız!`, "success");
+            
+            // 5 saniyə sonra yenidən klik edə bilər
+            setTimeout(() => {
+                socialBarClicked = false;
+            }, 5000);
+        }
+    }
+
+    // Faucet açma funksiyası
+    window.claimFaucetWithSocialBar = function() {
+        triggerHaptic('medium');
+        
+        // 1. Cooldown
+        const now = Date.now();
+        const lastClaim = userState.faucetLastClaim || 0;
+        if (now - lastClaim < FAUCET_COOLDOWN) {
+            const remaining = Math.ceil((FAUCET_COOLDOWN - (now - lastClaim)) / 60000);
+            showToast(`⏳ ${remaining} dəqiqə gözləyin!`, "error");
+            return;
+        }
+        
+        // 2. Gündəlik limit
+        const today = new Date().toDateString();
+        if (userState.faucetDailyDate !== today) {
+            userState.faucetDailyCount = 0;
+            userState.faucetDailyDate = today;
+        }
+        if (userState.faucetDailyCount >= DAILY_LIMIT) {
+            showToast(`📊 Gündəlik limit doldu! (${DAILY_LIMIT})`, "error");
+            return;
+        }
+        
+        // 3. Social Bar-a diqqət çək
+        showToast('👆 Reklama klikləyin!', 'gold');
+        
+        // Social Bar elementini yanıb-sönən et
+        const container = document.getElementById('socialBarContainer');
+        if (container) {
+            container.style.animation = 'pulse 0.8s ease-in-out 3';
+            container.style.borderColor = 'var(--neon-gold)';
+            setTimeout(() => {
+                container.style.animation = '';
+                container.style.borderColor = '';
+            }, 3000);
+        }
+        
+        // İstifadəçi artıq klikləyibsə, mükafatı ver
+        if (socialBarClicked) {
+            handleSocialBarClick();
+        }
+    };
+
+    // UI yeniləmə
+    function updateFaucetUI() {
+        const now = Date.now();
+        const lastClaim = userState.faucetLastClaim || 0;
+        const remaining = Math.max(0, FAUCET_COOLDOWN - (now - lastClaim));
+        const remainingMinutes = Math.ceil(remaining / 60000);
+        const isReady = remaining <= 0;
+        
+        const btn = document.getElementById('faucetClaimBtn');
+        if (btn) {
+            btn.disabled = !isReady;
+            btn.textContent = isReady ? '🎁 Faucet Aç' : `⏳ ${remainingMinutes} dəq`;
+            btn.style.opacity = isReady ? '1' : '0.5';
+        }
+        
+        // Gündəlik sıfırlama
+        const today = new Date().toDateString();
+        if (userState.faucetDailyDate !== today) {
+            userState.faucetDailyCount = 0;
+            userState.faucetDailyDate = today;
+        }
+        
+        document.getElementById('faucetTodayCount').textContent = 
+            `${userState.faucetDailyCount || 0}/${DAILY_LIMIT}`;
+        document.getElementById('faucetTotalEarned').textContent = 
+            (userState.faucetTotalClaimed || 0).toFixed(3);
+        document.getElementById('faucetTodayEarned').textContent = 
+            ((userState.faucetDailyCount || 0) * FAUCET_AMOUNT).toFixed(3);
+        document.getElementById('faucetAdClicks').textContent = 
+            userState.faucetAdClicks || 0;
     }
 
     // ==========================================
@@ -1195,7 +1442,7 @@
     };
 
     // ==========================================
-    // UPGRADE MINER - RGN ilə balanslaşdırılmış
+    // UPGRADE MINER
     // ==========================================
     window.upgradeMiner = function(minerId) {
         triggerHaptic('medium');
@@ -1363,16 +1610,6 @@
     // ==========================================
     // OTHER FUNCTIONS
     // ==========================================
-    window.claimFreeFaucet = function() {
-        triggerHaptic('success');
-        let bonus = 5.00;
-        userState.balances.RGN += bonus;
-        rewardReferrer(bonus);
-        updateTopUI();
-        saveUserDataToFirebase();
-        showToast("+5 RGN Faucet!", "gold");
-    };
-
     window.claimMiningRewards = function() {
         triggerHaptic('success');
         if (userState.unclaimedRgn <= 0) { showToast("Gəlir yoxdur!", "error"); return; }
@@ -1561,6 +1798,7 @@
         if (viewId === 'p2p') renderP2PMarket();
         if (viewId === 'leaderboard') renderLeaderboard();
         if (viewId === 'wallet') renderWallet();
+        if (viewId === 'faucet') updateFaucetUI();
         if (viewId === 'admin' && currentUserId === ADMIN_TG_ID) {
             renderAdminDeposits();
             renderAdminWithdraws();
@@ -1578,6 +1816,7 @@
         renderProfileData();
         renderAvatarSelector();
         updateTopUI();
+        updateFaucetUI();
 
         if (currentUserId === ADMIN_TG_ID) {
             document.getElementById('adminMenuItem').style.display = 'flex';
@@ -1585,6 +1824,10 @@
 
         document.getElementById('referralLinkInput').value = window.location.origin + window.location.pathname + "?ref=" + currentUserId;
 
+        // Social Bar klik izləmə
+        setTimeout(trackSocialBarClick, 3000);
+
+        // Mining gəlir
         setInterval(() => {
             let total = 0;
             userState.inventory.forEach(item => { total += item.earningPerSec * item.qty; });
@@ -1594,13 +1837,27 @@
             }
         }, 1000);
 
+        // Faucet UI yeniləmə
+        setInterval(updateFaucetUI, 10000);
+
+        // Firebase yeniləmə
         setInterval(() => { saveUserDataToFirebase(); }, 30000);
 
         renderWallet();
     }
 
+    // Pulse animasiyası
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(245,158,11,0.4); }
+            50% { box-shadow: 0 0 20px 5px rgba(245,158,11,0.2); }
+            100% { box-shadow: 0 0 0 0 rgba(245,158,11,0); }
+        }
+    `;
+    document.head.appendChild(style);
+
     window.onload = initApp;
 </script>
 </body>
-</html>
-
+                </html>
