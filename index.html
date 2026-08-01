@@ -722,22 +722,10 @@
         if (!socialBarClicked) {
             socialBarClicked = true;
             
-            const now = Date.now();
-            userState.balances.RGN += FAUCET_AMOUNT;
-            userState.faucetLastClaim = now;
-            userState.faucetDailyCount = (userState.faucetDailyCount || 0) + 1;
-            userState.faucetTotalClaimed = (userState.faucetTotalClaimed || 0) + FAUCET_AMOUNT;
-            userState.faucetAdClicks = (userState.faucetAdClicks || 0) + 1;
+            window.location.href = "reward.html";
+return;
             
-            updateFaucetUI();
-            updateTopUI();
-            saveUserDataToFirebase();
-            
-            showToast(`🎉 +${FAUCET_AMOUNT.toFixed(3)} RGN qazandınız!`, "success");
-            
-            setTimeout(() => {
-                socialBarClicked = false;
-            }, 5000);
+        
         }
     }
 
@@ -1713,7 +1701,15 @@ return;
         renderAvatarSelector();
         updateTopUI();
         updateFaucetUI();
+const reward = localStorage.getItem("rewardAmount");
 
+if (reward) {
+    userState.balances.RGN += parseFloat(reward);
+    localStorage.removeItem("rewardAmount");
+    updateTopUI();
+    saveUserDataToFirebase();
+    showToast(`🎉 +${reward} RGN qazandınız!`, "success");
+}
         if (currentUserId === ADMIN_TG_ID) {
             document.getElementById('adminMenuItem').style.display = 'flex';
         }
